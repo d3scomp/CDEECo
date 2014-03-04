@@ -5,6 +5,12 @@
  *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
+/* Kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+#include "semphr.h"
+
 #include "main.h"
 
 #include <cstdio>
@@ -15,18 +21,6 @@ Timer::Properties tim6Props {
 	TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn
 };
 Timer delayTimer(tim6Props);
-
-/*
-LED::Properties test1LedProps {
-	GPIOA, GPIO_Pin_1, RCC_AHB1Periph_GPIOA
-};
-LED test1Led(test1LedProps);
-
-LED::Properties test2LedProps {
-	GPIOA, GPIO_Pin_5, RCC_AHB1Periph_GPIOA
-};
-LED test2Led(test2LedProps);
-*/
 
 LED::Properties greenLedProps {
 	GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
@@ -44,83 +38,56 @@ LED rxtxLed(greenLedProps);
 LED outOfSyncLed(redLedProps);
 LED mrfRecvLed(blueLedProps);
 LED mrfSendLed(orangeLedProps);
-/*
-PulseLED rxtxPulseLed(rxtxLed, 1);
-PulseLED mrfRecvPulseLed(mrfRecvLed, 1);
-PulseLED mrfSendPulseLed(mrfSendLed, 1);
 
-Button::Properties userButtonProps {
-	GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn
-};
-Button infoButton(userButtonProps);
 
-MRF24J40::Properties mrfProps {
-	GPIOE, GPIOE, GPIOB, GPIOD,
-	SPI3,
-	GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_2,
-	GPIO_PinSource4, GPIO_PinSource5, GPIO_PinSource3, GPIO_PinSource4, GPIO_PinSource5,
-	RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD,
-	RCC_APB1PeriphClockCmd, RCC_APB1Periph_SPI3,
-	GPIO_AF_SPI3,
-	EXTI_Line2, EXTI_PortSourceGPIOD, EXTI_PinSource2, EXTI2_IRQn,
-	SPI3_IRQn
-};
-MRF24J40 mrf(mrfProps, mrfRecvPulseLed, mrfSendPulseLed);
+GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
 
-UART::Properties uart2Props {
-	GPIOA, USART2,
-	GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3,
-	RCC_APB1PeriphClockCmd, RCC_AHB1Periph_GPIOA, RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn,
-	921600
-};
-UART uartTOHD(uart2Props);
 
-UART::Properties uart6Props {
-	GPIOC, USART6,
-	GPIO_Pin_6, GPIO_Pin_7, GPIO_PinSource6, GPIO_PinSource7,
-	RCC_APB2PeriphClockCmd, RCC_AHB1Periph_GPIOC, RCC_APB2Periph_USART6, GPIO_AF_USART6, USART6_IRQn,
-	4800 // 9600 for L10, 4800 for L30
-};
-UART uartGPS(uart6Props);
 
-GPSL30::Properties gpsProps {
-	GPIOB, GPIOD, GPIOC,
-	GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_8,
-	RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC
-};
-GPSL30 gps(gpsProps, uartGPS); // This can be used for L10 as well. It has the three pins PWR, RST, WUP unconnected
+void LEDFlash(void *pvParameters) {
 
-TODQueue todQueue(uartTOHD, rxtxPulseLed, outOfSyncLed);
-TOHQueue tohQueue(uartTOHD, rxtxPulseLed);
+	lcd.clear();
+	lcd.setText("LEDFlash task");
 
-MsgHandler::Properties msgHandlerProps {
-	EXTI_Line1, EXTI1_IRQn
-};
-MsgHandler msgHandler(msgHandlerProps, mrf, gps, todQueue, tohQueue);
+	rxtxLed.init();
+	outOfSyncLed.init();
+	mrfRecvLed.init();
+	mrfSendLed.init();
 
-void handleInfoButtonInterrupt(void*) {
-	TOHMessage::Info& msg = tohQueue.getCurrentMsgWrite().info;
+	while(1) {
+		for(volatile int i = 0; i < 1000000; ++i);
+		rxtxLed.on();
+		outOfSyncLed.on();
+		mrfRecvLed.on();
+		mrfSendLed.on();
 
-	msg.type = TOHMessage::Type::INFO;
 
-	std::sprintf(msg.text,
-			"txCount: %d\n"
-			"rxCount: %d\n"
-			"panId: %04x\n"
-			"sAddr: %04x\n"
-			"channelNo: %d\n"
-			"mainCycles: %lu\n"
-			"GPS: %s\n",
-			mrf.getTXCount(), mrf.getRXCount(), mrf.readPANId(), mrf.readSAddr(), mrf.readChannel(), mainCycles, gps.getSentence());
-
-	msg.length = std::strlen(msg.text);
-
-	tohQueue.moveToNextMsgWrite();
+		for(volatile int i = 0; i < 1000000; ++i);
+		rxtxLed.off();
+		outOfSyncLed.off();
+		mrfRecvLed.off();
+		mrfSendLed.off();
+	}
 }
-*/
 
-int main(void)
-{
+void LCDWrite(void *pvParameters) {
+	lcd.clear();
+	lcd.setText("LCDWrite task");
+	vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+	int cnt = 0;
+	char buff[20];
+	lcd.clear();
+	while(1) {
+		sprintf(buff, "cnt: %p", cnt++);
+		lcd.setCursor(0,0);
+		lcd.setText(buff);
+		vTaskDelay(10 / portTICK_PERIOD_MS);
+		//for(volatile int i = 0; i < 100000; ++i);
+	}
+}
+
+int main(void) {
 	delayTimer.setPriority(1,1);
 	delayTimer.init();
 
@@ -134,12 +101,34 @@ int main(void)
 	mrfRecvLed.on();
 	mrfSendLed.on();
 
-	GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
-
-
 	lcd.init();
 
+	lcd.clear();
+	lcd.setText("Task create..");
 
+	/* Spawn the LED task. */
+	xTaskCreate( LEDFlash, "LEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+
+	/* Spawn the LCD task. */
+	xTaskCreate( LCDWrite, "LCDWrite", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+
+	lcd.setText("OK");
+	lcd.setCursor(1, 0);
+	lcd.setText("Run sched now");
+	delayTimer.mDelay(750);
+
+	/* Start the scheduler. */
+	vTaskStartScheduler();
+
+	lcd.setText("OK");
+
+
+	lcd.clear();
+	lcd.setText("End reached!!!");
+	while(1);
+
+
+/*
 	lcd.setText("Hello world!");
 
 	delayTimer.mDelay(1000);
@@ -170,59 +159,11 @@ int main(void)
 
 		for(int i = 0; i < 131072; ++i)
 			rxtxLed.off();
-	}
-
-/*
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 2 bits for pre-emption priority, 2 bits for non-preemptive subpriority
-	mrf.setSPIPriority(0,0);
-	uartTOHD.setPriority(1,0);
-	delayTimer.setPriority(1,1);
-	uartGPS.setPriority(1,2);
-	mrf.setRFPriority(2,0);
-	NVIC_SetPriority(SysTick_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 2, 1));
-	infoButton.setPriority(2,1);
-	msgHandler.setPriority(2,2);
-
-	/* Set SysTick to fire each 10ms */
-/*	RCC_ClocksTypeDef RCC_Clocks;
-	RCC_GetClocksFreq(&RCC_Clocks);
-	SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-
-
-	delayTimer.init();
-
-//	test1Led.init();
-//	test2Led.init();
-
-	outOfSyncLed.init();
-	rxtxLed.init();
-	mrfSendLed.init();
-	mrfRecvLed.init();
-	rxtxPulseLed.init();
-	mrfSendPulseLed.init();
-	mrfRecvPulseLed.init();
-
-	uartTOHD.init();
-	mrf.init();
-	tohQueue.init();
-	msgHandler.init();
-	todQueue.init();
-
-	uartGPS.init();
-	gps.init();
-
-	infoButton.setPressedListener(handleInfoButtonInterrupt, nullptr);
-	infoButton.init();
-
-
-	NVIC_SystemLPConfig(NVIC_LP_SLEEPONEXIT, ENABLE); // This ..
-	while (1) {
-		__WFI(); // ... and this has to be commented out when debugging.
-		mainCycles++; // This is to measure how many times we wake up from WFI. In fact, we should never wake up.
-	}
-
-	*/
+	}*/
 }
+
+
+
 
 
 #ifdef  USE_FULL_ASSERT
@@ -234,15 +175,12 @@ int main(void)
  * @param  line: assert_param error line source number
  * @retval None
  */
-void assert_failed(uint8_t* file, uint32_t line)
-{
+void assert_failed(uint8_t* file, uint32_t line) {
 	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
 	/* Infinite loop */
-	while (1)
-	{
-	}
+	while (1) { }
 }
 #endif
 

@@ -6,6 +6,7 @@ SRC_DIR=src
 CMSIS_DIR=stm32f40xx/CMSIS
 PERIPH_DIR=stm32f40xx/STM32F4xx_StdPeriph_Driver
 DISCOVERY_DIR=stm32f4discovery
+FREERTOS_DIR=FreeRTOS
 
 OPENOCD_DIR=C:/Apps/openocd-0.7.0
 
@@ -33,29 +34,41 @@ SRCS +=	${PERIPH_DIR}/src/stm32f4xx_spi.c
 SRCS +=	${PERIPH_DIR}/src/stm32f4xx_tim.c
 SRCS +=	${PERIPH_DIR}/src/misc.c
 
+# FreeRTOS sources
+SRCS += $(FREERTOS_DIR)/Source/portable/MemMang/heap_2.c
+SRCS += $(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F/port.c
+SRCS += $(FREERTOS_DIR)/Source/list.c
+SRCS += $(FREERTOS_DIR)/Source/queue.c
+SRCS += $(FREERTOS_DIR)/Source/tasks.c
+SRCS += $(FREERTOS_DIR)/Source/timers.c
+
 #DEFS = -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -DMANGUSTA_DISCOVERY -DUSE_USB_OTG_FS -DHSE_VALUE=8000000
 
 
 # Normally you shouldn't need to change anything below this line!
 #######################################################################################
 
-CC=arm-none-eabi-gcc
-OBJCOPY=arm-none-eabi-objcopy
+CC=armv7m-hardfloat-eabi-gcc
+CXX=armv7m-hardfloat-eabi-g++
+OBJCOPY=armv7m-hardfloat-eabi-objcopy
+SIZE=armv7m-hardfloat-eabi-size
 
 # For some reason -O2 generates wrong code for interrupts. At least the USER_BUTTON interrupt handler get called twice
-CFLAGS  = -mcpu=cortex-m4 -g3 -gdwarf-2 -O0 -Wall 
-CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork -mfloat-abi=soft -mfpu=fpv4-sp-d16 -MMD -MP
+CFLAGS  = -mcpu=cortex-m4 -g3 -gdwarf-2 -O0 -Wall -pipe
+CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP
 CFLAGS += -I$(SRC_DIR)
 CFLAGS += -I$(DISCOVERY_DIR)
 CFLAGS += -I$(CMSIS_DIR)/Include
 CFLAGS += -I$(PERIPH_DIR)/inc
+CFLAGS += -I$(FREERTOS_DIR)/Source/include
+CFLAGS += -I$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 
 CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++11
-#	arm-none-eabi-g++ -O0 -Wall -Wa,-adhlns="$@.lst" -fno-exceptions -fno-rtti -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=cortex-m4 -mthumb -g3 -gdwarf-2 -o "$@" "$<"
+#	${CXX} -O0 -Wall -Wa,-adhlns="$@.lst" -fno-exceptions -fno-rtti -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -mcpu=cortex-m4 -mthumb -g3 -gdwarf-2 -o "$@" "$<"
 
 #LDFLAGS = -nostartfiles -Tstm32f407vg.ld -Wl,-Map,beeclickarm.map $(CFLAGS)  
 LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/beeclickarm.map $(CFLAGS)  
-#	arm-none-eabi-g++ -Wl,-Map,test.map -mcpu=cortex-m4 -mthumb -g3 -gdwarf-2 -o "test.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+#	${CXX} -Wl,-Map,test.map -mcpu=cortex-m4 -mthumb -g3 -gdwarf-2 -o "test.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 
 # add startup file to build
 OBJS = $(patsubst %.c,build/%.o,$(SRCS))
@@ -68,29 +81,29 @@ DEPS := $(patsubst %.s,,$(DEPS))
 
 
 build/%.o: %.c
-	arm-none-eabi-gcc $(CFLAGS) -c -o "$@" "$<"
+	${CC} $(CFLAGS) -c -o "$@" "$<"
 
 build/%.o: %.cpp
-	arm-none-eabi-g++ $(CPPFLAGS) -c -o "$@" "$<"
+	${CXX} $(CPPFLAGS) -c -o "$@" "$<"
 
 build/%.o: %.s
-	arm-none-eabi-gcc $(CFLAGS) -c -o "$@" "$<"
+	${CC} $(CFLAGS) -c -o "$@" "$<"
 
 build/%.dep: %.cpp
-	arm-none-eabi-g++ -M $(CPPFLAGS) "$<" > "$@"
+	${CXX} -M $(CPPFLAGS) "$<" > "$@"
 
 .PHONY: proj
 
 all: init $(BUILD_DIR)/$(PROJ_NAME).elf
 
 init:
-	mkdir -p $(BUILD_DIR)/$(SRC_DIR) $(BUILD_DIR)/$(DISCOVERY_DIR) $(BUILD_DIR)/$(PERIPH_DIR)/src
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR) $(BUILD_DIR)/$(DISCOVERY_DIR) $(BUILD_DIR)/$(PERIPH_DIR)/src $(BUILD_DIR)/$(FREERTOS_DIR)/Source $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/MemMang $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 
 $(BUILD_DIR)/$(PROJ_NAME).elf: $(OBJS)
-	arm-none-eabi-g++ $(LDFLAGS) -o "$@" $(OBJS)
-	arm-none-eabi-objcopy -O ihex "$@" $(BUILD_DIR)/$(PROJ_NAME).hex 
-#	arm-none-eabi-objdump -h -S "$@" > $(BUILD_DIR)/$(PROJ_NAME).lst 
-	arm-none-eabi-size --format=berkeley "$@"
+	${CXX} $(LDFLAGS) -o "$@" $(OBJS)
+	${OBJCOPY} -O ihex "$@" $(BUILD_DIR)/$(PROJ_NAME).hex 
+#	${OBJDUMP} -h -S "$@" > $(BUILD_DIR)/$(PROJ_NAME).lst 
+	${SIZE} --format=berkeley "$@"
 
 clean:
 	rm -rf build
