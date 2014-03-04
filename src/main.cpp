@@ -153,7 +153,7 @@ int main(void)
 	lcd.setCursor(1,1);
 	lcd.setText("line1,1");
 
-/*	delayTimer.mDelay(1000);
+	delayTimer.mDelay(1000);
 	lcd.clear();
 	int cnt = 0;
 	char buff[20];
@@ -162,7 +162,7 @@ int main(void)
 		lcd.setCursor(0,0);
 		lcd.setText(buff);
 		delayTimer.mDelay(100);
-	}*/
+	}
 
 	while(1) {
 		for(int i = 0; i < 131072; ++i)
