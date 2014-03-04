@@ -44,7 +44,7 @@ LED rxtxLed(greenLedProps);
 LED outOfSyncLed(redLedProps);
 LED mrfRecvLed(blueLedProps);
 LED mrfSendLed(orangeLedProps);
-
+/*
 PulseLED rxtxPulseLed(rxtxLed, 1);
 PulseLED mrfRecvPulseLed(mrfRecvLed, 1);
 PulseLED mrfSendPulseLed(mrfSendLed, 1);
@@ -117,9 +117,13 @@ void handleInfoButtonInterrupt(void*) {
 
 	tohQueue.moveToNextMsgWrite();
 }
+*/
 
 int main(void)
 {
+	delayTimer.setPriority(1,1);
+	delayTimer.init();
+
 	rxtxLed.init();
 	outOfSyncLed.init();
 	mrfRecvLed.init();
@@ -130,6 +134,36 @@ int main(void)
 	mrfRecvLed.on();
 	mrfSendLed.on();
 
+	GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
+
+
+	lcd.init();
+
+
+	lcd.setText("Hello world!");
+
+	delayTimer.mDelay(1000);
+	lcd.clear();
+	lcd.setText("abcdefghijklmnopqrstuvwxyz");
+
+	delayTimer.mDelay(1000);
+	lcd.clear();
+	lcd.setCursor(0,0);
+	lcd.setText("line0,0");
+	lcd.setCursor(1,1);
+	lcd.setText("line1,1");
+
+/*	delayTimer.mDelay(1000);
+	lcd.clear();
+	int cnt = 0;
+	char buff[20];
+	while(1) {
+		sprintf(buff, "cnt: %p", cnt++);
+		lcd.setCursor(0,0);
+		lcd.setText(buff);
+		delayTimer.mDelay(100);
+	}*/
+
 	while(1) {
 		for(int i = 0; i < 131072; ++i)
 			rxtxLed.on();
@@ -138,7 +172,7 @@ int main(void)
 			rxtxLed.off();
 	}
 
-
+/*
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 2 bits for pre-emption priority, 2 bits for non-preemptive subpriority
 	mrf.setSPIPriority(0,0);
 	uartTOHD.setPriority(1,0);
@@ -150,7 +184,7 @@ int main(void)
 	msgHandler.setPriority(2,2);
 
 	/* Set SysTick to fire each 10ms */
-	RCC_ClocksTypeDef RCC_Clocks;
+/*	RCC_ClocksTypeDef RCC_Clocks;
 	RCC_GetClocksFreq(&RCC_Clocks);
 	SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 
@@ -186,6 +220,8 @@ int main(void)
 		__WFI(); // ... and this has to be commented out when debugging.
 		mainCycles++; // This is to measure how many times we wake up from WFI. In fact, we should never wake up.
 	}
+
+	*/
 }
 
 
