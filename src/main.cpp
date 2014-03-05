@@ -34,55 +34,39 @@ LED::Properties orangeLedProps {
 LED::Properties blueLedProps {
 	GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD
 };
-LED rxtxLed(greenLedProps);
-LED outOfSyncLed(redLedProps);
-LED mrfRecvLed(blueLedProps);
-LED mrfSendLed(orangeLedProps);
-
+LED green(greenLedProps);
+LED red(redLedProps);
+LED blue(blueLedProps);
+LED orange(orangeLedProps);
 
 GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
 
+#define LEDFLASH(LED,DELAY) \
+	void led_##LED(void *pvParameters) { \
+	LED.init(); \
+	while(1) { \
+		vTaskDelay(DELAY / portTICK_PERIOD_MS); \
+		LED.on(); \
+		vTaskDelay(DELAY / portTICK_PERIOD_MS); \
+		LED.off(); \
+	} \
+} \
 
+LEDFLASH(red, 100);
+LEDFLASH(green, 150);
+LEDFLASH(blue, 127);
+LEDFLASH(orange, 200);
 
-void LEDFlash(void *pvParameters) {
-
-	lcd.clear();
-	lcd.setText("LEDFlash task");
-
-	rxtxLed.init();
-	outOfSyncLed.init();
-	mrfRecvLed.init();
-	mrfSendLed.init();
-
-	while(1) {
-		for(volatile int i = 0; i < 1000000; ++i);
-		rxtxLed.on();
-		outOfSyncLed.on();
-		mrfRecvLed.on();
-		mrfSendLed.on();
-
-
-		for(volatile int i = 0; i < 1000000; ++i);
-		rxtxLed.off();
-		outOfSyncLed.off();
-		mrfRecvLed.off();
-		mrfSendLed.off();
-	}
-}
 
 void LCDWrite(void *pvParameters) {
-	lcd.clear();
-	lcd.setText("LCDWrite task");
-	vTaskDelay(1000 / portTICK_PERIOD_MS);
-
 	int cnt = 0;
 	char buff[20];
 	lcd.clear();
 	while(1) {
-		sprintf(buff, "cnt: %p", cnt++);
+		sprintf(buff, "%d", cnt++);
 		lcd.setCursor(0,0);
 		lcd.setText(buff);
-		vTaskDelay(10 / portTICK_PERIOD_MS);
+		vTaskDelay(1 / portTICK_PERIOD_MS);
 		//for(volatile int i = 0; i < 100000; ++i);
 	}
 }
@@ -91,23 +75,16 @@ int main(void) {
 	delayTimer.setPriority(1,1);
 	delayTimer.init();
 
-	rxtxLed.init();
-	outOfSyncLed.init();
-	mrfRecvLed.init();
-	mrfSendLed.init();
-
-	rxtxLed.on();
-	outOfSyncLed.on();
-	mrfRecvLed.on();
-	mrfSendLed.on();
-
 	lcd.init();
 
 	lcd.clear();
 	lcd.setText("Task create..");
 
-	/* Spawn the LED task. */
-	xTaskCreate( LEDFlash, "LEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	/* Spawn the LED tasks. */
+	xTaskCreate( led_red, "redLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate( led_green, "greenLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate( led_blue, "blueLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate( led_orange, "orangeLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	/* Spawn the LCD task. */
 	xTaskCreate( LCDWrite, "LCDWrite", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );

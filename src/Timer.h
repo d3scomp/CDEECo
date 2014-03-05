@@ -8,6 +8,9 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "stm32f4xx.h"
 
 class Timer {
@@ -26,8 +29,19 @@ public:
 	void init();
 
 	inline void uDelay(uint16_t us) {
+		taskENTER_CRITICAL();
+
+		uint32_t state = props.tim->CNT;
+
 		props.tim->CNT = 0;
 		while (props.tim->CNT < us);
+
+		props.tim->CNT = state;
+
+/*		uint32_t state = props.tim->CNT;
+		while (props.tim->CNT - us < state);
+*/
+		taskEXIT_CRITICAL();
 	}
 
 	inline void mDelay(uint16_t ms) {
