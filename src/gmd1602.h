@@ -9,14 +9,18 @@
 
 #include "stm32f4xx.h"
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 class GMD1602 {
 public:
 	GMD1602(GPIO_TypeDef* gpio, uint32_t clk);
 
 	void init();
-	void setText(char *text);
+	void writeText(char *text);
+	void writeXY(char *text, int x, int y);
 	void clear();
-	void setCursor(uint8_t line, uint8_t pos);
+	void setXY(uint8_t x, uint8_t y);
 private:
 	GPIO_TypeDef* gpio;
 	uint32_t clk;
@@ -63,6 +67,8 @@ private:
 	void write4(uint8_t data);
 	void lo(uint32_t pin);
 	void hi(uint32_t pin);
+
+	SemaphoreHandle_t writeSem;
 };
 
 

@@ -60,14 +60,26 @@ LEDFLASH(orange, 200);
 
 void LCDWrite(void *pvParameters) {
 	int cnt = 0;
-	char buff[20];
+	char buff[10];
 	lcd.clear();
 	while(1) {
 		sprintf(buff, "%d", cnt++);
-		lcd.setCursor(0,0);
-		lcd.setText(buff);
-		vTaskDelay(1 / portTICK_PERIOD_MS);
-		//for(volatile int i = 0; i < 100000; ++i);
+		lcd.writeXY(buff, 0, 0);
+		vTaskDelay(100 / portTICK_PERIOD_MS);
+		//	for(volatile int i = 0; i < 100000; ++i);
+	}
+}
+
+void LCDProgress(void *pvParameters) {
+	int pos = 0;
+	int dir = 1;
+	while(1) {
+		lcd.writeXY(" ", pos, 1);
+		pos += dir;
+		if(pos > 14 || pos < 1)
+			dir *= -1;
+		lcd.writeXY("#", pos, 1);
+		vTaskDelay(42 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -76,32 +88,30 @@ int main(void) {
 	delayTimer.init();
 
 	lcd.init();
-
-	lcd.clear();
-	lcd.setText("Task create..");
+	lcd.writeXY("Task create..", 0, 0);
 
 	/* Spawn the LED tasks. */
-	xTaskCreate( led_red, "redLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate( led_green, "greenLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate( led_blue, "blueLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate( led_orange, "orangeLEDFlash", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate(led_green, "greenLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
-	/* Spawn the LCD task. */
-	xTaskCreate( LCDWrite, "LCDWrite", configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+	/* Spawn the LCD counter task. */
+	xTaskCreate(LCDWrite, "LCDWrite", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
-	lcd.setText("OK");
-	lcd.setCursor(1, 0);
-	lcd.setText("Run sched now");
+	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+
+	lcd.writeXY("OK", 14, 0);
+	lcd.writeXY("Run sched now", 0, 1);
+	lcd.writeXY("OK", 14, 1);
 	delayTimer.mDelay(750);
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
 
-	lcd.setText("OK");
-
 
 	lcd.clear();
-	lcd.setText("End reached!!!");
+	lcd.writeText("End reached!!!");
 	while(1);
 
 

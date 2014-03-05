@@ -1,10 +1,17 @@
 #include "gmd1602.h"
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 #include "main.h"
 
-GMD1602::GMD1602(GPIO_TypeDef *gpio, uint32_t clk): gpio(gpio), clk(clk) { }
+GMD1602::GMD1602(GPIO_TypeDef *gpio, uint32_t clk): gpio(gpio), clk(clk) {
+	writeSem = xSemaphoreCreateMutex();
+}
 
 void GMD1602::init() {
+	xSemaphoreTake(writeSem, portMAX_DELAY);
+
 	GPIO_InitTypeDef  gpioInitStruct;
 
 	// Enable the GPIO_LED Clock
@@ -44,11 +51,23 @@ void GMD1602::init() {
 	delayTimer.mDelay(100);
 
 	clear();
+
+	xSemaphoreGive(writeSem);
 }
 
-void GMD1602::setText(char *text) {
+void GMD1602::writeText(char *text) {
+	xSemaphoreTake(writeSem, portMAX_DELAY);
 	while(*text)
 		data(*text++);
+	xSemaphoreGive(writeSem);
+}
+
+void GMD1602::writeXY(char *text, int x, int y) {
+	xSemaphoreTake(writeSem, portMAX_DELAY);
+	setXY(x, y);
+	while(*text)
+		data(*text++);
+	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::clear() {
@@ -56,13 +75,13 @@ void GMD1602::clear() {
 	delayTimer.mDelay(100);
 }
 
-void GMD1602::setCursor(uint8_t line, uint8_t pos) {
+void GMD1602::setXY(uint8_t x, uint8_t y) {
 	// pos will be used as a temporary variable
-	pos |= 0b10000000;
-	if (line == 1)
-		pos += 0x40;
+	x |= 0b10000000;
+	if (y == 1)
+		x += 0x40;
 
-	command(pos);
+	command(x);
 }
 
 void GMD1602::command(uint8_t command) {
