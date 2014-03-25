@@ -88,7 +88,7 @@ int main(void) {
 	delayTimer.init();
 
 	lcd.init();
-	lcd.writeXY("TASK CREATE..", 0, 0);
+	lcd.writeXY("Task create..", 0, 0);
 
 	/* Spawn the LED tasks. */
 	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
