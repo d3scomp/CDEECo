@@ -30,7 +30,7 @@ public:
 		knowledge.teamId.setVal(team_id);
 
 		PERIODIC_TASK(processSensorData, 2000ms);
-		TRIGGERED_TASK(outputGMsInDanger, "FFsInDangerInSite");
+		TRIGGERED_TASK(outputGMsInDanger, &GroupLeaderKnowledge.FFsInDangerInTeam);
 	}
 
 	void processSensorData() {

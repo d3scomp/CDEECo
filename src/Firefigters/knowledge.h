@@ -4,18 +4,23 @@
  *
  */
 
+// For now trigger is a function pointer
+typedef void (*Trigger)(void);
+
+// Basic knowledge class
 class Knowledge {
 public:
-	string name;
 	Knowledge *parent;
 
-	Knowledge(string name, Knowledge *parent): name(name), parent(parent);
+	Knowledge(Knowledge *parent): parent(parent);
 
-	void registerTrigger(Trigger trigger);
+	void setTrigger(Trigger trigger);
 private:
-	Set<Trigger> triggers;
+	Trigger *trigger;
 	void triggerChange() {
 		// Run triggers
+		if(trigger)
+			trigger();
 		parent->triggerChange();
 	}
 };
@@ -23,7 +28,7 @@ private:
 template<class T>
 class SimpleKnowledge: Knowledge {
 public:
-	SimpleKnowledge(string name, Knowledge *parent): Knowledge(name, parent) {}
+	SimpleKnowledge(Knowledge *parent): Knowledge(parent) {}
 
 	T getVal() {
 		return value;
@@ -40,10 +45,11 @@ private:
 
 class Position: Knowledge {
 public:
-	SimpleKnowledge *x, *y;
+	SimpleKnowledge<int> x(this);
+	SimpleKnowledge<int> y(this);
 
-	Position(string name, Knowledge *parent): Knowledge(name, aprent) {
-		x = new SimpleKnowledge<int>("x", this);
-		y = new SimpleKnowledge<int>("y", this);
+	Position(Knowledge *parent): Knowledge(null) {
+		x.parent = parent;
+		y.parent = parent;
 	}
 };
