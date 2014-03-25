@@ -1,5 +1,5 @@
 # Binaries will be generated with this name (.elf, .bin, .hex, etc)
-PROJ_NAME=beeclickarm
+PROJ_NAME=cdeeco++
 
 BUILD_DIR=build
 SRC_DIR=src
