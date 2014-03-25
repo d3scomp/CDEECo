@@ -12,7 +12,7 @@ class Knowledge {
 public:
 	Knowledge *parent;
 
-	Knowledge(Knowledge *parent): parent(parent);
+	Knowledge(Knowledge *parent): parent(parent) {};
 
 	void setTrigger(Trigger trigger);
 private:
@@ -20,9 +20,9 @@ private:
 	void triggerChange() {
 		// Run triggers
 		if(trigger)
-			trigger();
+			(*trigger)();
 		parent->triggerChange();
-	}
+	};
 };
 
 template<class T>
@@ -33,6 +33,7 @@ public:
 	T getVal() {
 		return value;
 	}
+
 	void setVal(T value) {
 		this->value = value;
 		triggerChange();
@@ -45,11 +46,17 @@ private:
 
 class Position: Knowledge {
 public:
-	SimpleKnowledge<int> x(this);
-	SimpleKnowledge<int> y(this);
+	/*SimpleKnowledge<int> x(NULL);
+	SimpleKnowledge<int> y((Knowledge*)NULL);*/
 
-	Position(Knowledge *parent): Knowledge(null) {
-		x.parent = parent;
-		y.parent = parent;
+	SimpleKnowledge<int> *x;
+	SimpleKnowledge<int> *y;
+
+	Position(Knowledge *parent): Knowledge(parent) {
+		/*x.parent = parent;
+		y.parent = parent;*/
+
+		x = new SimpleKnowledge<int>(this);
+		y = new SimpleKnowledge<int>(this);
 	}
 };
