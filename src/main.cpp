@@ -88,7 +88,7 @@ int main(void) {
 	delayTimer.init();
 
 	lcd.init();
-	lcd.writeXY("Task create..", 0, 0);
+	lcd.writeXY("TASK CREATE..", 0, 0);
 
 	/* Spawn the LED tasks. */
 	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
@@ -102,7 +102,7 @@ int main(void) {
 	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	lcd.writeXY("OK", 14, 0);
-	lcd.writeXY("Run sched now", 0, 1);
+	lcd.writeXY("Running sched", 0, 1);
 	lcd.writeXY("OK", 14, 1);
 	delayTimer.mDelay(750);
 
