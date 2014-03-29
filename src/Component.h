@@ -10,10 +10,11 @@
 
 #include "FreeRTOS.h"
 
-#include "knowledge.h"
+#include "Knowledge.h"
+#include "PeriodicTask.h"
 
 /** System component template */
-template<class KNOWLEDGE>
+template<typename KNOWLEDGE>
 class Component {
 public:
 	/// Task code
@@ -25,29 +26,11 @@ public:
 	/// Knowledge of the component
 	KNOWLEDGE knowledge;
 
-	Component();
-
-private:
-	/// Default task stack size
-	static const size_t DefaultStackSize = 512;
-
-	/// Parameters to carry periodic task information
-	struct PerodicTaskParams {
-		long period;
-		TaskCode *code;
-	};
-
-	/// Parameters to carry triggered task information
-	struct TrigerredTaskParams {
-		TaskCode *code;
-	};
-
-	void periodicTaskBody(PerodicTaskParams *params);
-	void triggeredTaskBody(TrigerredTaskParams *params);
+	Component() {}
 
 protected:
-	void createPeriodicTask(TaskCode *code, size_t stackSize = DefaultStackSize);
-	void createTriggeredTask(TaskCode *code, Trigger, size_t stackSize = DefaultStackSize);
+	void createPeriodicTask(PeriodicTask<KNOWLEDGE, KNOWLEDGE> *task);
+//	void createTriggeredTask(TaskCode *code, Trigger, size_t stackSize = DefaultStackSize);
 };
 
 #endif /* COMPONENT_H_ */

@@ -12,7 +12,7 @@ class Knowledge {
 public:
 	Knowledge *parent;
 
-	Knowledge(Knowledge *parent): parent(parent) {};
+	Knowledge(Knowledge *parent): parent(parent), trigger(NULL) {};
 
 	void setTrigger(Trigger trigger);
 private:
@@ -46,17 +46,8 @@ private:
 
 class Position: Knowledge {
 public:
-	/*SimpleKnowledge<int> x(NULL);
-	SimpleKnowledge<int> y((Knowledge*)NULL);*/
+	SimpleKnowledge<int> x;
+	SimpleKnowledge<int> y;
 
-	SimpleKnowledge<int> *x;
-	SimpleKnowledge<int> *y;
-
-	Position(Knowledge *parent): Knowledge(parent) {
-		/*x.parent = parent;
-		y.parent = parent;*/
-
-		x = new SimpleKnowledge<int>(this);
-		y = new SimpleKnowledge<int>(this);
-	}
+	Position(Knowledge *parent): Knowledge(parent), x(this), y(this) { }
 };

@@ -23,7 +23,6 @@ SRCS +=	${SRC_DIR}/Timer.cpp
 SRCS +=	${SRC_DIR}/GPS.cpp
 #SRCS +=	${SRC_DIR}/stm32f4xx_it.cpp 
 SRCS +=	${SRC_DIR}/syscalls.c
-SRCS += ${SRC_DIR}/Component.cpp
 
 
 SRCS +=	${DISCOVERY_DIR}/system_stm32f4xx.c

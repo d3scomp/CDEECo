@@ -13,6 +13,8 @@
 
 #include "main.h"
 
+#include "TestComponent.h"
+
 #include <cstdio>
 
 uint32_t mainCycles;
@@ -34,7 +36,7 @@ LED::Properties orangeLedProps {
 LED::Properties blueLedProps {
 	GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD
 };
-LED green(greenLedProps);
+//LED green(greenLedProps);
 LED red(redLedProps);
 LED blue(blueLedProps);
 LED orange(orangeLedProps);
@@ -53,7 +55,7 @@ GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
 } \
 
 LEDFLASH(red, 100);
-LEDFLASH(green, 150);
+//LEDFLASH(green, 150);
 LEDFLASH(blue, 127);
 LEDFLASH(orange, 200);
 
@@ -92,7 +94,7 @@ int main(void) {
 
 	/* Spawn the LED tasks. */
 	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate(led_green, "greenLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(led_green, "greenLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
@@ -102,8 +104,17 @@ int main(void) {
 	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	lcd.writeXY("OK", 14, 0);
-	lcd.writeXY("Running sched", 0, 1);
-	lcd.writeXY("OK", 14, 1);
+
+	delayTimer.mDelay(750);
+
+	lcd.clear();
+	lcd.writeXY("TestComponent..", 0, 0);
+
+	TestComponent testComponent;
+
+	delayTimer.mDelay(750);
+
+	lcd.writeXY("Running sched..", 0, 1);
 	delayTimer.mDelay(750);
 
 	/* Start the scheduler. */
