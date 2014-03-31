@@ -17,6 +17,10 @@
 
 #include <cstdio>
 
+#include "console.h"
+GMD1602 Console::lcd(GPIOE, RCC_AHB1Periph_GPIOE);
+char Console::stored[20];
+
 uint32_t mainCycles;
 
 Timer::Properties tim6Props {
@@ -88,8 +92,8 @@ int main(void) {
 	delayTimer.setPriority(1,1);
 	delayTimer.init();
 
-	lcd.init();
-	lcd.writeXY("Task create..", 0, 0);
+	Console::init();
+	Console::log("Task create..");
 
 	/* Spawn the LED tasks. */
 //	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
@@ -101,18 +105,14 @@ int main(void) {
 
 //	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
-	lcd.writeXY("TestComponent..", 0, 0);
+	Console::log("TestComponent..");
 
 	TestComponent testComponent;
 
-	lcd.writeXY("Running sched..", 0, 0);
+	Console::log("Running sched..");
 
 	/* Start the scheduler. */
-	vTaskStartScheduler();
-
-
-	lcd.clear();
-	lcd.writeText("End reached!!!");
+//	vTaskStartScheduler();
 	while(1);
 }
 

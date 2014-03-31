@@ -17,6 +17,8 @@
 
 #include "Task.h"
 
+#include "console.h"
+
 template<typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
@@ -36,6 +38,7 @@ private:
 
 	/** Helper for launching task code from RTOS C environment */
 	static void taskBodyLauncher(PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE> *task) {
+		Console::log("launcher");
 		//task->taskBodyImplementation();
 		// Do not let the task run to the end
 		while(1);
