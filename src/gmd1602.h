@@ -17,8 +17,8 @@ public:
 	GMD1602(GPIO_TypeDef* gpio, uint32_t clk);
 
 	void init();
-	void writeText(char *text);
-	void writeXY(char *text, int x, int y);
+	void writeText(const char *text);
+	void writeXY(const char *text, int x, int y);
 	void clear();
 	void setXY(uint8_t x, uint8_t y);
 private:

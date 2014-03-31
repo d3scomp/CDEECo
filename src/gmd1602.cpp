@@ -56,7 +56,7 @@ void GMD1602::init() {
 //	xSemaphoreGive(writeSem);
 }
 
-void GMD1602::writeText(char *text) {
+void GMD1602::writeText(const char *text) {
 ///	xSemaphoreTake(writeSem, portMAX_DELAY);
 //	vTaskSuspendAll();
 	while(*text)
@@ -65,7 +65,7 @@ void GMD1602::writeText(char *text) {
 //	xSemaphoreGive(writeSem);
 }
 
-void GMD1602::writeXY(char *text, int x, int y) {
+void GMD1602::writeXY(const char *text, int x, int y) {
 //	xSemaphoreTake(writeSem, portMAX_DELAY);
 //	vTaskSuspendAll();
 	setXY(x, y);
