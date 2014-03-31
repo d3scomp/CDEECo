@@ -10,7 +10,6 @@
 
 #include "Component.h"
 
-
 class TestKnowledge: Knowledge {
 public:
 	SimpleKnowledge<int> id;
@@ -22,23 +21,23 @@ public:
 class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
 public:
 	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(500, in, out), state(false) {
+		// Init green led
+		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 
+		GPIO_InitTypeDef  gpioInitStruct = {
+			GPIO_Pin_12, GPIO_Mode_OUT, GPIO_Speed_50MHz, GPIO_OType_PP, GPIO_PuPd_UP
+		};
+		GPIO_Init(GPIOD, &gpioInitStruct);
 	};
 
 	bool state;
 
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
-		LED::Properties greenLedProps {
-			GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
-		};
-		LED green(greenLedProps);
-
-		green.init();
-		if(state)
-			green.on();
+		if(!state)
+			GPIOD->BSRRL = GPIO_Pin_12;
 		else
-			green.off();
+			GPIOD->BSRRH = GPIO_Pin_12;
 
 		state = !state;
 

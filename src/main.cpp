@@ -55,7 +55,6 @@ GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
 } \
 
 LEDFLASH(red, 100);
-//LEDFLASH(green, 150);
 LEDFLASH(blue, 127);
 LEDFLASH(orange, 200);
 
@@ -93,29 +92,20 @@ int main(void) {
 	lcd.writeXY("Task create..", 0, 0);
 
 	/* Spawn the LED tasks. */
-	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-//	xTaskCreate(led_green, "greenLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	/* Spawn the LCD counter task. */
 	xTaskCreate(LCDWrite, "LCDWrite", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
-	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
-	lcd.writeXY("OK", 14, 0);
-
-	delayTimer.mDelay(750);
-
-	lcd.clear();
 	lcd.writeXY("TestComponent..", 0, 0);
 
 	TestComponent testComponent;
 
-	delayTimer.mDelay(750);
-
-	lcd.writeXY("Running sched..", 0, 1);
-	delayTimer.mDelay(750);
+	lcd.writeXY("Running sched..", 0, 0);
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
@@ -124,40 +114,6 @@ int main(void) {
 	lcd.clear();
 	lcd.writeText("End reached!!!");
 	while(1);
-
-
-/*
-	lcd.setText("Hello world!");
-
-	delayTimer.mDelay(1000);
-	lcd.clear();
-	lcd.setText("abcdefghijklmnopqrstuvwxyz");
-
-	delayTimer.mDelay(1000);
-	lcd.clear();
-	lcd.setCursor(0,0);
-	lcd.setText("line0,0");
-	lcd.setCursor(1,1);
-	lcd.setText("line1,1");
-
-	delayTimer.mDelay(1000);
-	lcd.clear();
-	int cnt = 0;
-	char buff[20];
-	while(1) {
-		sprintf(buff, "cnt: %p", cnt++);
-		lcd.setCursor(0,0);
-		lcd.setText(buff);
-		delayTimer.mDelay(100);
-	}
-
-	while(1) {
-		for(int i = 0; i < 131072; ++i)
-			rxtxLed.on();
-
-		for(int i = 0; i < 131072; ++i)
-			rxtxLed.off();
-	}*/
 }
 
 

@@ -25,15 +25,12 @@ public:
 	/** Task user code */
 	virtual OUT_KNOWLEDGE run(IN_KNOWLEDGE in) = 0;
 
-	const size_t DefaultStackSize = 512;
+	const size_t DefaultStackSize = 1024;
 	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
 
 private:
 	IN_KNOWLEDGE *inKnowledge;
 	OUT_KNOWLEDGE *outKnowledge;
-
-	/** Task system code, responsible for scheduling */
-	virtual void taskBodyImplementation() = 0;
 
 protected:
 	/** Task execution code, responsible for data passing */

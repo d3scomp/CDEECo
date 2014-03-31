@@ -36,8 +36,7 @@ private:
 
 	/** Helper for launching task code from RTOS C environment */
 	static void taskBodyLauncher(PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE> *task) {
-		if(task)
-			task->taskBodyImplementation();
+		//task->taskBodyImplementation();
 		// Do not let the task run to the end
 		while(1);
 	}

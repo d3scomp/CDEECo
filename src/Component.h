@@ -27,10 +27,6 @@ public:
 	KNOWLEDGE knowledge;
 
 	Component() {}
-
-protected:
-	void createPeriodicTask(PeriodicTask<KNOWLEDGE, KNOWLEDGE> *task);
-//	void createTriggeredTask(TaskCode *code, Trigger, size_t stackSize = DefaultStackSize);
 };
 
 #endif /* COMPONENT_H_ */

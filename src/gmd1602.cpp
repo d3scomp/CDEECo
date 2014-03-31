@@ -10,7 +10,8 @@ GMD1602::GMD1602(GPIO_TypeDef *gpio, uint32_t clk): gpio(gpio), clk(clk) {
 }
 
 void GMD1602::init() {
-	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	vTaskSuspendAll();
 
 	GPIO_InitTypeDef  gpioInitStruct;
 
@@ -50,29 +51,37 @@ void GMD1602::init() {
 	command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF);
 	delayTimer.mDelay(100);
 
-	clear();
 
-	xSemaphoreGive(writeSem);
+//	xTaskResumeAll();
+//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::writeText(char *text) {
-	xSemaphoreTake(writeSem, portMAX_DELAY);
+///	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	vTaskSuspendAll();
 	while(*text)
 		data(*text++);
-	xSemaphoreGive(writeSem);
+//	xTaskResumeAll();
+//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::writeXY(char *text, int x, int y) {
-	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	vTaskSuspendAll();
 	setXY(x, y);
 	while(*text)
 		data(*text++);
-	xSemaphoreGive(writeSem);
+//	xTaskResumeAll();
+//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::clear() {
+//	xSemaphoreTake(writeSem, portMAX_DELAY);
+//	vTaskSuspendAll();
 	command(LCD_CLEARDISPLAY);
 	delayTimer.mDelay(100);
+//	xTaskResumeAll();
+//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::setXY(uint8_t x, uint8_t y) {
