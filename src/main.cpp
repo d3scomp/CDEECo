@@ -70,7 +70,7 @@ void LCDWrite(void *pvParameters) {
 	while(1) {
 		sprintf(buff, "%d", cnt++);
 		Console::log(buff);
-		vTaskDelay(100 / portTICK_PERIOD_MS);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
 		//	for(volatile int i = 0; i < 100000; ++i);
 	}
 }
