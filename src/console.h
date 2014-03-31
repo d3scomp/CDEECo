@@ -9,7 +9,7 @@ public:
 	static void log(const char *text);
 private:
 	static GMD1602 lcd;
-	static char stored[20];
+	static char stored[16];
 };
 
 #endif // CONSOLE_H_

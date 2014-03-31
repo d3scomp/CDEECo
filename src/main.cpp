@@ -19,7 +19,7 @@
 
 #include "console.h"
 GMD1602 Console::lcd(GPIOE, RCC_AHB1Periph_GPIOE);
-char Console::stored[20];
+char Console::stored[16];
 
 uint32_t mainCycles;
 
@@ -69,7 +69,7 @@ void LCDWrite(void *pvParameters) {
 	lcd.clear();
 	while(1) {
 		sprintf(buff, "%d", cnt++);
-		lcd.writeXY(buff, 0, 0);
+		Console::log(buff);
 		vTaskDelay(100 / portTICK_PERIOD_MS);
 		//	for(volatile int i = 0; i < 100000; ++i);
 	}
@@ -112,7 +112,7 @@ int main(void) {
 	Console::log("Running sched..");
 
 	/* Start the scheduler. */
-//	vTaskStartScheduler();
+	vTaskStartScheduler();
 	while(1);
 }
 
