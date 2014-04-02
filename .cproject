@@ -32,7 +32,7 @@
 							<builder enableAutoBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.target.gnu.builder.base.564908800" incrementalBuildTarget="flash" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.target.gnu.builder.base"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.base.150869539.20868166" name="MRF24J40.cpp" rcbsApplicability="disable" resourcePath="src/MRF24J40.cpp" toolsToInvoke="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.148318588.932998230">
+					<fileInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.base.150869539.20868166" name="MRF24J40.cpp" rcbsApplicability="disable" resourcePath="src/drivers/MRF24J40.cpp" toolsToInvoke="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.148318588.932998230">
 						<tool id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.148318588.932998230" name="ARM Sourcery Windows GCC C++ Compiler">
 							<inputType id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.148318588.932998230.1417943475"/>
 						</tool>

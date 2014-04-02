@@ -13,7 +13,7 @@
 
 #include "main.h"
 
-#include "TestComponent.h"
+#include "test/TestComponent.h"
 
 #include <cstdio>
 #include <sstream>

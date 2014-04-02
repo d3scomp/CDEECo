@@ -8,7 +8,7 @@
 #ifndef TESTCOMPONENT_H_
 #define TESTCOMPONENT_H_
 
-#include "Component.h"
+#include "cdeeco/Component.h"
 
 class TestKnowledge: Knowledge {
 public:
