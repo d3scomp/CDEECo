@@ -29,7 +29,7 @@
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createlisting.555626130" name="Create Extended Listing" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.createlisting"/>
 							<option id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize.1090068215" name="Print Size" superClass="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.option.addtools.printsize"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.GNU_ELF" id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.platform.base.863771470" isAbstract="false" name="Windows Platform" osList="win32"/>
-							<builder enableAutoBuild="true" id="cdt.managedbuild.target.gnu.builder.base.564908800" incrementalBuildTarget="flash" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.target.gnu.builder.base"/>
+							<builder enableAutoBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.target.gnu.builder.base.564908800" incrementalBuildTarget="flash" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.target.gnu.builder.base"/>
 						</toolChain>
 					</folderInfo>
 					<fileInfo id="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.toolchain.base.150869539.20868166" name="MRF24J40.cpp" rcbsApplicability="disable" resourcePath="src/MRF24J40.cpp" toolsToInvoke="org.eclipse.cdt.cross.arm.gnu.sourcery.windows.cpp.compiler.base.148318588.932998230">

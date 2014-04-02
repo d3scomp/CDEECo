@@ -46,14 +46,15 @@ private:
 	}
 
 	void taskBodyImplementation() {
-		Console::log("BODY");
+		bool state = false;
+
 		// Schedule the task periodically
 		while(1) {
 			// Run the task
 			this->execute();
 
 			// Wait for next execution time
-			vTaskDelay(period / portTICK_PERIOD_MS);
+			vTaskDelay(this->period / portTICK_PERIOD_MS);
 		}
 	}
 };

@@ -23,7 +23,7 @@ using namespace std;
 
 #include "console.h"
 GMD1602 Console::lcd(GPIOE, RCC_AHB1Periph_GPIOE);
-char Console::stored[16];
+char Console::stored[20];
 
 
 Timer::Properties tim6Props {
@@ -96,6 +96,21 @@ int main(void) {
 	delayTimer.init();
 
 	Console::init();
+
+	// TODO: This fixes memory corruption, why?
+	volatile char padd[0xa0];
+
+/*	volatile int a = 5;
+	ostringstream ss;
+	ss << "&a: ";
+	ss << (void*)(&a);
+	Console::log(ss.str().c_str());
+	ostringstream ss2;
+	ss2 << "&main: ";
+	ss2 << (void*)(main);
+	Console::log(ss2.str().c_str());
+	delayTimer.mDelay(2000);
+	while(1);*/
 
 	Console::log("Task create..");
 

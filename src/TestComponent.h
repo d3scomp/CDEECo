@@ -20,7 +20,7 @@ public:
 
 class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
 public:
-	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(500, in, out), state(false) {
+	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false) {
 		Console::log("TestComponent");
 
 		// Init green led
@@ -36,7 +36,6 @@ public:
 
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
-		Console::log("TASK");
 		if(!state)
 			GPIOD->BSRRL = GPIO_Pin_12;
 		else
