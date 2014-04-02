@@ -128,7 +128,7 @@ int main(void) {
 
 	TestComponent testComponent;
 
-	Console::log("Running sched..");
+	Console::log("Running schedule");
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();

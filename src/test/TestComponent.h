@@ -2,7 +2,10 @@
  * TestComponent.h
  *
  *  Created on: 28. 3. 2014
- *      Author: vlada
+ *      Author: Vladimír Matěna
+ *
+ *  This file contains cdeeco++ component implementation for testing early system.
+ *
  */
 
 #ifndef TESTCOMPONENT_H_
