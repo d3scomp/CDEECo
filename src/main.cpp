@@ -100,7 +100,8 @@ int main(void) {
 	// TODO: This fixes memory corruption, why?
 	volatile char padd[0xa0];
 
-/*	volatile int a = 5;
+/*
+	volatile int a = 5;
 	ostringstream ss;
 	ss << "&a: ";
 	ss << (void*)(&a);
@@ -110,13 +111,12 @@ int main(void) {
 	ss2 << (void*)(main);
 	Console::log(ss2.str().c_str());
 	delayTimer.mDelay(2000);
-	while(1);*/
-
+*/
 	Console::log("Task create..");
 
 	/* Spawn the LED tasks. */
 //	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 //	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	/* Spawn the LCD counter task. */

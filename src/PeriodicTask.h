@@ -28,26 +28,24 @@ using namespace std;
 template<typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
+	// Create the periodic task
 	PeriodicTask(long period, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
 		Task<IN_KNOWLEDGE, OUT_KNOWLEDGE>(inKnowledge, outKnowledge), period(period) {
-		// Create the task
-		void (*body)(void *) = (void (*)(void*))PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE>::taskBodyLauncher;
-		xTaskCreate(body, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
+		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
 	}
 private:
 	long period;
 	TaskHandle_t handle;
 
 	/** Helper for launching task code from RTOS C environment */
-	static void taskBodyLauncher(PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE> *task) {
-		task->taskBodyImplementation();
+	static void taskBodyLauncher(void *data) {
+		((PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE>*)data)->taskBodyImplementation();
 		// Do not let the task run to the end
 		while(1);
 	}
 
+	/** Periodic task body implementation, responsible for periodic scheduling */
 	void taskBodyImplementation() {
-		bool state = false;
-
 		// Schedule the task periodically
 		while(1) {
 			// Run the task
