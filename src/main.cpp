@@ -135,7 +135,18 @@ int main(void) {
 	while(1);
 }
 
+// RTOS System error handlers
+extern "C" {
+	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName ) {
+		Console::log("STACK OVERFLOW!!");
+		while(1);
+	}
 
+	void vApplicationMallocFailedHook(void) {
+		Console::log("MALLOC FAILED!!!");
+		while(1);
+	}
+}
 
 
 
