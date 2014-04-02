@@ -36,10 +36,9 @@ protected:
 	/** Task execution code, responsible for data passing */
 	void execute() {
 		// TODO: This should lock and copy input data
-		IN_KNOWLEDGE in = *inKnowledge;
 
 		// Execute user code defined for the task
-		OUT_KNOWLEDGE out = run(in);
+		OUT_KNOWLEDGE out = run(*inKnowledge);
 
 		// TODO: Lock and copy output data
 	}
