@@ -16,12 +16,15 @@
 #include "TestComponent.h"
 
 #include <cstdio>
+#include <sstream>
+#include <string>
+
+using namespace std;
 
 #include "console.h"
 GMD1602 Console::lcd(GPIOE, RCC_AHB1Periph_GPIOE);
 char Console::stored[16];
 
-uint32_t mainCycles;
 
 Timer::Properties tim6Props {
 	TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn
@@ -93,6 +96,7 @@ int main(void) {
 	delayTimer.init();
 
 	Console::init();
+
 	Console::log("Task create..");
 
 	/* Spawn the LED tasks. */
@@ -101,7 +105,7 @@ int main(void) {
 //	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	/* Spawn the LCD counter task. */
-	xTaskCreate(LCDWrite, "LCDWrite", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
+//	xTaskCreate(LCDWrite, "LCDWrite", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 //	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 

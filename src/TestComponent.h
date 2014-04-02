@@ -36,6 +36,7 @@ public:
 
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
+		Console::log("TASK");
 		if(!state)
 			GPIOD->BSRRL = GPIO_Pin_12;
 		else

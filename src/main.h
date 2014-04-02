@@ -21,15 +21,7 @@
 #include "Timer.h"
 #include "GPS.h"
 
-extern uint32_t mainCycles;
-
-extern Button infoButton;
-extern UART uartTOHD;
-extern MsgHandler msgHandler;
 extern Timer delayTimer;
-extern MRF24J40 mrf;
-extern UART uartGPS;
-extern GPSL30 gps;
 
 
 #endif /* MAIN_H_ */

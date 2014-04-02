@@ -19,6 +19,12 @@
 
 #include "console.h"
 
+#include <stdio.h>
+#include <sstream>
+#include <string>
+
+using namespace std;
+
 template<typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
@@ -28,23 +34,19 @@ public:
 		void (*body)(void *) = (void (*)(void*))PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE>::taskBodyLauncher;
 		xTaskCreate(body, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
 	}
-	virtual ~PeriodicTask() {};
-
-	virtual OUT_KNOWLEDGE run(IN_KNOWLEDGE in) = 0;
-
 private:
 	long period;
 	TaskHandle_t handle;
 
 	/** Helper for launching task code from RTOS C environment */
 	static void taskBodyLauncher(PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE> *task) {
-		Console::log("TaskBody");
-		//task->taskBodyImplementation();
+		task->taskBodyImplementation();
 		// Do not let the task run to the end
 		while(1);
 	}
 
 	void taskBodyImplementation() {
+		Console::log("BODY");
 		// Schedule the task periodically
 		while(1) {
 			// Run the task
