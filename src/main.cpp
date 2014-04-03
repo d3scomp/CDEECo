@@ -98,7 +98,9 @@ int main(void) {
 	Console::init();
 
 	// TODO: This fixes memory corruption, why?
-	volatile char padd[0xa0];
+	//volatile char padd[0xa0];
+//	memset((void*)padd, 0, 0xa0);
+
 
 /*
 	volatile int a = 5;
@@ -126,12 +128,13 @@ int main(void) {
 
 	Console::log("TestComponent..");
 
-	TestComponent testComponent;
+	TestComponent *testComponent = new TestComponent();
 
 	Console::log("Running schedule");
 
 	/* Start the scheduler. */
 	vTaskStartScheduler();
+	Console::log("End reached!!!!!");
 	while(1);
 }
 

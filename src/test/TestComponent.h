@@ -24,7 +24,7 @@ public:
 class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
 public:
 	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false) {
-		Console::log("TestComponent");
+		Console::log("TestTask");
 
 		// Init green led
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);

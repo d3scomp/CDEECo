@@ -135,8 +135,7 @@ SECTIONS
 
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
-    __bss_end__ = _ebss;
-    __end__ = _ebss;
+    __bss_end__ = _ebss;  
   } >RAM
 
   /* User_heap_stack section, used to check that there is enough RAM left */
@@ -145,6 +144,7 @@ SECTIONS
     . = ALIGN(4);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
+    PROVIDE (  __end__ = . );
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(4);
