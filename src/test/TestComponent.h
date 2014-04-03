@@ -13,6 +13,12 @@
 
 #include "cdeeco/Component.h"
 
+/**
+ * Test component knowledge
+ *
+ * Holds integer and float values named "id" and "value".
+ *
+ */
 class TestKnowledge: Knowledge {
 public:
 	SimpleKnowledge<int> id;
@@ -21,8 +27,17 @@ public:
 	TestKnowledge():Knowledge(NULL), id(this), value(this) {}
 };
 
+/**
+ * Test component task
+ *
+ * Uses periodic scheduling.
+ * It processes whole component knowledge and outputs whole component knowledge.
+ *
+ * The task blinks the green LED and increases "id" value in the knowledge.
+ */
 class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
 public:
+	// Test task initialization
 	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false) {
 		Console::log("TestTask");
 
@@ -66,6 +81,11 @@ public:
 	}
 };
 
+/**
+ * Test component container
+ *
+ * Defines one periodic task.
+ */
 class TestComponent: public Component<TestKnowledge> {
 public:
 	TestTask task;
