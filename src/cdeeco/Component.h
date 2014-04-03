@@ -17,12 +17,6 @@
 template<typename KNOWLEDGE>
 class Component {
 public:
-	/// Task code
-	typedef void (*TaskCode)(KNOWLEDGE);
-
-	/// Task trigger definition
-	typedef Knowledge* Trigger;
-
 	/// Knowledge of the component
 	KNOWLEDGE knowledge;
 
