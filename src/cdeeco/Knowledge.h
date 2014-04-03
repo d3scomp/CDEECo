@@ -15,20 +15,24 @@ public:
 	Knowledge(Knowledge *parent): parent(parent), trigger(NULL) {};
 
 	void setTrigger(Trigger trigger);
+
 private:
 	Trigger *trigger;
+
+protected:
 	void triggerChange() {
 		// Run triggers
 		if(trigger)
 			(*trigger)();
-		parent->triggerChange();
+		if(parent)
+			parent->triggerChange();
 	};
 };
 
 template<class T>
 class SimpleKnowledge: Knowledge {
 public:
-	SimpleKnowledge(Knowledge *parent): Knowledge(parent) {}
+	SimpleKnowledge(Knowledge *parent): Knowledge(parent), value(0) {}
 
 	T getVal() {
 		return value;

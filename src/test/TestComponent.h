@@ -39,6 +39,15 @@ public:
 
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
+		Console::log("TaskRun");
+		// Visualize knowlage value
+		int id = in.id.getVal();
+		char num[17] = "0000000000000000";
+		for(int i = 0; i < 16; i++)
+			if(1 << i & id)
+				num[15 - i] = '1';
+		Console::log(num);
+
 		if(!state)
 			GPIOD->BSRRL = GPIO_Pin_12;
 		else
@@ -48,6 +57,11 @@ public:
 
 		// TODO: Do something with the "in" knowledge return the "out" knowledge
 		TestKnowledge out;
+
+		// Increase ID and copy value
+		out.id.setVal(in.id.getVal() + 1);
+		out.value.setVal(in.value.getVal());
+
 		return out;
 	}
 };
