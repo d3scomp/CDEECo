@@ -31,23 +31,10 @@ Timer::Properties tim6Props {
 };
 Timer delayTimer(tim6Props);
 
-/*
-LED::Properties redLedProps {
-	GPIOD, GPIO_Pin_14, RCC_AHB1Periph_GPIOD
-};
-LED::Properties orangeLedProps {
-	GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD
-};
-LED::Properties blueLedProps {
-	GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD
-};
-*/
-
-
+/** System startup function */
 int main(void) {
 	delayTimer.setPriority(1,1);
 	delayTimer.init();
-
 	Console::init();
 
 	Console::log("TestComponent..");
@@ -62,7 +49,7 @@ int main(void) {
 	while(1);
 }
 
-// RTOS System error handlers
+// FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName ) {
 		Console::log("STACK OVERFLOW!!");
@@ -74,24 +61,3 @@ extern "C" {
 		while(1);
 	}
 }
-
-
-
-#ifdef  USE_FULL_ASSERT
-
-/**
- * @brief  Reports the name of the source file and the source line number
- *         where the assert_param error has occurred.
- * @param  file: pointer to the source file name
- * @param  line: assert_param error line source number
- * @retval None
- */
-void assert_failed(uint8_t* file, uint32_t line) {
-	/* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-	/* Infinite loop */
-	while (1) { }
-}
-#endif
-
