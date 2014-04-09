@@ -31,7 +31,7 @@ public:
 	// Create the periodic task
 	PeriodicTask(long period, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
 		Task<IN_KNOWLEDGE, OUT_KNOWLEDGE>(inKnowledge, outKnowledge), period(period) {
-	//	Console::log("PeriodicTask");
+		Console::log("PeriodicTask");
 
 		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
 	}
