@@ -31,9 +31,7 @@ Timer::Properties tim6Props {
 };
 Timer delayTimer(tim6Props);
 
-LED::Properties greenLedProps {
-	GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
-};
+/*
 LED::Properties redLedProps {
 	GPIOD, GPIO_Pin_14, RCC_AHB1Periph_GPIOD
 };
@@ -43,88 +41,14 @@ LED::Properties orangeLedProps {
 LED::Properties blueLedProps {
 	GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD
 };
-//LED green(greenLedProps);
-LED red(redLedProps);
-LED blue(blueLedProps);
-LED orange(orangeLedProps);
+*/
 
-GMD1602 lcd(GPIOE, RCC_AHB1Periph_GPIOE);
-
-#define LEDFLASH(LED,DELAY) \
-	void led_##LED(void *pvParameters) { \
-	LED.init(); \
-	while(1) { \
-		vTaskDelay(DELAY / portTICK_PERIOD_MS); \
-		LED.on(); \
-		vTaskDelay(DELAY / portTICK_PERIOD_MS); \
-		LED.off(); \
-	} \
-} \
-
-LEDFLASH(red, 100);
-LEDFLASH(blue, 127);
-LEDFLASH(orange, 200);
-
-
-void LCDWrite(void *pvParameters) {
-	int cnt = 0;
-	char buff[10];
-	lcd.clear();
-	while(1) {
-		sprintf(buff, "%d", cnt++);
-		Console::log(buff);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-		//	for(volatile int i = 0; i < 100000; ++i);
-	}
-}
-
-void LCDProgress(void *pvParameters) {
-	int pos = 0;
-	int dir = 1;
-	while(1) {
-		lcd.writeXY(" ", pos, 1);
-		pos += dir;
-		if(pos > 14 || pos < 1)
-			dir *= -1;
-		lcd.writeXY("#", pos, 1);
-		vTaskDelay(42 / portTICK_PERIOD_MS);
-	}
-}
 
 int main(void) {
 	delayTimer.setPriority(1,1);
 	delayTimer.init();
 
 	Console::init();
-
-	// TODO: This fixes memory corruption, why?
-	//volatile char padd[0xa0];
-//	memset((void*)padd, 0, 0xa0);
-
-
-/*
-	volatile int a = 5;
-	ostringstream ss;
-	ss << "&a: ";
-	ss << (void*)(&a);
-	Console::log(ss.str().c_str());
-	ostringstream ss2;
-	ss2 << "&main: ";
-	ss2 << (void*)(main);
-	Console::log(ss2.str().c_str());
-	delayTimer.mDelay(2000);
-*/
-	Console::log("Task create..");
-
-	/* Spawn the LED tasks. */
-//	xTaskCreate(led_red, "redLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-//	xTaskCreate(led_blue, "blueLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-//	xTaskCreate(led_orange, "orangeLEDFlash", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-
-	/* Spawn the LCD counter task. */
-//	xTaskCreate(LCDWrite, "LCDWrite", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
-
-//	xTaskCreate(LCDProgress, "LCDProgress", 2*configMINIMAL_STACK_SIZE, NULL, ( tskIDLE_PRIORITY + 1UL ), ( TaskHandle_t * ) NULL );
 
 	Console::log("TestComponent..");
 

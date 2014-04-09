@@ -38,19 +38,16 @@ public:
 class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
 public:
 	// Test task initialization
-	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false) {
+	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false), led(green) {
 		Console::log("TestTask");
-
-		// Init green led
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
-
-		GPIO_InitTypeDef  gpioInitStruct = {
-			GPIO_Pin_12, GPIO_Mode_OUT, GPIO_Speed_50MHz, GPIO_OType_PP, GPIO_PuPd_UP
-		};
-		GPIO_Init(GPIOD, &gpioInitStruct);
+		led.init();
 	};
 
+	LED::Properties green {
+		GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
+	};
 	bool state;
+	LED led;
 
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
@@ -64,9 +61,9 @@ public:
 		Console::log(num);
 
 		if(!state)
-			GPIOD->BSRRL = GPIO_Pin_12;
+			led.off();
 		else
-			GPIOD->BSRRH = GPIO_Pin_12;
+			led.on();
 
 		state = !state;
 
