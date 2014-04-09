@@ -2,7 +2,7 @@
  * Component.h
  *
  *  Created on: 25. 3. 2014
- *      Author: vlada
+ *      Author: Vladimir Matěna
  */
 
 #ifndef COMPONENT_H_

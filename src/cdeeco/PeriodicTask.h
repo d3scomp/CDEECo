@@ -2,7 +2,7 @@
  * PeriodicTask.h
  *
  *  Created on: 28. 3. 2014
- *      Author: vlada
+ *      Author: Vladimir Matěna
  */
 
 #ifndef PERIODICTASK_H_

@@ -54,7 +54,7 @@ protected:
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
 		Console::log("TaskRun");
-		// Visualize knowlage value
+		// Visualize knowledge value
 		int id = in.id.getVal();
 		char num[17] = "0000000000000000";
 		for(int i = 0; i < 16; i++)

@@ -52,7 +52,7 @@ int main(void) {
 
 	Console::log("TestComponent..");
 
-	TestComponent *testComponent = new TestComponent();
+	new TestComponent();
 
 	Console::log("Running schedule");
 

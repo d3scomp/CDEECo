@@ -2,7 +2,7 @@
  * Task.h
  *
  *  Created on: 28. 3. 2014
- *      Author: vlada
+ *      Author: Vladimir Matěna
  */
 
 #ifndef TASK_H_
