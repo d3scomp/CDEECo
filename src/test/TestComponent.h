@@ -35,10 +35,10 @@ public:
  *
  * The task blinks the green LED and increases "id" value in the knowledge.
  */
-class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge> {
+class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge, TestKnowledge> {
 public:
 	// Test task initialization
-	TestTask(TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, in, out), state(false), led(green) {
+	TestTask(Component<TestKnowledge> *component, TestKnowledge *in, TestKnowledge *out): PeriodicTask(250, component, in, out), state(false), led(green) {
 		Console::log("TestTask");
 		led.init();
 	};
@@ -89,7 +89,7 @@ class TestComponent: public Component<TestKnowledge> {
 public:
 	TestTask task;
 
-	TestComponent(): task(&this->knowledge, &this->knowledge) {}
+	TestComponent(): task(this, &this->knowledge, &this->knowledge) {}
 };
 
 #endif /* TESTCOMPONENT_H_ */

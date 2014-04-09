@@ -9,6 +9,7 @@
 #define COMPONENT_H_
 
 #include "FreeRTOS.h"
+#include "semphr.h"
 
 #include "Knowledge.h"
 #include "PeriodicTask.h"
@@ -17,10 +18,21 @@
 template<typename KNOWLEDGE>
 class Component {
 public:
+	Component(): knowledgeSem(xSemaphoreCreateMutex()) {}
+
+	void lockKnowledge() {
+		xSemaphoreTake(knowledgeSem, portMAX_DELAY);
+	}
+	void unlockKnowledge() {
+		xSemaphoreGive(knowledgeSem);
+	}
+
+protected:
 	/// Knowledge of the component
 	KNOWLEDGE knowledge;
 
-	Component() {}
+private:
+	SemaphoreHandle_t knowledgeSem;
 };
 
 #endif /* COMPONENT_H_ */

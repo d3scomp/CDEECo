@@ -8,17 +8,20 @@
 #ifndef TASK_H_
 #define TASK_H_
 
+template<typename KNOWLEDGE>
+class Component;
+
 #include "FreeRTOS.h"
 #include "task.h"
 
 #include <stdlib.h>
 
 /** Prototype for component tasks */
-template<typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
+template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class Task {
 public:
-	Task(IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
-		inKnowledge(inKnowledge), outKnowledge(outKnowledge) {
+	Task(Component<KNOWLEDGE> *component, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
+		component(component), inKnowledge(inKnowledge), outKnowledge(outKnowledge) {
 	};
 	virtual ~Task() {};
 
@@ -29,20 +32,25 @@ public:
 	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
 
 private:
+	Component<KNOWLEDGE> *component;
 	IN_KNOWLEDGE *inKnowledge;
 	OUT_KNOWLEDGE *outKnowledge;
 
 protected:
 	/** Task execution code, responsible for data passing */
 	void execute() {
-		// TODO: This should lock and copy input data
+		// Lock and copy input data
+		component->lockKnowledge();
 		IN_KNOWLEDGE in(*inKnowledge);
+		component->unlockKnowledge();
 
 		// Execute user code defined for the task
 		OUT_KNOWLEDGE out = run(in);
 
-		// TODO: Lock and copy output data
+		// Lock and copy output data
+		component->lockKnowledge();
 		*outKnowledge = out;
+		component->unlockKnowledge();
 	}
 };
 

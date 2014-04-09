@@ -25,12 +25,12 @@
 
 using namespace std;
 
-template<typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
-class PeriodicTask: Task<IN_KNOWLEDGE, OUT_KNOWLEDGE> {
+template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
+class PeriodicTask: Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
 	// Create the periodic task
-	PeriodicTask(long period, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
-		Task<IN_KNOWLEDGE, OUT_KNOWLEDGE>(inKnowledge, outKnowledge), period(period) {
+	PeriodicTask(long period, Component<KNOWLEDGE> *component, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
+		Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), period(period) {
 		Console::log("PeriodicTask");
 
 		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
@@ -43,7 +43,7 @@ private:
 	static void taskBodyLauncher(void *data) {
 		Console::log("PeriodicTaskBody");
 
-		((PeriodicTask<IN_KNOWLEDGE, OUT_KNOWLEDGE>*)data)->taskBodyImplementation();
+		((PeriodicTask<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*)data)->taskBodyImplementation();
 
 		// Do not let the task run to the end
 		while(1);
