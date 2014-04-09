@@ -43,12 +43,14 @@ public:
 		led.init();
 	};
 
+private:
 	LED::Properties green {
 		GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
 	};
 	bool state;
 	LED led;
 
+protected:
 	// Test task code
 	TestKnowledge run(TestKnowledge in) {
 		Console::log("TaskRun");
