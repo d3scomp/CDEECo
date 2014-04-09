@@ -29,7 +29,7 @@ template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
 	// Create the periodic task
-	PeriodicTask(long period, Component<KNOWLEDGE> *component, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
+	PeriodicTask(long period, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge, OUT_KNOWLEDGE &outKnowledge):
 		Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), period(period) {
 		Console::log("PeriodicTask");
 

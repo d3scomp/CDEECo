@@ -20,7 +20,7 @@ class Component;
 template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class Task {
 public:
-	Task(Component<KNOWLEDGE> *component, IN_KNOWLEDGE *inKnowledge, OUT_KNOWLEDGE *outKnowledge):
+	Task(Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge, OUT_KNOWLEDGE &outKnowledge):
 		component(component), inKnowledge(inKnowledge), outKnowledge(outKnowledge) {
 	};
 	virtual ~Task() {};
@@ -32,25 +32,25 @@ public:
 	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
 
 private:
-	Component<KNOWLEDGE> *component;
-	IN_KNOWLEDGE *inKnowledge;
-	OUT_KNOWLEDGE *outKnowledge;
+	Component<KNOWLEDGE> &component;
+	const IN_KNOWLEDGE &inKnowledge;
+	OUT_KNOWLEDGE &outKnowledge;
 
 protected:
 	/** Task execution code, responsible for data passing */
 	void execute() {
 		// Lock and copy input data
-		component->lockKnowledge();
-		IN_KNOWLEDGE in(*inKnowledge);
-		component->unlockKnowledge();
+		component.lockKnowledge();
+		IN_KNOWLEDGE in(inKnowledge);
+		component.unlockKnowledge();
 
 		// Execute user code defined for the task
 		OUT_KNOWLEDGE out = run(in);
 
 		// Lock and copy output data
-		component->lockKnowledge();
-		*outKnowledge = out;
-		component->unlockKnowledge();
+		component.lockKnowledge();
+		outKnowledge = out;
+		component.unlockKnowledge();
 	}
 };
 
