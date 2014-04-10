@@ -19,12 +19,13 @@
  * Holds integer and float values named "id" and "value".
  *
  */
-class TestKnowledge: Knowledge {
-public:
-	SimpleKnowledge<int> id;
-	SimpleKnowledge<float> value;
-
-	TestKnowledge():Knowledge(NULL), id(this), value(this) {}
+struct TestKnowledge {
+	int id;
+	float value;
+	struct {
+		int x;
+		int y;
+	} position;
 };
 
 /**
@@ -55,7 +56,7 @@ protected:
 	TestKnowledge run(TestKnowledge in) {
 		Console::log("TaskRun");
 		// Visualize knowledge value
-		int id = in.id.getVal();
+		int id = in.id;
 		char num[17] = "0000000000000000";
 		for(int i = 0; i < 16; i++)
 			if(1 << i & id)
@@ -73,8 +74,8 @@ protected:
 		TestKnowledge out;
 
 		// Increase ID and copy value
-		out.id.setVal(in.id.getVal() + 1);
-		out.value.setVal(in.value.getVal());
+		out.id = in.id + 1;
+		out.value = in.value;
 
 		return out;
 	}
