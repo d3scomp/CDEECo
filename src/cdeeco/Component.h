@@ -20,11 +20,21 @@ class Component {
 public:
 	Component(): knowledgeSem(xSemaphoreCreateMutex()) {}
 
-	void lockKnowledge() {
-		xSemaphoreTake(knowledgeSem, portMAX_DELAY);
+	template <typename IN_KNOWLEDGE>
+	IN_KNOWLEDGE lockReadKnowledge(IN_KNOWLEDGE &inKnowledge) {
+		lockKnowledge();
+		IN_KNOWLEDGE in = inKnowledge;
+		unlockKnowledge();
+
+		return in;
 	}
-	void unlockKnowledge() {
-		xSemaphoreGive(knowledgeSem);
+
+	template <typename OUT_KNOWLEDGE>
+	void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
+		lockKnowledge();
+		// TODO: Check and run triggered tasks
+		outKnowledge = knowledgeData;
+		unlockKnowledge();
 	}
 
 protected:
@@ -33,6 +43,13 @@ protected:
 
 private:
 	SemaphoreHandle_t knowledgeSem;
+
+	void lockKnowledge() {
+		xSemaphoreTake(knowledgeSem, portMAX_DELAY);
+	}
+	void unlockKnowledge() {
+		xSemaphoreGive(knowledgeSem);
+	}
 };
 
 #endif /* COMPONENT_H_ */

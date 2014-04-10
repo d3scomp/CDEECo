@@ -40,17 +40,13 @@ protected:
 	/** Task execution code, responsible for data passing */
 	void execute() {
 		// Lock and copy input data
-		component.lockKnowledge();
-		IN_KNOWLEDGE in(inKnowledge);
-		component.unlockKnowledge();
+		IN_KNOWLEDGE in = component.lockReadKnowledge(inKnowledge);
 
 		// Execute user code defined for the task
 		OUT_KNOWLEDGE out = run(in);
 
 		// Lock and copy output data
-		component.lockKnowledge();
-		outKnowledge = out;
-		component.unlockKnowledge();
+		component.lockWriteKnowledge(outKnowledge, out);
 	}
 };
 
