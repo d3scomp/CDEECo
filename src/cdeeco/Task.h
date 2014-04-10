@@ -26,7 +26,7 @@ public:
 	virtual ~Task() {};
 
 	/** Task user code */
-	virtual OUT_KNOWLEDGE run(IN_KNOWLEDGE in) = 0;
+	virtual OUT_KNOWLEDGE run(const IN_KNOWLEDGE in) = 0;
 
 	const size_t DefaultStackSize = 4096;
 	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;

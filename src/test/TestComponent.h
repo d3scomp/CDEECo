@@ -53,7 +53,7 @@ private:
 
 protected:
 	// Test task code
-	TestKnowledge run(TestKnowledge in) {
+	TestKnowledge run(const TestKnowledge in) {
 		Console::log("TaskRun");
 		// Visualize knowledge value
 		int id = in.id;
@@ -90,7 +90,10 @@ class TestComponent: public Component<TestKnowledge> {
 public:
 	TestTask task;
 
-	TestComponent(): task(*this, this->knowledge, this->knowledge) {}
+	TestComponent(): task(*this, this->knowledge, this->knowledge) {
+		// Initialize knowledge
+		memset(&knowledge, 0, sizeof(TestKnowledge));
+	}
 };
 
 #endif /* TESTCOMPONENT_H_ */
