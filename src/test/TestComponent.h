@@ -36,10 +36,10 @@ struct TestKnowledge {
  *
  * The task blinks the green LED and increases "id" value in the knowledge.
  */
-class TestTask: public PeriodicTask<TestKnowledge, TestKnowledge, TestKnowledge> {
+class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge, TestKnowledge> {
 public:
 	// Test task initialization
-	TestTask(Component<TestKnowledge> &component, const TestKnowledge &in, TestKnowledge &out): PeriodicTask(250, component, in, out), state(false), led(green) {
+	TestPeriodicTask(Component<TestKnowledge> &component, const TestKnowledge &in, TestKnowledge &out): PeriodicTask(250, component, in, out), state(false), led(green) {
 		Console::log("TestTask");
 		led.init();
 	};
@@ -88,9 +88,9 @@ protected:
  */
 class TestComponent: public Component<TestKnowledge> {
 public:
-	TestTask task;
+	TestPeriodicTask periodicTask;
 
-	TestComponent(): task(*this, this->knowledge, this->knowledge) {
+	TestComponent(): periodicTask(*this, this->knowledge, this->knowledge) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
 	}
