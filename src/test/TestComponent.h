@@ -12,6 +12,7 @@
 #define TESTCOMPONENT_H_
 
 #include "cdeeco/Component.h"
+#include "cdeeco/TriggeredTask.h"
 
 /**
  * Test component knowledge
@@ -29,7 +30,7 @@ struct TestKnowledge {
 };
 
 /**
- * Test component task
+ * Test component periodic task
  *
  * Uses periodic scheduling.
  * It processes whole component knowledge and outputs whole component knowledge.
@@ -38,9 +39,8 @@ struct TestKnowledge {
  */
 class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge, TestKnowledge> {
 public:
-	// Test task initialization
+	// Task initialization
 	TestPeriodicTask(Component<TestKnowledge> &component, const TestKnowledge &in, TestKnowledge &out): PeriodicTask(250, component, in, out), state(false), led(green) {
-		Console::log("TestTask");
 		led.init();
 	};
 
@@ -52,9 +52,9 @@ private:
 	LED led;
 
 protected:
-	// Test task code
+	// Task code
 	TestKnowledge run(const TestKnowledge in) {
-		Console::log("TaskRun");
+		Console::log("PeriodicTaskRun");
 		// Visualize knowledge value
 		int id = in.id;
 		char num[17] = "0000000000000000";
@@ -82,6 +82,46 @@ protected:
 };
 
 /**
+ * Test component triggered task
+ */
+class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge, TestKnowledge, TestKnowledge> {
+public:
+	// Task initialization
+	TestTriggeredTask(TestKnowledge &trigger, Component<TestKnowledge> &component, const TestKnowledge &inKnowledge,
+			TestKnowledge &outKnowledge): TriggeredTask(trigger, component, inKnowledge, outKnowledge), state(false), led(red) {
+		led.init();
+	};
+
+private:
+	LED::Properties red {
+		GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD
+	};
+	bool state;
+	LED led;
+
+protected:
+	// Task code
+	TestKnowledge run(const TestKnowledge in) {
+		Console::log("TriggerTaskRun");
+
+		if(!state)
+			led.off();
+		else
+			led.on();
+
+		state = !state;
+
+		TestKnowledge out;
+
+		// Increase ID and copy value
+		out.id = in.id + 1;
+		out.value = in.value;
+
+		return out;
+	}
+};
+
+/**
  * Test component container
  *
  * Defines one periodic task.
@@ -89,8 +129,9 @@ protected:
 class TestComponent: public Component<TestKnowledge> {
 public:
 	TestPeriodicTask periodicTask;
+	TestTriggeredTask triggeredTask;
 
-	TestComponent(): periodicTask(*this, this->knowledge, this->knowledge) {
+	TestComponent(): periodicTask(*this, this->knowledge, this->knowledge), triggeredTask(this->knowledge, *this, this->knowledge, this->knowledge) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
 	}

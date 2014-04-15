@@ -29,8 +29,9 @@ template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE> {
 public:
 	// Create the periodic task
-	PeriodicTask(long period, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge, OUT_KNOWLEDGE &outKnowledge):
-		Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), period(period) {
+	PeriodicTask(long period, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge,
+			OUT_KNOWLEDGE &outKnowledge) :
+			Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), period(period) {
 		Console::log("PeriodicTask");
 
 		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
@@ -43,16 +44,16 @@ private:
 	static void taskBodyLauncher(void *data) {
 		Console::log("PeriodicTaskBody");
 
-		((PeriodicTask<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*)data)->taskBodyImplementation();
+		((PeriodicTask<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
 
 		// Do not let the task run to the end
-		while(1);
+		while (1) {}
 	}
 
 	/** Periodic task body implementation, responsible for periodic scheduling */
 	void taskBodyImplementation() {
 		// Schedule the task periodically
-		while(1) {
+		while (1) {
 			// Run the task
 			this->execute();
 

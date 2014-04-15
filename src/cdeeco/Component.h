@@ -13,12 +13,13 @@
 
 #include "Knowledge.h"
 #include "PeriodicTask.h"
+#include "ListedTriggerTask.h"
 
 /** System component template */
 template<typename KNOWLEDGE>
 class Component {
 public:
-	Component(): knowledgeSem(xSemaphoreCreateMutex()) {}
+	Component(): knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {}
 
 	template <typename IN_KNOWLEDGE>
 	IN_KNOWLEDGE lockReadKnowledge(IN_KNOWLEDGE &inKnowledge) {
@@ -32,9 +33,24 @@ public:
 	template <typename OUT_KNOWLEDGE>
 	void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
 		lockKnowledge();
-		// TODO: Check and run triggered tasks
 		outKnowledge = knowledgeData;
 		unlockKnowledge();
+
+		checkAndRunTriggeredTasks(outKnowledge);
+	}
+
+	void addTriggeredTask(ListedTriggerTask &task) {
+		// Install new list head
+		if(rootTriggerTask == NULL) {
+			rootTriggerTask = &task;
+			return;
+		}
+
+		// Add to the end of the list
+		ListedTriggerTask *root = rootTriggerTask;
+		while(root->next != NULL)
+			root = root->next;
+		root->next = &task;
 	}
 
 protected:
@@ -43,12 +59,20 @@ protected:
 
 private:
 	SemaphoreHandle_t knowledgeSem;
+	ListedTriggerTask *rootTriggerTask;
 
 	void lockKnowledge() {
 		xSemaphoreTake(knowledgeSem, portMAX_DELAY);
 	}
 	void unlockKnowledge() {
 		xSemaphoreGive(knowledgeSem);
+	}
+
+	template<typename T>
+	void checkAndRunTriggeredTasks(T &changed) {
+		for(ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
+			task->checkTriggerCondition(changed);
+		}
 	}
 };
 
