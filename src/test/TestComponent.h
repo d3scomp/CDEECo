@@ -21,12 +21,17 @@
  *
  */
 struct TestKnowledge {
-	int id;
-	float value;
-	struct {
+	struct Position {
 		int x;
 		int y;
-	} position;
+	};
+
+	typedef int Id;
+	typedef float Value;
+
+	Id id;
+	Value value;
+	Position position;
 };
 
 /**
@@ -35,47 +40,44 @@ struct TestKnowledge {
  * Uses periodic scheduling.
  * It processes whole component knowledge and outputs whole component knowledge.
  *
- * The task blinks the green LED and increases "id" value in the knowledge.
+ * The task blinks the green LED and changes position knowledge.
  */
-class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge, TestKnowledge> {
+class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Position> {
 public:
 	// Task initialization
-	TestPeriodicTask(Component<TestKnowledge> &component, const TestKnowledge &in, TestKnowledge &out): PeriodicTask(250, component, in, out), state(false), led(green) {
+	TestPeriodicTask(Component<TestKnowledge> &component, const TestKnowledge::Position &in,
+			TestKnowledge::Position &out) :
+			PeriodicTask(250, component, in, out), led(green) {
 		led.init();
-	};
+	}
 
 private:
-	LED::Properties green {
-		GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD
-	};
-	bool state;
+	LED::Properties green { GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD };
 	LED led;
 
 protected:
 	// Task code
-	TestKnowledge run(const TestKnowledge in) {
-		Console::log("PeriodicTaskRun");
-		// Visualize knowledge value
-		int id = in.id;
-		char num[17] = "0000000000000000";
-		for(int i = 0; i < 16; i++)
-			if(1 << i & id)
-				num[15 - i] = '1';
+	TestKnowledge::Position run(const TestKnowledge::Position in) {
+		// Visualize knowledge position x
+		int x = in.x;
+		char num[17] = "PeriodTask      ";
+		for (int i = 0; i < 10 && x > 0; ++i) {
+			num[15 - i] = '0' + x % 10;
+			x /= 10;
+		}
 		Console::log(num);
 
-		if(!state)
+		if (in.x % 2)
 			led.off();
 		else
 			led.on();
 
-		state = !state;
-
 		// TODO: Do something with the "in" knowledge return the "out" knowledge
-		TestKnowledge out;
+		TestKnowledge::Position out;
 
-		// Increase ID and copy value
-		out.id = in.id + 1;
-		out.value = in.value;
+		// Change position
+		out.x = in.x + 1;
+		out.y = in.y + in.x % 2;
 
 		return out;
 	}
@@ -84,40 +86,31 @@ protected:
 /**
  * Test component triggered task
  */
-class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge, TestKnowledge, TestKnowledge> {
+class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Position,
+		TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(TestKnowledge &trigger, Component<TestKnowledge> &component, const TestKnowledge &inKnowledge,
-			TestKnowledge &outKnowledge): TriggeredTask(trigger, component, inKnowledge, outKnowledge), state(false), led(red) {
+	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component,
+			const TestKnowledge::Position &inKnowledge, TestKnowledge::Value &outKnowledge) :
+			TriggeredTask(trigger, component, inKnowledge, outKnowledge), led(red) {
 		led.init();
-	};
+	}
 
 private:
-	LED::Properties red {
-		GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD
-	};
-	bool state;
+	LED::Properties red { GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD };
 	LED led;
 
 protected:
 	// Task code
-	TestKnowledge run(const TestKnowledge in) {
+	TestKnowledge::Value run(const TestKnowledge::Position in) {
 		Console::log("TriggerTaskRun");
 
-		if(!state)
+		if (in.x % 2)
 			led.off();
 		else
 			led.on();
 
-		state = !state;
-
-		TestKnowledge out;
-
-		// Increase ID and copy value
-		out.id = in.id + 1;
-		out.value = in.value;
-
-		return out;
+		return 42;
 	}
 };
 
@@ -131,7 +124,9 @@ public:
 	TestPeriodicTask periodicTask;
 	TestTriggeredTask triggeredTask;
 
-	TestComponent(): periodicTask(*this, this->knowledge, this->knowledge), triggeredTask(this->knowledge, *this, this->knowledge, this->knowledge) {
+	TestComponent() :
+			periodicTask(*this, this->knowledge.position, this->knowledge.position), triggeredTask(
+					this->knowledge.position, *this, this->knowledge.position, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
 	}
