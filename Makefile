@@ -16,9 +16,10 @@ SRCS +=	${SRC_DIR}/main.cpp
 
 # Drivers
 SRCS +=	${SRC_DIR}/drivers/LED.cpp
-SRCS +=	${SRC_DIR}/drivers/gmd1602.cpp  
+SRCS +=	${SRC_DIR}/drivers/gmd1602.cpp
 SRCS +=	${SRC_DIR}/drivers/Timer.cpp
 SRCS += ${SRC_DIR}/drivers/console.cpp
+SRCS += ${SRC_DIR}/drivers/UART.cpp
 
 
 # STM32F4 code

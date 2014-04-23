@@ -60,7 +60,7 @@ protected:
 	TestKnowledge::Position run(const TestKnowledge::Position in) {
 		// Visualize knowledge position x
 		int x = in.x;
-		char num[17] = "PeriodTask      ";
+		char num[17] = "> PeriodTask    ";
 		for (int i = 0; i < 10 && x > 0; ++i) {
 			num[15 - i] = '0' + x % 10;
 			x /= 10;
@@ -103,7 +103,7 @@ private:
 protected:
 	// Task code
 	TestKnowledge::Value run(const TestKnowledge::Position in) {
-		Console::log("TriggerTaskRun");
+		Console::log("> Triggered task running now");
 
 		if (in.x % 2)
 			led.off();

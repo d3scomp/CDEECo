@@ -32,7 +32,7 @@ public:
 	PeriodicTask(long period, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge,
 			OUT_KNOWLEDGE &outKnowledge) :
 			Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), period(period) {
-		Console::log("PeriodicTask");
+		Console::log(">> PeriodicTask constructor");
 
 		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
 	}
@@ -42,7 +42,7 @@ private:
 
 	/** Helper for launching task code from RTOS C environment */
 	static void taskBodyLauncher(void *data) {
-		Console::log("PeriodicTaskBody");
+		Console::log(">> PeriodicTask body");
 
 		((PeriodicTask<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
 

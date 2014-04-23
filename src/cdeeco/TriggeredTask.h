@@ -33,7 +33,7 @@ public:
 	TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge,
 			OUT_KNOWLEDGE &outKnowledge) :
 			Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), trigger(trigger), triggerSem(xSemaphoreCreateCounting(TriggerMaxWaiting, 0)) {
-		Console::log("TrigerredTask");
+		Console::log(">> TrigerredTask constructor");
 
 		// Create task
 		xTaskCreate(taskBodyLauncher, "TrigerredTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
@@ -63,7 +63,7 @@ private:
 
 	/** Helper for launching task code from RTOS C environment */
 	static void taskBodyLauncher(void *data) {
-		Console::log("TriggerTaskBody");
+		Console::log(">> TriggerTask body");
 
 		((TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
 
