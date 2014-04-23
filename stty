@@ -1,0 +1,2 @@
+#!/bin/sh
+stty -F /dev/ttyUSB1 raw speed 921600 -crtscts cs8 -parenb -cstopb
