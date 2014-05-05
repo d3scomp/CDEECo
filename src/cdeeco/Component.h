@@ -15,14 +15,14 @@
 #include "PeriodicTask.h"
 #include "ListedTriggerTask.h"
 
+typedef uint32_t ComponentType;
+typedef uint32_t ComponentId;
+
 /** System component template */
 template<typename KNOWLEDGE>
 class Component {
 public:
-	typedef uint32_t Type;
-	typedef uint32_t Id;
-
-	Component(const Type type, const Id id) :
+	Component(const ComponentType type, const ComponentId id) :
 			type(type), id(id), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
 	}
 
