@@ -42,12 +42,11 @@ struct TestKnowledge {
  *
  * The task blinks the green LED and changes position knowledge.
  */
-class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Position> {
+class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge::Position> {
 public:
 	// Task initialization
-	TestPeriodicTask(Component<TestKnowledge> &component, const TestKnowledge::Position &in,
-			TestKnowledge::Position &out) :
-			PeriodicTask(250, component, in, out), led(green) {
+	TestPeriodicTask(Component<TestKnowledge> &component, TestKnowledge::Position &out) :
+			PeriodicTask(250, component, out), led(green) {
 		led.init();
 	}
 
@@ -57,9 +56,9 @@ private:
 
 protected:
 	// Task code
-	TestKnowledge::Position run(const TestKnowledge::Position in) {
+	TestKnowledge::Position run(const TestKnowledge in) {
 		// Visualize knowledge position x
-		int x = in.x;
+		int x = in.position.x;
 		char num[17] = "> PeriodTask    ";
 		for (int i = 0; i < 10 && x > 0; ++i) {
 			num[15 - i] = '0' + x % 10;
@@ -67,7 +66,7 @@ protected:
 		}
 		Console::log(num);
 
-		if (in.x % 2)
+		if (in.position.x % 2)
 			led.off();
 		else
 			led.on();
@@ -76,8 +75,8 @@ protected:
 		TestKnowledge::Position out;
 
 		// Change position
-		out.x = in.x + 1;
-		out.y = in.y + in.x % 2;
+		out.x = in.position.x + 1;
+		out.y = in.position.y + in.position.x % 2;
 
 		return out;
 	}
@@ -86,13 +85,12 @@ protected:
 /**
  * Test component triggered task
  */
-class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Position,
+class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position,
 		TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component,
-			const TestKnowledge::Position &inKnowledge, TestKnowledge::Value &outKnowledge) :
-			TriggeredTask(trigger, component, inKnowledge, outKnowledge), led(red) {
+	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component, TestKnowledge::Value &outKnowledge) :
+			TriggeredTask(trigger, component, outKnowledge), led(red) {
 		led.init();
 	}
 
@@ -102,10 +100,10 @@ private:
 
 protected:
 	// Task code
-	TestKnowledge::Value run(const TestKnowledge::Position in) {
+	TestKnowledge::Value run(const TestKnowledge in) {
 		Console::log("> Triggered task running now");
 
-		if (in.x % 2)
+		if (in.position.x % 2)
 			led.off();
 		else
 			led.on();
@@ -125,8 +123,8 @@ public:
 	TestTriggeredTask triggeredTask;
 
 	TestComponent() :
-			periodicTask(*this, this->knowledge.position, this->knowledge.position), triggeredTask(
-					this->knowledge.position, *this, this->knowledge.position, this->knowledge.value) {
+			periodicTask(*this, this->knowledge.position), triggeredTask(
+					this->knowledge.position, *this, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
 	}

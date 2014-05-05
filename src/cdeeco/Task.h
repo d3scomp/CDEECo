@@ -17,30 +17,29 @@ class Component;
 #include <stdlib.h>
 
 /** Prototype for component tasks */
-template<typename KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
+template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 class Task {
 public:
-	Task(Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge, OUT_KNOWLEDGE &outKnowledge):
-		component(component), inKnowledge(inKnowledge), outKnowledge(outKnowledge) {
+	Task(Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge):
+		component(component), outKnowledge(outKnowledge) {
 	};
 	virtual ~Task() {};
 
 	/** Task user code */
-	virtual OUT_KNOWLEDGE run(const IN_KNOWLEDGE in) = 0;
+	virtual OUT_KNOWLEDGE run(const KNOWLEDGE knowledge) = 0;
 
 	const size_t DefaultStackSize = 4096;
 	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
 
 private:
 	Component<KNOWLEDGE> &component;
-	const IN_KNOWLEDGE &inKnowledge;
 	OUT_KNOWLEDGE &outKnowledge;
 
 protected:
 	/** Task execution code, responsible for data passing */
 	void execute() {
 		// Lock and copy input data
-		IN_KNOWLEDGE in = component.lockReadKnowledge(inKnowledge);
+		KNOWLEDGE in = component.lockReadKnowledge();
 
 		// Execute user code defined for the task
 		OUT_KNOWLEDGE out = run(in);

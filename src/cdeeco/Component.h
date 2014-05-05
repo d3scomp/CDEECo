@@ -21,10 +21,9 @@ class Component {
 public:
 	Component(): knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {}
 
-	template <typename IN_KNOWLEDGE>
-	IN_KNOWLEDGE lockReadKnowledge(IN_KNOWLEDGE &inKnowledge) {
+	KNOWLEDGE lockReadKnowledge() {
 		lockKnowledge();
-		IN_KNOWLEDGE in = inKnowledge;
+		KNOWLEDGE in = knowledge;
 		unlockKnowledge();
 
 		return in;

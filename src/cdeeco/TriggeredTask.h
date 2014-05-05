@@ -26,13 +26,12 @@
 
 using namespace std;
 
-template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename IN_KNOWLEDGE, typename OUT_KNOWLEDGE>
-class TriggeredTask: Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask {
+template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename OUT_KNOWLEDGE>
+class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask {
 public:
 	// Create the triggered task
-	TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component, const IN_KNOWLEDGE &inKnowledge,
-			OUT_KNOWLEDGE &outKnowledge) :
-			Task<KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>(component, inKnowledge, outKnowledge), trigger(trigger), triggerSem(xSemaphoreCreateCounting(TriggerMaxWaiting, 0)) {
+	TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
+			Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), trigger(trigger), triggerSem(xSemaphoreCreateCounting(TriggerMaxWaiting, 0)) {
 		Console::log(">> TrigerredTask constructor");
 
 		// Create task
@@ -65,7 +64,7 @@ private:
 	static void taskBodyLauncher(void *data) {
 		Console::log(">> TriggerTask body");
 
-		((TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, IN_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
+		((TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
 
 		// Do not let the task run to the end
 		while (1) {}
