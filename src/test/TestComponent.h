@@ -85,11 +85,11 @@ protected:
 /**
  * Test component triggered task
  */
-class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position,
-		TestKnowledge::Value> {
+class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component, TestKnowledge::Value &outKnowledge) :
+	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component,
+			TestKnowledge::Value &outKnowledge) :
 			TriggeredTask(trigger, component, outKnowledge), led(red) {
 		led.init();
 	}
@@ -123,7 +123,7 @@ public:
 	TestTriggeredTask triggeredTask;
 
 	TestComponent() :
-			periodicTask(*this, this->knowledge.position), triggeredTask(
+			Component<TestKnowledge>(0x42, 0), periodicTask(*this, this->knowledge.position), triggeredTask(
 					this->knowledge.position, *this, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));

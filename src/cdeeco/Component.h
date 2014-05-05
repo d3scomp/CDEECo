@@ -19,7 +19,12 @@
 template<typename KNOWLEDGE>
 class Component {
 public:
-	Component(): knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {}
+	typedef uint32_t Type;
+	typedef uint32_t Id;
+
+	Component(const Type type, const Id id) :
+			type(type), id(id), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
+	}
 
 	KNOWLEDGE lockReadKnowledge() {
 		lockKnowledge();
@@ -29,7 +34,7 @@ public:
 		return in;
 	}
 
-	template <typename OUT_KNOWLEDGE>
+	template<typename OUT_KNOWLEDGE>
 	void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
 		lockKnowledge();
 		outKnowledge = knowledgeData;
@@ -40,19 +45,25 @@ public:
 
 	void addTriggeredTask(ListedTriggerTask &task) {
 		// Install new list head
-		if(rootTriggerTask == NULL) {
+		if (rootTriggerTask == NULL) {
 			rootTriggerTask = &task;
 			return;
 		}
 
 		// Add to the end of the list
 		ListedTriggerTask *root = rootTriggerTask;
-		while(root->next != NULL)
+		while (root->next != NULL)
 			root = root->next;
 		root->next = &task;
 	}
 
 protected:
+	/// Component type
+	const uint32_t type;
+
+	/// Component identification
+	const uint32_t id;
+
 	/// Knowledge of the component
 	KNOWLEDGE knowledge;
 
@@ -69,7 +80,7 @@ private:
 
 	template<typename T>
 	void checkAndRunTriggeredTasks(T &changed) {
-		for(ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
+		for (ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
 			task->checkTriggerCondition(changed);
 		}
 	}
