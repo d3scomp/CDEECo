@@ -1,3 +1,10 @@
+/**
+ * KnowledgeCache.h
+ *
+ *  Created on: 5. 5. 2014
+ *      Author: Vladimír Matěna
+ */
+
 #ifndef KNOWLEDGECACHE_H_
 #define KNOWLEDGECACHE_H_
 

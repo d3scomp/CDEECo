@@ -1,3 +1,10 @@
+/**
+ * KnowledgeFragment.h
+ *
+ *  Created on: 28. 4. 2014
+ *      Author: Vladimír Matěna
+ */
+
 #ifndef FRAGMENT_H_
 #define FRAGMENT_H_
 
