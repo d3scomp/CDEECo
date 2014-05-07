@@ -6,11 +6,28 @@
 #include "Component.h"
 #include "KnowledgeFragment.h"
 
-template<ComponentType TYPE, typename KNOWLEDGE, size_t SIZE>
+/** Interface to access knowledge cache */
 class KnowledgeCache {
+public:
+	virtual ~KnowledgeCache() {}
+
+	// TODO: Pass reference to the fragment?
+	virtual void storeFragment(KnowledgeFragment fragment) = 0;
+};
+
+/** Typed cache for storing knowledge */
+template<ComponentType TYPE, typename KNOWLEDGE, size_t SIZE>
+class TypedKnowledgeCache: KnowledgeCache {
 	typedef uint32_t Timestamp;
 
 public:
+	TypedKnowledgeCache() {
+		// Erase cache
+		memset(&cache, 0, sizeof(CacheRecord) * SIZE);
+	}
+
+	virtual ~TypedKnowledgeCache() {}
+
 	void storeFragment(KnowledgeFragment fragment) {
 		if(fragment.type != TYPE)
 			return; // Not our knowledge type
