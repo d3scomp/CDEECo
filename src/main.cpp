@@ -41,7 +41,9 @@ int main(void) {
 
 	Console::log(">>> About to construct test component");
 
-	new TestComponent();
+	System *system = new System();
+
+	new TestComponent(*system);
 
 	Console::log(">>> Running scheduler");
 

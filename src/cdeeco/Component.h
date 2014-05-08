@@ -11,19 +11,17 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
+#include "System.h"
 #include "Knowledge.h"
 #include "PeriodicTask.h"
 #include "ListedTriggerTask.h"
-
-typedef uint32_t ComponentType;
-typedef uint32_t ComponentId;
 
 /** System component template */
 template<typename KNOWLEDGE>
 class Component {
 public:
-	Component(const ComponentType type, const ComponentId id) :
-			type(type), id(id), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
+	Component(const ComponentType type, const ComponentId id, System &system) :
+			system(system), type(type), id(id), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
 	}
 
 	KNOWLEDGE lockReadKnowledge() {
@@ -68,6 +66,7 @@ protected:
 	KNOWLEDGE knowledge;
 
 private:
+	System &system;
 	SemaphoreHandle_t knowledgeSem;
 	ListedTriggerTask *rootTriggerTask;
 

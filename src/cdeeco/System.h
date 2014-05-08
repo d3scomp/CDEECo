@@ -8,11 +8,12 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+#include <stdio.h>
+
 #include "KnowledgeCache.h"
 
 typedef uint32_t Timestamp;
 
-template<size_t CACHES, size_t REBROADCAST_SIZE>
 class System {
 public:
 	System() {
@@ -43,6 +44,9 @@ public:
 	}
 
 private:
+	static const size_t CACHES = 10;
+	static const size_t REBROADCAST_SIZE = 32;
+
 	KnowledgeCache *caches[CACHES];
 
 	struct ReboadcastRecord {

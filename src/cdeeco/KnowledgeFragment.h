@@ -8,9 +8,11 @@
 #ifndef FRAGMENT_H_
 #define FRAGMENT_H_
 
+typedef uint32_t ComponentType;
+typedef uint32_t ComponentId;
+
 struct KnowledgeFragment {
 	static const size_t MaxDataSize = 100;
-	static constexpr size_t MaxSize = sizeof(KnowledgeFragment);
 
 	ComponentType type;
 	ComponentId id;

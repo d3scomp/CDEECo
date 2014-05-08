@@ -122,8 +122,8 @@ public:
 	TestPeriodicTask periodicTask;
 	TestTriggeredTask triggeredTask;
 
-	TestComponent() :
-			Component<TestKnowledge>(0x42, 0), periodicTask(*this, this->knowledge.position), triggeredTask(
+	TestComponent(System &system) :
+			Component<TestKnowledge>(0x42, 0, system), periodicTask(*this, this->knowledge.position), triggeredTask(
 					this->knowledge.position, *this, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
