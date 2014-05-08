@@ -23,6 +23,17 @@ public:
 	/** Broadcast knowledge fragment */
 	void broadcastFragment(KnowledgeFragment fragment) {
 		// TODO: Enqueue fragment for broadcasting
+
+		// Print knowledge fragment
+		const size_t bufLen = 256;
+		char buffer[bufLen];
+		int written = sprintf(buffer, "Broadcast Fragment:\nType:%x\nId:%x\nSize:%x\nOffset:%x", fragment.type,
+				fragment.id, fragment.size, fragment.offset);
+		for(size_t i = 0; i < fragment.size; ++i) {
+			written += sprintf(buffer + written, "%x");
+			if(i % 8 == 0)
+				sprintf(buffer + written, "\n");
+		}
 	}
 
 	/** Process process received fragment */
