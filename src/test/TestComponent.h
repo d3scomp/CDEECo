@@ -20,7 +20,7 @@
  * Holds integer and float values named "id" and "value".
  *
  */
-struct TestKnowledge {
+struct TestKnowledge: Knowledge {
 	struct Position {
 		int x;
 		int y;
@@ -32,6 +32,14 @@ struct TestKnowledge {
 	Id id;
 	Value value;
 	Position position;
+};
+
+/**
+ * Define allowed offsets to guarantee knowledge consistency
+ */
+template<>
+struct KnowledgeTrait<TestKnowledge> {
+	static constexpr void* offsets[] = { offsetof(TestKnowledge, id) };
 };
 
 /**
@@ -60,13 +68,13 @@ protected:
 		// Visualize knowledge position x
 		int x = in.position.x;
 		char num[17] = "> PeriodTask    ";
-		for (int i = 0; i < 10 && x > 0; ++i) {
+		for(int i = 0; i < 10 && x > 0; ++i) {
 			num[15 - i] = '0' + x % 10;
 			x /= 10;
 		}
 		Console::log(num);
 
-		if (in.position.x % 2)
+		if(in.position.x % 2)
 			led.off();
 		else
 			led.on();
@@ -103,7 +111,7 @@ protected:
 	TestKnowledge::Value run(const TestKnowledge in) {
 		Console::log("> Triggered task running now");
 
-		if (in.position.x % 2)
+		if(in.position.x % 2)
 			led.off();
 		else
 			led.on();
