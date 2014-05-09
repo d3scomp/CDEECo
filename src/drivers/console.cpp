@@ -39,7 +39,7 @@ void Console::log(const char *text) {
 #endif
 
 #ifdef CONSOLE_SERIAL
-	for(const char* c = text; *c != NULL; c++) {
+	for(const char* c = text; *c != 0; c++) {
 		while(!serial.canSend());
 		serial.send(*c);
 	}

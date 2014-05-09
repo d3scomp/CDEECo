@@ -29,7 +29,7 @@ public:
 		// Print knowledge fragment
 		const size_t bufLen = 256;
 		char buffer[bufLen];
-		int written = sprintf(buffer, "Broadcast Fragment:\n\tType:%x\n\tId:%x\n\tSize:%x\n\tOffset:%x", fragment.type,
+		size_t written = sprintf(buffer, "Broadcast Fragment:\n\tType:%lx\n\tId:%lx\n\tSize:%x\n\tOffset:%x", fragment.type,
 				fragment.id, fragment.size, fragment.offset);
 		for(size_t i = 0; i < fragment.size; ++i) {
 			// Hex output formating

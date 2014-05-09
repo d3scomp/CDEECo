@@ -24,7 +24,7 @@ template<typename KNOWLEDGE>
 class Component {
 public:
 	Component(const ComponentType type, const ComponentId id, System &system) :
-			system(system), type(type), id(id), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
+			type(type), id(id), system(system), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
 	}
 
 	KNOWLEDGE lockReadKnowledge() {

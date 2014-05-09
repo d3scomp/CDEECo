@@ -8,7 +8,7 @@
 #include <UART.h>
 
 void UART::clearBreakOrError() {
-	volatile int32_t dummy;
+	volatile int32_t __attribute__ ((unused)) dummy;
 	dummy = props.usart->SR;
 	dummy = props.usart->DR;
 }
