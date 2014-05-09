@@ -39,8 +39,9 @@ struct TestKnowledge: Knowledge {
  */
 template<>
 struct KnowledgeTrait<TestKnowledge> {
-	static constexpr size_t offsets[] = { offsetof(TestKnowledge, id) };
+	static constexpr size_t offsets[] = { offsetof(TestKnowledge, id), offsetof(TestKnowledge, position) };
 };
+constexpr size_t KnowledgeTrait<TestKnowledge>::offsets[2];
 
 /**
  * Test component periodic task
