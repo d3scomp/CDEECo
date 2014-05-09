@@ -33,10 +33,12 @@ public:
 				fragment.id, fragment.size, fragment.offset);
 		for(size_t i = 0; i < fragment.size; ++i) {
 			// Hex output formating
-			if(i % 16 == 0)
-				written += sprintf(buffer + written, "\n\t");
+			if(i % 16 == 0) {
+				buffer[written++] = '\n';
+				buffer[written++] = '\t';
+			}
 			if(i % 2 == 0)
-				written += sprintf(buffer + written, " ");
+				buffer[written++] = ' ';
 
 			// Print single byte
 			written += sprintf(buffer + written, "%02x", fragment.data[i]);
