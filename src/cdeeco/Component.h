@@ -117,6 +117,7 @@ private:
 				if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
 					found = true;
 					brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
+					break;
 				}
 			}
 			assert(found);
