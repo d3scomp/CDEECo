@@ -37,7 +37,8 @@ public:
 
 	template<typename OUT_KNOWLEDGE>
 	void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
-//		assert((void*)&outKnowledge >= (void*)&knowledge && (void*)&outKnowledge + sizeof(OUT_KNOWLEDGE) <= (void*)&knowledge + sizeof(KNOWLEDGE));
+		assert((size_t)&outKnowledge >= (size_t)&knowledge
+				&& (size_t)&outKnowledge + sizeof(OUT_KNOWLEDGE) <= (size_t)&knowledge + sizeof(KNOWLEDGE));
 
 		lockKnowledge();
 		// Update knowledge
