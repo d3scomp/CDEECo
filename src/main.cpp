@@ -47,8 +47,10 @@ int main(void) {
 
 	Console::log(">>> Running scheduler");
 
-	/* Start the scheduler. */
+	// Start the scheduler.
 	vTaskStartScheduler();
+
+	// This should not be reached
 	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
 	while (1) {}
 }

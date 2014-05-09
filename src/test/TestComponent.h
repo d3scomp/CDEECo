@@ -39,7 +39,7 @@ struct TestKnowledge: Knowledge {
  */
 template<>
 struct KnowledgeTrait<TestKnowledge> {
-	static constexpr void* offsets[] = { offsetof(TestKnowledge, id) };
+	static constexpr size_t offsets[] = { offsetof(TestKnowledge, id) };
 };
 
 /**

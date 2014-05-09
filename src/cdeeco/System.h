@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 
+#include "console.h"
 #include "KnowledgeCache.h"
 
 typedef uint32_t Timestamp;
@@ -28,13 +29,26 @@ public:
 		// Print knowledge fragment
 		const size_t bufLen = 256;
 		char buffer[bufLen];
-		int written = sprintf(buffer, "Broadcast Fragment:\nType:%x\nId:%x\nSize:%x\nOffset:%x", fragment.type,
+		int written = sprintf(buffer, "Broadcast Fragment:\n\tType:%x\n\tId:%x\n\tSize:%x\n\tOffset:%x", fragment.type,
 				fragment.id, fragment.size, fragment.offset);
 		for(size_t i = 0; i < fragment.size; ++i) {
-			written += sprintf(buffer + written, "%x");
-			if(i % 8 == 0)
-				sprintf(buffer + written, "\n");
+			// Hex output formating
+			if(i % 16 == 0)
+				written += sprintf(buffer + written, "\n\t");
+			if(i % 2 == 0)
+				written += sprintf(buffer + written, " ");
+
+			// Print single byte
+			written += sprintf(buffer + written, "%02x", fragment.data[i]);
+
+			// Stop printing when running out of buffer
+			if(written > bufLen - 32) {
+				sprintf(buffer + written, "...");
+				break;
+			}
 		}
+
+		Console::log(buffer);
 	}
 
 	/** Process process received fragment */
@@ -44,8 +58,8 @@ public:
 	}
 
 private:
-	static const size_t CACHES = 10;
-	static const size_t REBROADCAST_SIZE = 32;
+	static const size_t CACHES = 3;
+	static const size_t REBROADCAST_SIZE = 8;
 
 	KnowledgeCache *caches[CACHES];
 

@@ -35,7 +35,7 @@ SRCS +=	${PERIPH_DIR}/src/stm32f4xx_tim.c
 SRCS +=	${PERIPH_DIR}/src/misc.c
 
 # FreeRTOS sources
-SRCS += $(FREERTOS_DIR)/Source/portable/MemMang/heap_1.c
+SRCS += $(FREERTOS_DIR)/Source/portable/MemMang/heap_3.c
 SRCS += $(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F/port.c
 SRCS += $(FREERTOS_DIR)/Source/list.c
 SRCS += $(FREERTOS_DIR)/Source/queue.c
