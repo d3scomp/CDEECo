@@ -107,13 +107,14 @@ private:
 		size_t end = start + size;
 		assert(end <= sizeof(KNOWLEDGE));
 
+
+
 		// Until the change is broadcasted
 		do {
 			// Find start offset
-			int offsetsLen = sizeof(KnowledgeTrait<KNOWLEDGE>::offsets) / sizeof(KnowledgeTrait<KNOWLEDGE>::offsets[0]);
 			size_t brdStart = 0;
 			bool found = false;
-			for(int i = offsetsLen - 1; i >= 0; --i) {
+			for(int i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
 				if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
 					found = true;
 					brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];

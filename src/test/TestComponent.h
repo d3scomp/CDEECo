@@ -11,6 +11,8 @@
 #ifndef TESTCOMPONENT_H_
 #define TESTCOMPONENT_H_
 
+#include <array>
+
 #include "cdeeco/Component.h"
 #include "cdeeco/TriggeredTask.h"
 
@@ -39,9 +41,14 @@ struct TestKnowledge: Knowledge {
  */
 template<>
 struct KnowledgeTrait<TestKnowledge> {
-	static constexpr size_t offsets[] = { offsetof(TestKnowledge, id), offsetof(TestKnowledge, position) };
+	static constexpr std::array<size_t, 2> offsets = {{
+			offsetof(TestKnowledge, id),
+			offsetof(TestKnowledge, position)
+	}};
 };
-constexpr size_t KnowledgeTrait<TestKnowledge>::offsets[2];
+// This declaration do not require array size to be specified twice, but drives eclipse crazy.
+//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
+constexpr std::array<size_t, 2> KnowledgeTrait<TestKnowledge>::offsets;
 
 /**
  * Test component periodic task
