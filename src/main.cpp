@@ -39,10 +39,14 @@ int main(void) {
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n# # # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # # \n# # # # # # # # # # # # # # # # # # # #\n>>> SYSTEM INIT <<<");
 
-	Console::log(">>> About to construct test component");
+	Console::log(">>> Waiting 3s for debugger to stop me...");
+	delayTimer.mDelay(3000);
+	Console::log(">>> Starting system");
 
+	Console::log(">>> About to construct system object");
 	System *system = new System();
 
+	Console::log(">>> About to construct test component");
 	new TestComponent(*system);
 
 	Console::log(">>> Running scheduler");
