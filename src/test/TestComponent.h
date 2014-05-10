@@ -74,13 +74,9 @@ protected:
 	// Task code
 	TestKnowledge::Position run(const TestKnowledge in) {
 		// Visualize knowledge position x
-		int x = in.position.x;
-		char num[17] = "> PeriodTask    ";
-		for(int i = 0; i < 10 && x > 0; ++i) {
-			num[15 - i] = '0' + x % 10;
-			x /= 10;
-		}
-		Console::log(num);
+		char buff[20];
+		sprintf(buff, "> Periodic task %d", in.position.x);
+		Console::log(buff);
 
 		if(in.position.x % 2)
 			led.off();
