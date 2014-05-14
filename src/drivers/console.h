@@ -16,16 +16,14 @@ class Console {
 public:
 	static void init();
 	static void log(const char *text);
+#ifdef CONSOLE_SERIAL
+	static UART serial;
+#endif
 private:
 #ifdef CONSOLE_LCD
 	static GMD1602 lcd;
 	static char stored[20];
 #endif
-
-#ifdef CONSOLE_SERIAL
-	static UART serial;
-#endif
-
 };
 
 #endif // CONSOLE_H_

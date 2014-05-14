@@ -12,14 +12,13 @@
 #include "semphr.h"
 
 #include "main.h"
-
+#include "UART.h"
 #include "test/TestComponent.h"
 
 #include <cstdio>
 #include <sstream>
 #include <string>
-
-#include "UART.h"
+#include <signal.h>
 
 using namespace std;
 
@@ -36,8 +35,11 @@ int main(void) {
 	delayTimer.setPriority(1, 1);
 	delayTimer.init();
 	Console::init();
-
-	Console::log("\n\n\n\n\n\n\n\n\n\n# # # # # # # # # # # # # # # # # # # #\n # # # # # # # # # # # # # # # # # # # \n# # # # # # # # # # # # # # # # # # # #\n>>> SYSTEM INIT <<<");
+	Console::log("\n\n\n\n\n\n\n\n\n\n");
+	Console::log("# # # # # # # # # # # # # # # # # # # #");
+	Console::log(" # # # # # # # # # # # # # # # # # # #");
+	Console::log("# # # # # # # # # # # # # # # # # # # #");
+	Console::log("\n>>> SYSTEM INIT <<<");
 
 	Console::log(">>> Waiting 3s for debugger to stop me...");
 	delayTimer.mDelay(3000);
@@ -56,18 +58,21 @@ int main(void) {
 
 	// This should not be reached
 	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
-	while (1) {}
+	while(1) {
+	}
 }
 
 // FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName) {
 		Console::log("STACK OVERFLOW!!");
-		while (1) {}
+		while(1) {
+		}
 	}
 
 	void vApplicationMallocFailedHook(void) {
 		Console::log("MALLOC FAILED!!!");
-		while (1) {}
+		while(1) {
+		}
 	}
 }

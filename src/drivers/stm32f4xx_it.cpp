@@ -3,6 +3,8 @@
 #include "main.h"
 #include "LED.h"
 
+#include "console.h"
+
 
 /** @addtogroup Template_Project
  * @{
@@ -76,8 +78,8 @@ void UsageFault_Handler(void) {
  * @param  None
  * @retval None
  */
-void SVC_Handler(void) {
-}
+/*void SVC_Handler(void) {
+}*/
 
 /**
  * @brief  This function handles Debug Monitor exception.
@@ -92,17 +94,17 @@ void DebugMon_Handler(void) {
  * @param  None
  * @retval None
  */
-void PendSV_Handler(void) {
-}
+/*void PendSV_Handler(void) {
+}*/
 
 /**
  * @brief  This function handles SysTick Handler.
  * @param  None
  * @retval None
  */
-void SysTick_Handler(void) {
+/*void SysTick_Handler(void) {
 	PulseLED::tickInterruptHandler();
-}
+}*/
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
@@ -118,7 +120,10 @@ void SysTick_Handler(void) {
  */
 void USART2_IRQHandler(void) {
 //	GPIOA->BSRRL = GPIO_Pin_1;  // Requires test1Led to be initialized in main.cpp
-	uartTOHD.txrxInterruptHandler();
+//	uartTOHD.txrxInterruptHandler();
+
+	Console::serial.txrxInterruptHandler();
+
 //	GPIOA->BSRRH = GPIO_Pin_1;
 }
 
@@ -128,7 +133,7 @@ void USART2_IRQHandler(void) {
  * @retval None
  */
 void USART6_IRQHandler(void) {
-	uartGPS.txrxInterruptHandler();
+//	uartGPS.txrxInterruptHandler();
 }
 
 /**
@@ -137,7 +142,7 @@ void USART6_IRQHandler(void) {
  * @retval None
  */
 void EXTI0_IRQHandler(void) {
-	infoButton.pressedInterruptHandler();
+//	infoButton.pressedInterruptHandler();
 }
 
 /**
@@ -146,7 +151,7 @@ void EXTI0_IRQHandler(void) {
  * @retval None
  */
 void EXTI1_IRQHandler(void) {
-	msgHandler.runInterruptHandler();
+//	msgHandler.runInterruptHandler();
 }
 
 /**
@@ -155,7 +160,7 @@ void EXTI1_IRQHandler(void) {
  * @retval None
  */
 void EXTI2_IRQHandler(void) {
-	mrf.rfInterruptHandler();
+//	mrf.rfInterruptHandler();
 }
 
 /**
@@ -165,7 +170,7 @@ void EXTI2_IRQHandler(void) {
  */
 void SPI3_IRQHandler(void) {
 //	GPIOA->BSRRL = GPIO_Pin_5;    // Requires test2Led to be initialized in main.cpp
-	mrf.spiInterruptHandler();
+//	mrf.spiInterruptHandler();
 //	GPIOA->BSRRH = GPIO_Pin_5;
 }
 

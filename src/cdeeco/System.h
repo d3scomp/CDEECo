@@ -20,6 +20,26 @@ public:
 	System() {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
+
+		// Init console input
+		Console::log("Setting receive listener");
+		Console::serial.setRecvListener(staticReceiveListener, this);
+		Console::log("Enabling receive events");
+		Console::serial.setPriority(2, 2);
+		Console::serial.enableRecvEvents();
+	}
+
+	/** Static receive listener */
+	static void staticReceiveListener(void *data) {
+		static_cast<System*>(data)->receiveListener();
+	}
+
+	/** Receive listener */
+	void receiveListener() {
+		char recv = Console::serial.recv();
+		if(recv == 'X') {
+			Console::log(">>>> Recieved <<<<");
+		}
 	}
 
 	/** Broadcast knowledge fragment */
