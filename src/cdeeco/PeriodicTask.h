@@ -43,7 +43,7 @@ private:
 	static void taskBodyLauncher(void *data) {
 		Console::log(">> PeriodicTask body");
 
-		((PeriodicTask<KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
+		static_cast<PeriodicTask<KNOWLEDGE, OUT_KNOWLEDGE>*>(data)->taskBodyImplementation();
 
 		// Do not let the task run to the end
 		while (1) {}

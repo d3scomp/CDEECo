@@ -64,7 +64,7 @@ private:
 	static void taskBodyLauncher(void *data) {
 		Console::log(">> TriggerTask body");
 
-		((TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, OUT_KNOWLEDGE>*) data)->taskBodyImplementation();
+		static_cast<TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, OUT_KNOWLEDGE>*>(data)->taskBodyImplementation();
 
 		// Do not let the task run to the end
 		while (1) {}
