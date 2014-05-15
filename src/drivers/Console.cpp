@@ -70,14 +70,63 @@ void Console::setRecvFragmentListener(Listener listener, void* data) {
 }
 
 void Console::receiveListener(void* data) {
-	char recv = serial.recv();
-	if(recv == 'X') {
-		Console::log(">>>> Received <<<<");
+	char c = serial.recv();
+	if(c == 'X') {
+		KnowledgeFragment fragment;
+
+		// Receive header
+		fragment.type = recv<decltype(fragment.type)>();
+		fragment.id = recv<decltype(fragment.id)>();
+		fragment.size = recv<decltype(fragment.size)>();
+		fragment.offset = recv<decltype(fragment.offset)>();
+
+		// Receive data
+		for(size_t i = 0; i < fragment.size; ++i)
+			fragment.data[i] = recv<char>();
+
+		listenerFunc(listenerData, fragment);
 	}
 }
 
 void Console::interrupt() {
 	serial.txrxInterruptHandler();
+}
+
+template<>
+uint8_t Console::recv<uint8_t>() {
+	return recvHexVal() << 4 | recvHexVal();
+}
+
+uint8_t Console::recvHexVal() {
+	while(1) {
+		while(!serial.canRecv());
+		switch(serial.recv()) {
+			case '0': return 0b0000;
+			case '1': return 0b0001;
+			case '2': return 0b0010;
+			case '3': return 0b0011;
+			case '4': return 0b0100;
+			case '5': return 0b0101;
+			case '6': return 0b0110;
+			case '7': return 0b0111;
+			case '8': return 0b1000;
+			case '9': return 0b1001;
+			case 'a':
+			case 'A': return 0b1010;
+			case 'B':
+			case 'b': return 0b1011;
+			case 'C':
+			case 'c': return 0b1100;
+			case 'D':
+			case 'd': return 0b1101;
+			case 'E':
+			case 'e': return 0b1110;
+			case 'F':
+			case 'f': return 0b1111;
+		}
+	}
+
+	return 0;
 }
 
 void Console::logFragment(KnowledgeFragment fragment) {
@@ -86,7 +135,7 @@ void Console::logFragment(KnowledgeFragment fragment) {
 	char buffer[bufLen];
 
 	// Write fragment header
-	size_t written = sprintf(buffer, "Broadcast Fragment:\n\tType:%lx\n\tId:%lx\n\tSize:%x\n\tOffset:%x", fragment.type,
+	size_t written = sprintf(buffer, "Fragment:Type:%lx Id:%lx Size:%x Offset:%x", fragment.type,
 			fragment.id, fragment.size, fragment.offset);
 
 	// Write fragment data
@@ -109,6 +158,10 @@ void Console::logFragment(KnowledgeFragment fragment) {
 			break;
 		}
 	}
+
+	buffer[written++] = '\n';
+	buffer[written++] = '\n';
+	buffer[written++] = 0;
 
 	Console::log(buffer);
 }

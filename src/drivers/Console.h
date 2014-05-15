@@ -33,6 +33,16 @@ private:
 	static void *listenerData;
 	static Listener listenerFunc;
 	static void receiveListener(void* data);
+
+	template<typename T>
+	static T recv() {
+		T data;
+		for(size_t i = 0; i < sizeof(T); ++i)
+			((uint8_t*)&data)[i] = recv<uint8_t>();
+		return data;
+	}
+
+	static uint8_t recvHexVal();
 };
 
 #endif // CONSOLE_H_

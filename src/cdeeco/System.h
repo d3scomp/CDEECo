@@ -33,13 +33,14 @@ public:
 
 	/** Receive listener */
 	void receiveListener(KnowledgeFragment fragment) {
-		Console::log(">>>> Received knowledge fragment <<<<");
+		Console::log(">>>>>>>>> Received knowledge fragment:");
+		Console::logFragment(fragment);
 	}
 
 	/** Broadcast knowledge fragment */
 	void broadcastFragment(KnowledgeFragment fragment) {
 		// TODO: Enqueue fragment for broadcasting
-
+		Console::log(">>>>>>>>> Sending knowledge fragment:");
 		Console::logFragment(fragment);
 	}
 
