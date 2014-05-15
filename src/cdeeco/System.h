@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-#include "console.h"
+#include "Console.h"
 #include "KnowledgeCache.h"
 
 typedef uint32_t Timestamp;
@@ -22,55 +22,25 @@ public:
 		memset(&caches, 0, sizeof(caches));
 
 		// Init console input
-		Console::log("Setting receive listener");
-		Console::serial.setRecvListener(staticReceiveListener, this);
-		Console::log("Enabling receive events");
-		Console::serial.setPriority(2, 2);
-		Console::serial.enableRecvEvents();
+		Console::log("Setting fragment listener");
+		Console::setRecvFragmentListener(staticReceiveListener, this);
 	}
 
 	/** Static receive listener */
-	static void staticReceiveListener(void *data) {
-		static_cast<System*>(data)->receiveListener();
+	static void staticReceiveListener(void *data, KnowledgeFragment fragment) {
+		static_cast<System*>(data)->receiveListener(fragment);
 	}
 
 	/** Receive listener */
-	void receiveListener() {
-		char recv = Console::serial.recv();
-		if(recv == 'X') {
-			Console::log(">>>> Recieved <<<<");
-		}
+	void receiveListener(KnowledgeFragment fragment) {
+		Console::log(">>>> Received knowledge fragment <<<<");
 	}
 
 	/** Broadcast knowledge fragment */
 	void broadcastFragment(KnowledgeFragment fragment) {
 		// TODO: Enqueue fragment for broadcasting
 
-		// Print knowledge fragment
-		const size_t bufLen = 256;
-		char buffer[bufLen];
-		size_t written = sprintf(buffer, "Broadcast Fragment:\n\tType:%lx\n\tId:%lx\n\tSize:%x\n\tOffset:%x", fragment.type,
-				fragment.id, fragment.size, fragment.offset);
-		for(size_t i = 0; i < fragment.size; ++i) {
-			// Hex output formating
-			if(i % 16 == 0) {
-				buffer[written++] = '\n';
-				buffer[written++] = '\t';
-			}
-			if(i % 2 == 0)
-				buffer[written++] = ' ';
-
-			// Print single byte
-			written += sprintf(buffer + written, "%02x", fragment.data[i]);
-
-			// Stop printing when running out of buffer
-			if(written > bufLen - 32) {
-				sprintf(buffer + written, "...");
-				break;
-			}
-		}
-
-		Console::log(buffer);
+		Console::logFragment(fragment);
 	}
 
 	/** Process process received fragment */

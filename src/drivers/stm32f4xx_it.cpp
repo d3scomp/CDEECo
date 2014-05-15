@@ -3,7 +3,7 @@
 #include "main.h"
 #include "LED.h"
 
-#include "console.h"
+#include "Console.h"
 
 
 /** @addtogroup Template_Project
@@ -122,7 +122,7 @@ void USART2_IRQHandler(void) {
 //	GPIOA->BSRRL = GPIO_Pin_1;  // Requires test1Led to be initialized in main.cpp
 //	uartTOHD.txrxInterruptHandler();
 
-	Console::serial.txrxInterruptHandler();
+	Console::interrupt();
 
 //	GPIOA->BSRRH = GPIO_Pin_1;
 }

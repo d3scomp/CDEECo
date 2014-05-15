@@ -23,7 +23,7 @@
 using namespace std;
 
 // Initialize system console
-#include "console.h"
+#include "Console.h"
 
 // Initialize delay timer
 Timer::Properties tim6Props {
