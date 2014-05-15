@@ -84,9 +84,14 @@ void Console::logFragment(KnowledgeFragment fragment) {
 	// Print knowledge fragment
 	const size_t bufLen = 256;
 	char buffer[bufLen];
+
+	// Write fragment header
 	size_t written = sprintf(buffer, "Broadcast Fragment:\n\tType:%lx\n\tId:%lx\n\tSize:%x\n\tOffset:%x", fragment.type,
 			fragment.id, fragment.size, fragment.offset);
-	for(size_t i = 0; i < fragment.size; ++i) {
+
+	// Write fragment data
+	size_t validSize = sizeof(fragment) - sizeof(fragment.data) + fragment.size;
+	for(size_t i = 0; i < validSize; ++i) {
 		// Hex output formating
 		if(i % 16 == 0) {
 			buffer[written++] = '\n';
@@ -96,7 +101,7 @@ void Console::logFragment(KnowledgeFragment fragment) {
 			buffer[written++] = ' ';
 
 		// Print single byte
-		written += sprintf(buffer + written, "%02x", fragment.data[i]);
+		written += sprintf(buffer + written, "%02x", ((char*)&fragment)[i]);
 
 		// Stop printing when running out of buffer
 		if(written > bufLen - 32) {
