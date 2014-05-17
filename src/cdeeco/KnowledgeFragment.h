@@ -5,8 +5,11 @@
  *      Author: Vladimír Matěna
  */
 
-#ifndef FRAGMENT_H_
-#define FRAGMENT_H_
+#ifndef KNOWLEDGE_FRAGMENT_H_
+#define KNOWLEDGE_FRAGMENT_H_
+
+#include <cstdint>
+#include <cstring>
 
 typedef uint32_t ComponentType;
 typedef uint32_t ComponentId;
@@ -24,4 +27,4 @@ struct KnowledgeFragment {
 
 static_assert(MaxPacketSize >= sizeof(KnowledgeFragment), "Knowledge fragment too big to fit into packet.");
 
-#endif // FRAGMENT_H_
+#endif // KNOWLEDGE_FRAGMENT_H_

@@ -96,6 +96,7 @@ all: init $(BUILD_DIR)/$(PROJ_NAME).elf
 init:
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/drivers
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/cdeeco
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/core
 	mkdir -p $(BUILD_DIR)/$(DISCOVERY_DIR)
 	mkdir -p $(BUILD_DIR)/$(PERIPH_DIR)/src

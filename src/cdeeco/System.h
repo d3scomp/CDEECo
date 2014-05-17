@@ -12,11 +12,15 @@
 #include <array>
 #include <algorithm>
 
+#include "RebroadcastStorage.h"
 #include "Console.h"
 #include "KnowledgeCache.h"
-#include "RebroadcastStorage.h"
+#include "Broadcaster.h"
 
-class System {
+template<size_t SIZE>
+class RebroadcastStorage;
+
+class System: Broadcaster {
 public:
 	System(): rebroadcast(*this) {
 		// Erase caches

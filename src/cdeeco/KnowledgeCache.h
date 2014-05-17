@@ -10,7 +10,6 @@
 
 #include <assert.h>
 
-#include "Component.h"
 #include "KnowledgeFragment.h"
 
 /** Interface to access knowledge cache */

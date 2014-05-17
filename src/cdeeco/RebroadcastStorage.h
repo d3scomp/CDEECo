@@ -1,32 +1,72 @@
 #ifndef REBROADCAST_STORAGE_H_
-#define REBORADCAST_STORAGE_H_
+#define REBROADCAST_STORAGE_H_
+
+#include "FreeRTOS.h"
+#include "task.h"
 
 #include "KnowledgeFragment.h"
-#include "System.h"
+#include "Broadcaster.h"
 
-class System;
+#include <array>
+
+// TODO: Locking
 
 template<size_t SIZE>
 class RebroadcastStorage {
-public:
-	RebroadcastStorage(System &system): system(system) {
-		memset(&records, 0, sizeof(records));
-	}
-
-	void storeFragment(const KnowledgeFragment fragment) {
-		Console::log("TODO: Store fragment in rebroadcast storage");
-	}
-
 private:
-	typedef uint32_t Timestamp;
+	typedef TickType_t Timestamp;
+	typedef size_t Index;
 
 	struct ReboadcastRecord {
-		Timestamp recieved;
+		bool used;
+		Timestamp received;
 		Timestamp rebroadcast;
 		KnowledgeFragment fragment;
 	};
 
-	System &system;
+public:
+	RebroadcastStorage(Broadcaster &broadcaster) :
+			broadcaster(broadcaster) {
+		memset(&records, 0, sizeof(records));
+	}
+
+	void storeFragment(const KnowledgeFragment fragment) {
+		// TODO: Implement some smarter rebroadcast mechanism
+		const Timestamp RebroadcastInterval = 5000;
+
+		// TODO: Do not rebroadcast local hosted knowledge ?
+
+		Index free = getFree();
+
+		records[free].used = true;
+		records[free].received = xTaskGetTickCount();
+		records[free].rebroadcast = xTaskGetTickCount() + RebroadcastInterval / portTICK_PERIOD_MS;
+		records[free].fragment = fragment;
+	}
+
+	Index getFree() {
+		for(Index i = 0; i < records.size(); ++i)
+			if(!records[i].used)
+				return i;
+		return pushRecord();
+	}
+
+	Index pushRecord() {
+		Index oldest = 0;
+		for(Index i = 0; i < records.size(); ++i)
+			if(records[i].received < records[oldest].received)
+				oldest = i;
+		rebroadcast(oldest);
+		return oldest;
+	}
+
+	void rebroadcast(Index index) {
+		broadcaster.broadcastFragment(records[index].fragment);
+		records[index].used = false;
+	}
+
+private:
+	Broadcaster &broadcaster;
 
 	std::array<RebroadcastStorage::ReboadcastRecord, SIZE> records;
 };
