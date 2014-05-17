@@ -65,7 +65,7 @@ CFLAGS += -I$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 
 CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++11
 
-LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/beeclickarm.map $(CFLAGS)  
+LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/cdeeco++.map $(CFLAGS)  
 
 # Add startup file to build
 OBJS = $(patsubst %.c,build/%.o,$(SRCS))

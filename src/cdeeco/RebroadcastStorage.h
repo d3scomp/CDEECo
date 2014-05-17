@@ -4,18 +4,21 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "Console.h"
 #include "KnowledgeFragment.h"
 #include "Broadcaster.h"
+#include "FreeRTOSTask.h"
 
 #include <array>
 
 // TODO: Locking
 
 template<size_t SIZE>
-class RebroadcastStorage {
+class RebroadcastStorage: FreeRTOSTask<> {
 private:
 	typedef TickType_t Timestamp;
 	typedef size_t Index;
+	static const Timestamp PERIOD = 1000;
 
 	struct ReboadcastRecord {
 		bool used;
@@ -34,7 +37,7 @@ public:
 		// TODO: Implement some smarter rebroadcast mechanism
 		const Timestamp RebroadcastInterval = 5000;
 
-		// TODO: Do not rebroadcast local hosted knowledge ?
+		// TODO: Do not rebroadcast locally hosted knowledge ?
 
 		Index free = getFree();
 
@@ -61,8 +64,23 @@ public:
 	}
 
 	void rebroadcast(Index index) {
+		Console::log(">>> Rebroadcasting fragment");
 		broadcaster.broadcastFragment(records[index].fragment);
 		records[index].used = false;
+	}
+
+	/**
+	 * Check records and rebroadcast them every PERIOD
+	 */
+	void run() {
+		while(1) {
+			vTaskDelay(PERIOD / portTICK_PERIOD_MS);
+
+			const Timestamp now = xTaskGetTickCount();
+			for(Index i = 0; i < records.size(); ++i)
+				if(records[i].used && records[i].rebroadcast <= now)
+					rebroadcast(i);
+		}
 	}
 
 private:
