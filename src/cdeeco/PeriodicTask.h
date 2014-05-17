@@ -18,6 +18,7 @@
 #include "Task.h"
 
 #include "Console.h"
+#include "FreeRTOSTask.h"
 
 #include <stdio.h>
 #include <sstream>
@@ -26,31 +27,18 @@
 using namespace std;
 
 template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
-class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE> {
+class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask<> {
 public:
 	// Create the periodic task
 	PeriodicTask(long period, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge):
 			Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), period(period) {
 		Console::log(">> PeriodicTask constructor");
-
-		xTaskCreate(taskBodyLauncher, "PeriodicTask", this->DefaultStackSize, this, this->DefaultPriority, &handle);
 	}
 private:
 	long period;
-	TaskHandle_t handle;
-
-	/** Helper for launching task code from RTOS C environment */
-	static void taskBodyLauncher(void *data) {
-		Console::log(">> PeriodicTask body");
-
-		static_cast<PeriodicTask<KNOWLEDGE, OUT_KNOWLEDGE>*>(data)->taskBodyImplementation();
-
-		// Do not let the task run to the end
-		while (1) {}
-	}
 
 	/** Periodic task body implementation, responsible for periodic scheduling */
-	void taskBodyImplementation() {
+	void run() {
 		// Schedule the task periodically
 		while (1) {
 			// Run the task
