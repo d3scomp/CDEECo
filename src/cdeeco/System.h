@@ -9,15 +9,16 @@
 #define SYSTEM_H_
 
 #include <stdio.h>
+#include <array>
+#include <algorithm>
 
 #include "Console.h"
 #include "KnowledgeCache.h"
-
-typedef uint32_t Timestamp;
+#include "RebroadcastStorage.h"
 
 class System {
 public:
-	System() {
+	System(): rebroadcast(*this) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
@@ -32,9 +33,10 @@ public:
 	}
 
 	/** Receive listener */
-	void receiveListener(KnowledgeFragment fragment) {
+	void receiveListener(const KnowledgeFragment fragment) {
 		Console::log(">>>>>>>>> Received knowledge fragment:");
 		Console::logFragment(fragment);
+		processFragment(fragment);
 	}
 
 	/** Broadcast knowledge fragment */
@@ -45,22 +47,21 @@ public:
 	}
 
 	/** Process process received fragment */
-	void processFragment(KnowledgeFragment fragment) {
-		// TODO: Try to store fragment in one of the caches
-		// TODO: Store fragment in rebroadcast storage
+	void processFragment(const KnowledgeFragment fragment) {
+		// Store fragment in rebroadcast storage
+		rebroadcast.storeFragment(fragment);
+
+		// Try to store fragment in one of the caches
+		for(size_t i = 0; i < caches.size() && caches[i]; ++i)
+			caches[i]->storeFragment(fragment);
 	}
 
 private:
 	static const size_t CACHES = 3;
 	static const size_t REBROADCAST_SIZE = 8;
 
-	KnowledgeCache *caches[CACHES];
-
-	struct ReboadcastRecord {
-		Timestamp recieved;
-		Timestamp rebroadcast;
-		KnowledgeFragment fragment;
-	} rebroadcast[REBROADCAST_SIZE];
+	std::array<KnowledgeCache*, CACHES> caches;
+	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
 };
 
 #endif /* SYSTEM_H_ */

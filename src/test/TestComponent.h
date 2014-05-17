@@ -62,7 +62,7 @@ class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge::Positi
 public:
 	// Task initialization
 	TestPeriodicTask(Component<TestKnowledge> &component, TestKnowledge::Position &out) :
-			PeriodicTask(2000, component, out), led(green) {
+			PeriodicTask(1000, component, out), led(green) {
 		led.init();
 	}
 

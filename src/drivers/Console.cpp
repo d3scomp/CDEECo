@@ -129,7 +129,7 @@ uint8_t Console::recvHexVal() {
 	return 0;
 }
 
-void Console::logFragment(KnowledgeFragment fragment) {
+void Console::logFragment(const KnowledgeFragment fragment) {
 	// Print knowledge fragment
 	const size_t bufLen = 256;
 	char buffer[bufLen];

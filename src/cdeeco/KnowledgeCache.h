@@ -19,7 +19,7 @@ public:
 	virtual ~KnowledgeCache() {}
 
 	// TODO: Pass reference to the fragment?
-	virtual void storeFragment(KnowledgeFragment fragment) = 0;
+	virtual void storeFragment(const KnowledgeFragment fragment) = 0;
 };
 
 /** Typed cache for storing knowledge */
@@ -35,9 +35,11 @@ public:
 
 	virtual ~TypedKnowledgeCache() {}
 
-	void storeFragment(KnowledgeFragment fragment) {
+	void storeFragment(const KnowledgeFragment fragment) {
 		if(fragment.type != TYPE)
 			return; // Not our knowledge type
+
+		Console::log("Storing fragment in cache");
 
 		// TODO: Locking?
 

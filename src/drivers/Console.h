@@ -16,10 +16,10 @@
 
 class Console {
 public:
-	typedef void (*Listener)(void* data, KnowledgeFragment fragment);
+	typedef void (*Listener)(void* data, const KnowledgeFragment fragment);
 	static void init();
 	static void log(const char *text);
-	static void logFragment(KnowledgeFragment fragment);
+	static void logFragment(const KnowledgeFragment fragment);
 	static void setRecvFragmentListener(Listener, void* data);
 	static void interrupt();
 private:

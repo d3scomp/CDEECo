@@ -8,11 +8,12 @@ PERIPH_DIR=stm32f40xx/STM32F4xx_StdPeriph_Driver
 DISCOVERY_DIR=stm32f4discovery
 FREERTOS_DIR=FreeRTOS
 DRIVERS_DIR=${SRC_DIR}/drivers
+CDEECO_DIR=${SRC_DIR}/cdeeco
 
 OPENOCD_DIR=C:/Apps/openocd-0.7.0
 
 # System
-SRCS +=	${SRC_DIR}/main.cpp 
+SRCS +=	${SRC_DIR}/main.cpp
 
 # Drivers
 SRCS +=	${SRC_DIR}/drivers/LED.cpp
