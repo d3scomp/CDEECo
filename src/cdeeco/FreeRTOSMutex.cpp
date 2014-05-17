@@ -20,4 +20,3 @@ void FreeRTOSMutex::lock() {
 void FreeRTOSMutex::unlock() {
 	xSemaphoreGive(sem);
 }
-

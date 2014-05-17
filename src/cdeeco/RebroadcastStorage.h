@@ -4,14 +4,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <array>
+
 #include "Console.h"
 #include "KnowledgeFragment.h"
 #include "Broadcaster.h"
 #include "FreeRTOSTask.h"
-
-#include <array>
-
-// TODO: Locking
+#include "FreeRTOSMutex.h"
 
 template<size_t SIZE>
 class RebroadcastStorage: FreeRTOSTask<> {
@@ -39,12 +38,13 @@ public:
 
 		// TODO: Do not rebroadcast locally hosted knowledge ?
 
+		recordsMutex.lock();
 		Index free = getFree();
-
 		records[free].used = true;
 		records[free].received = xTaskGetTickCount();
 		records[free].rebroadcast = xTaskGetTickCount() + RebroadcastInterval / portTICK_PERIOD_MS;
 		records[free].fragment = fragment;
+		recordsMutex.unlock();
 	}
 
 	Index getFree() {
@@ -77,15 +77,18 @@ public:
 			vTaskDelay(PERIOD / portTICK_PERIOD_MS);
 
 			const Timestamp now = xTaskGetTickCount();
+			recordsMutex.lock();
 			for(Index i = 0; i < records.size(); ++i)
 				if(records[i].used && records[i].rebroadcast <= now)
 					rebroadcast(i);
+			recordsMutex.unlock();
 		}
 	}
 
 private:
 	Broadcaster &broadcaster;
 
+	FreeRTOSMutex recordsMutex;
 	std::array<RebroadcastStorage::ReboadcastRecord, SIZE> records;
 };
 
