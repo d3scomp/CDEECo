@@ -14,6 +14,7 @@ OPENOCD_DIR=C:/Apps/openocd-0.7.0
 
 # System
 SRCS +=	${SRC_DIR}/main.cpp
+SRCS += $(CDEECO_DIR)/FreeRTOSMutex.cpp
 
 # Drivers
 SRCS +=	${SRC_DIR}/drivers/LED.cpp

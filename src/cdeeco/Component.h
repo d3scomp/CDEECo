@@ -18,19 +18,20 @@
 #include "PeriodicTask.h"
 #include "ListedTriggerTask.h"
 #include "KnowledgeFragment.h"
+#include "FreeRTOSMutex.h"
 
 /** System component template */
 template<typename KNOWLEDGE>
 class Component {
 public:
 	Component(const ComponentType type, const ComponentId id, System &system) :
-			type(type), id(id), system(system), knowledgeSem(xSemaphoreCreateMutex()), rootTriggerTask(NULL) {
+			type(type), id(id), system(system), rootTriggerTask(NULL) {
 	}
 
 	KNOWLEDGE lockReadKnowledge() {
-		lockKnowledge();
+		knowledgeMutex.lock();
 		KNOWLEDGE in = knowledge;
-		unlockKnowledge();
+		knowledgeMutex.unlock();
 
 		return in;
 	}
@@ -40,14 +41,14 @@ public:
 		assert((size_t)&outKnowledge >= (size_t)&knowledge
 				&& (size_t)&outKnowledge + sizeof(OUT_KNOWLEDGE) <= (size_t)&knowledge + sizeof(KNOWLEDGE));
 
-		lockKnowledge();
+		knowledgeMutex.lock();
 		// Update knowledge
 		outKnowledge = knowledgeData;
 
 		// Broadcast updated knowledge fragments
 		broadcastChange(((size_t)&outKnowledge) - ((size_t)&knowledge), sizeof(OUT_KNOWLEDGE));
 
-		unlockKnowledge();
+		knowledgeMutex.unlock();
 
 		checkAndRunTriggeredTasks(outKnowledge);
 	}
@@ -78,15 +79,8 @@ protected:
 
 private:
 	System &system;
-	SemaphoreHandle_t knowledgeSem;
+	FreeRTOSMutex knowledgeMutex;
 	ListedTriggerTask *rootTriggerTask;
-
-	void lockKnowledge() {
-		xSemaphoreTake(knowledgeSem, portMAX_DELAY);
-	}
-	void unlockKnowledge() {
-		xSemaphoreGive(knowledgeSem);
-	}
 
 	template<typename T>
 	void checkAndRunTriggeredTasks(T &changed) {
@@ -106,8 +100,6 @@ private:
 
 		size_t end = start + size;
 		assert(end <= sizeof(KNOWLEDGE));
-
-
 
 		// Until the change is broadcasted
 		do {
