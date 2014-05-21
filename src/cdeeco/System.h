@@ -64,7 +64,7 @@ private:
 	static const size_t CACHES = 3;
 	static const size_t REBROADCAST_SIZE = 8;
 
-	std::array<KnowledgeCache*, CACHES> caches;
+	std::array<KnowledgeStorage*, CACHES> caches;
 	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
 };
 

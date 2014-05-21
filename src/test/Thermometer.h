@@ -47,7 +47,7 @@ protected:
  */
 class Component: public CDEECO::Component<Knowledge> {
 public:
-	ComponentType Type = 0x00000001;
+	static const ComponentType Type = 0x00000001;
 	Temp temp;
 
 	Component(System &system, ComponentId id) :

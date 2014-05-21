@@ -10,29 +10,37 @@
 
 #include <assert.h>
 
+#include "Console.h"
+
 #include "KnowledgeFragment.h"
 
-/** Interface to access knowledge cache */
-class KnowledgeCache {
+/** Interface to store knowledge in cache */
+class KnowledgeStorage {
 public:
-	virtual ~KnowledgeCache() {}
+	virtual ~KnowledgeStorage() {}
 
 	// TODO: Pass reference to the fragment?
 	virtual void storeFragment(const KnowledgeFragment fragment) = 0;
 };
 
+/** Interface to retrieve knowledge from cache */
+template<typename KNOWLEDGE>
+class KnowledgeLibrary {
+
+};
+
 /** Typed cache for storing knowledge */
 template<ComponentType TYPE, typename KNOWLEDGE, size_t SIZE>
-class TypedKnowledgeCache: KnowledgeCache {
+class KnowledgeCache: public KnowledgeStorage, public KnowledgeLibrary<KNOWLEDGE> {
 	typedef uint32_t Timestamp;
 
 public:
-	TypedKnowledgeCache() {
+	KnowledgeCache() {
 		// Erase cache
 		memset(&cache, 0, sizeof(CacheRecord) * SIZE);
 	}
 
-	virtual ~TypedKnowledgeCache() {}
+	virtual ~KnowledgeCache() {}
 
 	void storeFragment(const KnowledgeFragment fragment) {
 		if(fragment.type != TYPE)
@@ -41,9 +49,6 @@ public:
 		Console::log("Storing fragment in cache");
 
 		// TODO: Locking?
-
-		// Find index for data
-		size_t index = 0;
 
 		// Try to update knowledge and check for oldest knowledge
 		size_t oldest = 0;

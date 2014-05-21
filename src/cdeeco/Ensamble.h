@@ -10,18 +10,20 @@
 
 #include "Component.h"
 #include "KnowledgeCache.h"
+#include "cdeeco/FreeRTOSTask.h"
 
 namespace CDEECO {
 
 	template <typename COORD_KNOWLEDGE, typename OUT_KNOWLEDGE,  typename MEMBER_KNOWLEDGE>
-	class Ensamble: FreeRTOSTask {
+	class Ensamble {
 	public:
-		Ensamble(Component<COORD_KNOWLEDGE> &coordinator, OUT_KNOWLEDGE &outKnowledge, KnowledgeCache<MEMBER_KNOWLEDGE> &cache, long period):
-			coordinator(coordinator), outKnowledge(outKnowledge), cache(cache), period(period) {};
+		Ensamble(Component<COORD_KNOWLEDGE> &coordinator, OUT_KNOWLEDGE &outKnowledge, KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache, long period):
+			period(period), coordinator(coordinator), outKnowledge(outKnowledge), cache(cache) {};
 
 		virtual ~Ensamble() {
 		}
 
+	protected:
 		/**
 		 * Membership to function to be implemented
 		 *
@@ -44,7 +46,7 @@ namespace CDEECO {
 		long period;
 		Component<COORD_KNOWLEDGE> &coordinator;
 		OUT_KNOWLEDGE &outKnowledge;
-		KnowledgeCache<MEMBER_KNOWLEDGE> &cache;
+		KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache;
 
 		/** Ensamble periodic task */
 		void run() {

@@ -13,9 +13,12 @@
 
 #include "main.h"
 #include "UART.h"
+#include "cdeeco/KnowledgeCache.h"
+
 #include "test/TestComponent.h"
 #include "test/Thermometer.h"
 #include "test/Alarm.h"
+#include "test/TempExchange.h"
 
 #include <cstdio>
 #include <sstream>
@@ -57,7 +60,13 @@ int main(void) {
 	new Thermometer::Component(*system, 1);
 
 	Console::log(">>> About to construct alarm component");
-	new Alarm::Component(*system, 1);
+	Alarm::Component* alarm = new Alarm::Component(*system, 1);
+
+	Console::log(">>> About to construct knowledge cache");
+	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>();
+
+	Console::log(">>> About to construct temperature exchange ensamble");
+	new TempExchange::Ensamble(*alarm, *cache);
 
 	Console::log(">>> Running scheduler");
 

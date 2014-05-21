@@ -30,7 +30,9 @@ struct Knowledge: CDEECO::Knowledge {
 		float temp;
 	};
 
-	std::array<Temp, 10> tempsNearby;
+	typedef std::array<Temp, 10> Temps;
+
+	Temps tempsNearby;
 
 	bool tempCritical;
 };

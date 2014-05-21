@@ -69,15 +69,15 @@ public:
 		root->next = &task;
 	}
 
+	/// Knowledge of the component
+	KNOWLEDGE knowledge;
+
 protected:
 	/// Component type
 	const uint32_t type;
 
 	/// Component identification
 	const uint32_t id;
-
-	/// Knowledge of the component
-	KNOWLEDGE knowledge;
 
 private:
 	System &system;
