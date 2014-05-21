@@ -14,6 +14,7 @@
 #include "main.h"
 #include "UART.h"
 #include "test/TestComponent.h"
+#include "test/PortableThermometer.h"
 
 #include <cstdio>
 #include <sstream>
@@ -50,6 +51,9 @@ int main(void) {
 
 	Console::log(">>> About to construct test component");
 	new TestComponent(*system);
+
+	Console::log(">>> About to temperature component");
+		new PortableThermometer(*system, 1);
 
 	Console::log(">>> Running scheduler");
 
