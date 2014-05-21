@@ -1,6 +1,8 @@
 #ifndef COMPONENT_KNOWLEDGE_H_
 #define COMPONENT_KNOWLEDGE_H_
 
+#include "Console.h"
+
 namespace CDEECO {
 
 /**
@@ -17,6 +19,9 @@ struct Knowledge {
 template<class KNOWLEDGE>
 struct KnowledgeTrait {
 	static constexpr void* offsets[] = { };
+	static void humanPrint() {
+		Console::log("No human printing defined for this knowledge");
+	}
 };
 
 }

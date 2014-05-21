@@ -53,7 +53,7 @@ int main(void) {
 	new TestComponent(*system);
 
 	Console::log(">>> About to temperature component");
-		new PortableThermometer::Component(*system, 1);
+	new PortableThermometer::Component(*system, 1);
 
 	Console::log(">>> Running scheduler");
 
@@ -78,5 +78,14 @@ extern "C" {
 		Console::log("MALLOC FAILED!!!");
 		while(1) {
 		}
+	}
+}
+
+// GCC 4.9.0 fix ssp by dummy ssp
+extern "C" {
+	void __stack_chk_fail() {
+	}
+	bool __stack_chk_guard() {
+		return true;
 	}
 }
