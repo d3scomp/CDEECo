@@ -16,9 +16,9 @@
 
 #include "cdeeco/Component.h"
 
-namespace PortableThermometer {
+namespace Thermometer {
 
-/// Portable thermometer knowledge
+/// Thermometer knowledge
 struct Knowledge: CDEECO::Knowledge {
 	struct Position {
 		int x;
@@ -63,12 +63,12 @@ namespace CDEECO {
 
 /// Allowed offsets to guarantee knowledge consistency
 template<>
-struct KnowledgeTrait<PortableThermometer::Knowledge> {
-	static constexpr std::array<size_t, 1> offsets = { { offsetof(PortableThermometer::Knowledge, position) } };
+struct KnowledgeTrait<Thermometer::Knowledge> {
+	static constexpr std::array<size_t, 1> offsets = { { offsetof(Thermometer::Knowledge, position) } };
 };
 // This declaration do not require array size to be specified twice, but drives eclipse crazy.
 //constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-constexpr std::array<size_t, 1> KnowledgeTrait<PortableThermometer::Knowledge>::offsets;
+constexpr std::array<size_t, 1> KnowledgeTrait<Thermometer::Knowledge>::offsets;
 
 }
 
