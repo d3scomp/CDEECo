@@ -10,7 +10,7 @@ DEFINE_COMPOSED_KNOWLEDGE("GroupMemberKnowledge",
 			Int, "id");
 
 
-class GroupMember: Component<GroupMemberKnowledge> {
+class GroupMember: DeecoComponent<GroupMemberKnowledge> {
 public:
 	GroupMember(String id, String team_id) {
 		// Setup instance specific knowledge

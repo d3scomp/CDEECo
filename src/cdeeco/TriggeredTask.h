@@ -25,6 +25,8 @@
 
 using namespace std;
 
+namespace CDEECO {
+
 template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename OUT_KNOWLEDGE>
 class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask, FreeRTOSTask<> {
 public:
@@ -69,5 +71,7 @@ private:
 		}
 	}
 };
+
+}
 
 #endif /* TRIGERREDTASK_H_ */

@@ -53,7 +53,7 @@ int main(void) {
 	new TestComponent(*system);
 
 	Console::log(">>> About to temperature component");
-		new PortableThermometer(*system, 1);
+		new PortableThermometer::Component(*system, 1);
 
 	Console::log(">>> Running scheduler");
 

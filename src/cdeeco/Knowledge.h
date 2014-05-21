@@ -1,3 +1,8 @@
+#ifndef COMPONENT_KNOWLEDGE_H_
+#define COMPONENT_KNOWLEDGE_H_
+
+namespace CDEECO {
+
 /**
  * Knowledge interface
  */
@@ -14,3 +19,6 @@ struct KnowledgeTrait {
 	static constexpr void* offsets[] = { };
 };
 
+}
+
+#endif // COMPONENT_KNOWLEDGE_H

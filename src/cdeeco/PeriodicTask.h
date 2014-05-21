@@ -26,6 +26,8 @@
 
 using namespace std;
 
+namespace CDEECO {
+
 template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask<> {
 public:
@@ -49,5 +51,7 @@ private:
 		}
 	}
 };
+
+}
 
 #endif /* PERIODICTASK_H_ */

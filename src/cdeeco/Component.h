@@ -20,6 +20,8 @@
 #include "KnowledgeFragment.h"
 #include "FreeRTOSMutex.h"
 
+namespace CDEECO {
+
 /** System component template */
 template<typename KNOWLEDGE>
 class Component {
@@ -139,5 +141,7 @@ private:
 		return fragment.size;
 	}
 };
+
+}
 
 #endif /* COMPONENT_H_ */

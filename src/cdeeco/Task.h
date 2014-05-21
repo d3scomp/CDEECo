@@ -8,13 +8,15 @@
 #ifndef TASK_H_
 #define TASK_H_
 
-template<typename KNOWLEDGE>
-class Component;
-
 #include "FreeRTOS.h"
 #include "task.h"
 
 #include <stdlib.h>
+
+namespace CDEECO {
+
+template<typename KNOWLEDGE>
+class Component;
 
 /** Prototype for component tasks */
 template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
@@ -48,5 +50,7 @@ protected:
 		component.lockWriteKnowledge(outKnowledge, out);
 	}
 };
+
+}
 
 #endif /* TASK_H_ */

@@ -16,8 +16,10 @@
 
 #include "cdeeco/Component.h"
 
+namespace PortableThermometer {
+
 /// Portable thermometer knowledge
-struct PortableThermometerKnowledge: Knowledge {
+struct Knowledge: CDEECO::Knowledge {
 	struct Position {
 		int x;
 		int y;
@@ -26,42 +28,48 @@ struct PortableThermometerKnowledge: Knowledge {
 	float temperature;
 };
 
-/// Allowed offsets to guarantee knowledge consistency
-template<>
-struct KnowledgeTrait<PortableThermometerKnowledge> {
-	static constexpr std::array<size_t, 1> offsets = { { offsetof(PortableThermometerKnowledge, position) } };
+/// Temperature measure task
+class Temp: public CDEECO::PeriodicTask<Knowledge, float> {
+public:
+	Temp(CDEECO::Component<Knowledge> &component, float &out) :
+			PeriodicTask(2000, component, out) {
+	}
+
+protected:
+	float run(const Knowledge in) {
+		std::default_random_engine gen;
+		return in.temperature + gen() % 5;
+	}
 };
-// This declaration do not require array size to be specified twice, but drives eclipse crazy.
-//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-constexpr std::array<size_t, 1> KnowledgeTrait<PortableThermometerKnowledge>::offsets;
 
 /**
  * PortableThermometer component class
  */
-class PortableThermometer: public Component<PortableThermometerKnowledge> {
-private:
-	class Temp: public PeriodicTask<PortableThermometerKnowledge, float> {
-	public:
-		Temp(Component<PortableThermometerKnowledge> &component, float &out) :
-				PeriodicTask(2000, component, out) {
-		}
-
-	protected:
-		float run(const PortableThermometerKnowledge in) {
-			std::default_random_engine gen;
-			return in.temperature + gen() % 5;
-		}
-	};
-
+class Component: public CDEECO::Component<Knowledge> {
 public:
 	ComponentType Type = 0x00000001;
 	Temp temp;
 
-	PortableThermometer(System &system, ComponentId id) :
-			Component<PortableThermometerKnowledge>(1, id, system), temp(*this, this->knowledge.temperature) {
+	Component(System &system, ComponentId id) :
+			CDEECO::Component<Knowledge>(1, id, system), temp(*this, this->knowledge.temperature) {
 		// Initialize knowledge
-		memset(&knowledge, 0, sizeof(PortableThermometerKnowledge));
+		memset(&knowledge, 0, sizeof(Knowledge));
 	}
 };
+
+}
+
+namespace CDEECO {
+
+/// Allowed offsets to guarantee knowledge consistency
+template<>
+struct KnowledgeTrait<PortableThermometer::Knowledge> {
+	static constexpr std::array<size_t, 1> offsets = { { offsetof(PortableThermometer::Knowledge, position) } };
+};
+// This declaration do not require array size to be specified twice, but drives eclipse crazy.
+//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
+constexpr std::array<size_t, 1> KnowledgeTrait<PortableThermometer::Knowledge>::offsets;
+
+}
 
 #endif // PORTABLE_THERMOMETER_H_

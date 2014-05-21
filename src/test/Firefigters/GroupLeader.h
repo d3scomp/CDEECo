@@ -22,7 +22,7 @@ DEFINE_COMPOSED_KNOWLEDGE("GroupLeaderKnowledge",
 		Float , "spectrum");
 
 
-class GroupLeader: Component<GroupLeaderKnowledge> {
+class GroupLeader: DeecoComponent<GroupLeaderKnowledge> {
 public:
 	GroupLeader(String id, String team_id) {
 		// Setup instance specific knowledge

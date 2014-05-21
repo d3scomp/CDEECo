@@ -14,6 +14,8 @@
 #include <array>
 
 #include "cdeeco/Component.h"
+#include "cdeeco/Knowledge.h"
+#include "cdeeco/PeriodicTask.h"
 #include "cdeeco/TriggeredTask.h"
 
 /**
@@ -22,7 +24,7 @@
  * Holds integer and float values named "id" and "value".
  *
  */
-struct TestKnowledge: Knowledge {
+struct TestKnowledge: CDEECO::Knowledge {
 	struct Position {
 		int x;
 		int y;
@@ -36,19 +38,17 @@ struct TestKnowledge: Knowledge {
 	Position position;
 };
 
-/**
- * Define allowed offsets to guarantee knowledge consistency
- */
-template<>
-struct KnowledgeTrait<TestKnowledge> {
-	static constexpr std::array<size_t, 2> offsets = {{
-			offsetof(TestKnowledge, id),
-			offsetof(TestKnowledge, position)
-	}};
-};
-// This declaration do not require array size to be specified twice, but drives eclipse crazy.
-//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-constexpr std::array<size_t, 2> KnowledgeTrait<TestKnowledge>::offsets;
+namespace CDEECO {
+	/// Define allowed offsets to guarantee knowledge consistency
+	template<>
+	struct KnowledgeTrait<TestKnowledge> {
+		static constexpr std::array<size_t, 2> offsets = { { offsetof(TestKnowledge, id), offsetof(TestKnowledge,
+				position) } };
+	};
+	// This declaration do not require array size to be specified twice, but drives eclipse crazy.
+	//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
+	constexpr std::array<size_t, 2> KnowledgeTrait<TestKnowledge>::offsets;
+}
 
 /**
  * Test component periodic task
@@ -58,10 +58,10 @@ constexpr std::array<size_t, 2> KnowledgeTrait<TestKnowledge>::offsets;
  *
  * The task blinks the green LED and changes position knowledge.
  */
-class TestPeriodicTask: public PeriodicTask<TestKnowledge, TestKnowledge::Position> {
+class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge::Position> {
 public:
 	// Task initialization
-	TestPeriodicTask(Component<TestKnowledge> &component, TestKnowledge::Position &out) :
+	TestPeriodicTask(CDEECO::Component<TestKnowledge> &component, TestKnowledge::Position &out) :
 			PeriodicTask(1000, component, out), led(green) {
 		led.init();
 	}
@@ -97,10 +97,10 @@ protected:
 /**
  * Test component triggered task
  */
-class TestTriggeredTask: public TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
+class TestTriggeredTask: public CDEECO::TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(TestKnowledge::Position &trigger, Component<TestKnowledge> &component,
+	TestTriggeredTask(TestKnowledge::Position &trigger, CDEECO::Component<TestKnowledge> &component,
 			TestKnowledge::Value &outKnowledge) :
 			TriggeredTask(trigger, component, outKnowledge), led(red) {
 		led.init();
@@ -129,13 +129,13 @@ protected:
  *
  * Defines one periodic task.
  */
-class TestComponent: public Component<TestKnowledge> {
+class TestComponent: public CDEECO::Component<TestKnowledge> {
 public:
 	TestPeriodicTask periodicTask;
 	TestTriggeredTask triggeredTask;
 
 	TestComponent(System &system) :
-			Component<TestKnowledge>(0x42, 0, system), periodicTask(*this, this->knowledge.position), triggeredTask(
+			CDEECO::Component<TestKnowledge>(0x42, 0, system), periodicTask(*this, this->knowledge.position), triggeredTask(
 					this->knowledge.position, *this, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
