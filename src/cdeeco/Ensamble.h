@@ -55,14 +55,22 @@ namespace CDEECO {
 		void run() {
 			// Schedule the task periodically
 			while(1) {
-				// TODO: For all knowledge from the cache check member and execute map
+				// For all knowledge from the cache check member and execute map
 				Console::log(">>>> Ensamble task running now");
 
+				COORD_KNOWLEDGE coordKnowledge = coordinator.lockReadKnowledge();
+
 				for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : library) {
-					if(record.complete)
-						Console::log("Found valid cache record");
-					else
-						Console::log("Found INvalid cache record");
+					if(record.complete) {
+						Console::log(">>>> Found complete record, trying membership <<<<");
+						if(member(coordKnowledge, record.knowledge)) {
+							Console::log(">>>> Record's knowledge is member of this Ensable, running knowledge mapping");
+							OUT_KNOWLEDGE out = map(coordKnowledge, record.knowledge);
+							coordinator.lockWriteKnowledge(outKnowledge, out);
+						} else {
+							Console::log(">>>> Record's knowledge is not member <<<<");
+						}
+					}
 				}
 
 				// Wait for next execution time

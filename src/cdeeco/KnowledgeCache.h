@@ -33,7 +33,7 @@ public:
 	struct CacheRecord {
 		ComponentId id;
 		Timestamp timestamp;
-		KNOWLEDGE data;
+		KNOWLEDGE knowledge;
 		KNOWLEDGE availability;
 		bool complete;
 	};
@@ -131,7 +131,7 @@ private:
 		assert(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
 
 		// Set knowledge data
-		memcpy(((char*) &cache[index].data) + fragment.offset, fragment.data, fragment.size);
+		memcpy(((char*) &cache[index].knowledge) + fragment.offset, fragment.data, fragment.size);
 
 		// Update availability
 		memset(((char*) &cache[index].availability) + fragment.offset, 0xff, fragment.size);

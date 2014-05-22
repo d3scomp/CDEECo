@@ -27,14 +27,17 @@ namespace TempExchange {
 
 	protected:
 		bool member(const Alarm::Knowledge coord, const Thermometer::Knowledge member) {
-			// TODO: Implement membership method
-			return false;
+			// TODO: Implement membership method. For now we assume all temperatures are members.
+			return true;
 		}
 
+		// Map temperatures from Thermometers to Alarm
 		Alarm::Knowledge::Temps map(const Alarm::Knowledge coord, const Thermometer::Knowledge member) {
-			Alarm::Knowledge::Temps temps;
+			Alarm::Knowledge::Temps temps = coord.tempsNearby;
 
-			// TODO: Map knowledge from member to coordinator
+			// TODO: Do some proper mapping
+			temps[0].id = 42;
+			temps[0].temp = member.temperature;
 
 			return temps;
 		}
