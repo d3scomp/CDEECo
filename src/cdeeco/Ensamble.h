@@ -43,7 +43,7 @@ namespace CDEECO {
 		 * @param member Member knowledge
 		 * @return Output knowledge for coordinator
 		 */
-		virtual OUT_KNOWLEDGE map(const COORD_KNOWLEDGE coord, const MEMBER_KNOWLEDGE member) = 0;
+		virtual OUT_KNOWLEDGE map(const COORD_KNOWLEDGE coord, const ComponentId memberId, const MEMBER_KNOWLEDGE memberKnowledge) = 0;
 
 	private:
 		long period;
@@ -65,7 +65,7 @@ namespace CDEECO {
 						Console::log(">>>> Found complete record, trying membership <<<<");
 						if(member(coordKnowledge, record.knowledge)) {
 							Console::log(">>>> Record's knowledge is member of this Ensable, running knowledge mapping");
-							OUT_KNOWLEDGE out = map(coordKnowledge, record.knowledge);
+							OUT_KNOWLEDGE out = map(coordKnowledge, record.id, record.knowledge);
 							coordinator.lockWriteKnowledge(outKnowledge, out);
 						} else {
 							Console::log(">>>> Record's knowledge is not member <<<<");

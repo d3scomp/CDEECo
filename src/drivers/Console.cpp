@@ -131,7 +131,7 @@ uint8_t Console::recvHexVal() {
 
 void Console::logFragment(const KnowledgeFragment fragment) {
 	// Print knowledge fragment
-	const size_t bufLen = 256;
+	const size_t bufLen = 512;
 	char buffer[bufLen];
 
 	// Write fragment header
@@ -153,8 +153,8 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 		written += sprintf(buffer + written, "%02x", ((char*)&fragment)[i]);
 
 		// Stop printing when running out of buffer
-		if(written > bufLen - 32) {
-			sprintf(buffer + written, "...");
+		if(written > bufLen - 64) {
+			written += sprintf(buffer + written, "...");
 			break;
 		}
 	}
