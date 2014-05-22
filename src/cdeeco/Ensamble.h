@@ -15,7 +15,7 @@
 namespace CDEECO {
 
 	template <typename COORD_KNOWLEDGE, typename OUT_KNOWLEDGE,  typename MEMBER_KNOWLEDGE>
-	class Ensamble {
+	class Ensamble: FreeRTOSTask<> {
 	public:
 		Ensamble(Component<COORD_KNOWLEDGE> &coordinator, OUT_KNOWLEDGE &outKnowledge, KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache, long period):
 			period(period), coordinator(coordinator), outKnowledge(outKnowledge), cache(cache) {};
@@ -53,6 +53,7 @@ namespace CDEECO {
 			// Schedule the task periodically
 			while (1) {
 				// TODO: For all knowledge from the cache check member and execute map
+				Console::log(">>>> Ensamble task running now");
 
 				// Wait for next execution time
 				vTaskDelay(period / portTICK_PERIOD_MS);
