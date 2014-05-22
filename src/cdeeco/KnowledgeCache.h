@@ -9,9 +9,11 @@
 #define KNOWLEDGECACHE_H_
 
 #include <assert.h>
+#include <iterator>
+#include <array>
 
 #include "Console.h"
-
+#include "FreeRTOSMutex.h"
 #include "KnowledgeFragment.h"
 
 /** Interface to store knowledge in cache */
@@ -26,18 +28,65 @@ public:
 /** Interface to retrieve knowledge from cache */
 template<typename KNOWLEDGE>
 class KnowledgeLibrary {
+public:
+	typedef uint32_t Timestamp;
+	struct CacheRecord {
+		ComponentId id;
+		Timestamp timestamp;
+		KNOWLEDGE data;
+		KNOWLEDGE availability;
+		bool complete;
+	};
 
+	class Iterator: std::iterator<std::input_iterator_tag, CacheRecord> {
+	public:
+		Iterator(KnowledgeLibrary<KNOWLEDGE> &library, size_t index): library(library), index(index) {
+		}
+
+		Iterator operator ++() {
+			index++;
+			return this;
+		}
+
+		CacheRecord operator *() {
+			library.cacheAccess.lock();
+			CacheRecord record = library.cache[index];
+			library.cacheAccess.unlock();
+			return record;
+		}
+
+	private:
+		size_t index;
+		KnowledgeLibrary<KNOWLEDGE> &library;
+	};
+
+	KnowledgeLibrary(CacheRecord *cache, size_t size): cache(cache), cacheSize(size) {
+	}
+
+	virtual ~KnowledgeLibrary() {
+	}
+
+	Iterator begin() {
+		return Iterator(*this, 0);
+	}
+
+	Iterator end() {
+		return Iterator(*this, cacheSize);
+	}
+
+protected:
+	CacheRecord *cache;
+	size_t cacheSize;
+	FreeRTOSMutex cacheAccess;
 };
 
 /** Typed cache for storing knowledge */
 template<ComponentType TYPE, typename KNOWLEDGE, size_t SIZE>
 class KnowledgeCache: public KnowledgeStorage, public KnowledgeLibrary<KNOWLEDGE> {
-	typedef uint32_t Timestamp;
-
 public:
-	KnowledgeCache() {
+	KnowledgeCache(): KnowledgeLibrary<KNOWLEDGE>(cache.data(), cache.size()) {
 		// Erase cache
-		memset(&cache, 0, sizeof(CacheRecord) * SIZE);
+		memset(&cache, 0, sizeof(typename KnowledgeLibrary<KNOWLEDGE>::CacheRecord) * SIZE);
 	}
 
 	virtual ~KnowledgeCache() {}
@@ -48,7 +97,7 @@ public:
 
 		Console::log("Storing fragment in cache");
 
-		// TODO: Locking?
+		this->cacheAccess.lock();
 
 		// Try to update knowledge and check for oldest knowledge
 		size_t oldest = 0;
@@ -66,18 +115,12 @@ public:
 
 		// Replace oldest knowledge
 		writeCache(oldest, fragment);
+
+		this->cacheAccess.unlock();
 	}
 
 private:
-	struct CacheRecord {
-		ComponentId id;
-		Timestamp timestamp;
-		KNOWLEDGE data;
-		KNOWLEDGE availability;
-		bool complete;
-	};
-
-	CacheRecord cache[SIZE];
+	std::array<typename KnowledgeLibrary<KNOWLEDGE>::CacheRecord, SIZE> cache;
 
 	void updateCache(size_t index, const KnowledgeFragment fragment) {
 		assert(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
