@@ -64,6 +64,7 @@ int main(void) {
 
 	Console::log(">>> About to construct knowledge cache");
 	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>();
+	system->registerCache(cache);
 
 	Console::log(">>> About to construct temperature exchange ensamble");
 	new TempExchange::Ensamble(*alarm, *cache);

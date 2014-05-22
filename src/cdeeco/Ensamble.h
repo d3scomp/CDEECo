@@ -14,11 +14,14 @@
 
 namespace CDEECO {
 
-	template <typename COORD_KNOWLEDGE, typename OUT_KNOWLEDGE,  typename MEMBER_KNOWLEDGE>
+	template<typename COORD_KNOWLEDGE, typename OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE>
 	class Ensamble: FreeRTOSTask<> {
 	public:
-		Ensamble(Component<COORD_KNOWLEDGE> &coordinator, OUT_KNOWLEDGE &outKnowledge, KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache, long period):
-			period(period), coordinator(coordinator), outKnowledge(outKnowledge), cache(cache) {};
+		Ensamble(Component<COORD_KNOWLEDGE> &coordinator, OUT_KNOWLEDGE &outKnowledge,
+				KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache, long period) :
+				period(period), coordinator(coordinator), outKnowledge(outKnowledge), library(cache) {
+		}
+		;
 
 		virtual ~Ensamble() {
 		}
@@ -46,14 +49,21 @@ namespace CDEECO {
 		long period;
 		Component<COORD_KNOWLEDGE> &coordinator;
 		OUT_KNOWLEDGE &outKnowledge;
-		KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache;
+		KnowledgeLibrary<MEMBER_KNOWLEDGE> &library;
 
 		/** Ensamble periodic task */
 		void run() {
 			// Schedule the task periodically
-			while (1) {
+			while(1) {
 				// TODO: For all knowledge from the cache check member and execute map
 				Console::log(">>>> Ensamble task running now");
+
+				for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : library) {
+					if(record.complete)
+						Console::log("Found valid cache record");
+					else
+						Console::log("Found INvalid cache record");
+				}
 
 				// Wait for next execution time
 				vTaskDelay(period / portTICK_PERIOD_MS);

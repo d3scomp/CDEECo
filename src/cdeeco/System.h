@@ -60,6 +60,20 @@ public:
 			caches[i]->storeFragment(fragment);
 	}
 
+	/** Register knowledge cache */
+	void registerCache(KnowledgeStorage *cache) {
+		assert(caches[caches.size() - 1] == NULL);
+
+		for(size_t i = 0; i < CACHES; ++i)
+			if(caches[i] == NULL) {
+				caches[i] = cache;
+				return;
+			}
+
+		Console::log(">>>> OUT OF CACHE STORAGE <<<<");
+		assert(false);
+	}
+
 private:
 	static const size_t CACHES = 3;
 	static const size_t REBROADCAST_SIZE = 8;

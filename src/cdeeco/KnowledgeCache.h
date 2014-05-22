@@ -45,7 +45,7 @@ public:
 
 		Iterator operator ++() {
 			index++;
-			return this;
+			return *this;
 		}
 
 		CacheRecord operator *() {
@@ -55,9 +55,13 @@ public:
 			return record;
 		}
 
+		bool operator !=(const Iterator &other) {
+			return index != other.index;
+		}
+
 	private:
-		size_t index;
 		KnowledgeLibrary<KNOWLEDGE> &library;
+		size_t index;
 	};
 
 	KnowledgeLibrary(CacheRecord *cache, size_t size): cache(cache), cacheSize(size) {
@@ -105,6 +109,7 @@ public:
 			// Store data is id matches
 			if(cache[i].id == fragment.id) {
 				updateCache(i, fragment);
+				this->cacheAccess.unlock();
 				return;
 			}
 
@@ -134,7 +139,7 @@ private:
 		// Check whenever the knowledge is complete
 		bool complete = true;
 		for(size_t i = 0; i < sizeof(KNOWLEDGE); ++i)
-			if(((char*) &cache[index])[i] != 0xff)
+			if(((char*) &cache[index].availability)[i] != 0xff)
 				complete = false;
 		if(complete)
 			cache[index].complete = true;
