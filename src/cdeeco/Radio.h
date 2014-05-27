@@ -26,10 +26,45 @@ public:
 		mrf.setSPIPriority(0,0);
 		mrf.setRFPriority(2,0);
 		mrf.init();
+
+		mrf.setRecvListener(receiverListenerStatic, this);
 	}
 
 	void broadcastFragment(const KnowledgeFragment fragment) {
 		mrf.broadcastPacket((uint8_t*)&fragment, (uint8_t)fragment.length());
+	}
+
+	static void receiverListenerStatic(void *data) {
+		static_cast<Radio*>(data)->receiveListener();
+	}
+
+	void receiveListener() {
+		Console::log(">>>> About to receive data from RF interface");
+
+		KnowledgeFragment fragment;
+
+		// TODO: Do not copy data
+
+		uint8_t data[128];
+		uint8_t size;
+		uint8_t srcPanId[2];
+		uint8_t srcSAddr[2];
+		uint8_t fcs[2];
+		uint8_t lqi;
+		uint8_t rssi;
+
+		bool ok = mrf.recvPacket(data, size, srcPanId, srcSAddr, fcs, lqi, rssi);
+
+		if(ok) {
+			Console::log(">>>> Received knowledge via RF interface");
+
+			memcpy(&fragment, data, sizeof(fragment));
+
+			receiver.receiveFragment(fragment);
+
+		} else {
+			Console::log(">>>> Failed to receive knowledge via RF interface");
+		}
 	}
 
 public:
