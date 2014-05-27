@@ -31,7 +31,7 @@ class KnowledgeLibrary {
 public:
 	typedef uint32_t Timestamp;
 	struct CacheRecord {
-		ComponentId id;
+		KnowledgeFragment::Id id;
 		Timestamp timestamp;
 		KNOWLEDGE knowledge;
 		KNOWLEDGE availability;
@@ -85,7 +85,7 @@ protected:
 };
 
 /** Typed cache for storing knowledge */
-template<ComponentType TYPE, typename KNOWLEDGE, size_t SIZE>
+template<KnowledgeFragment::Type TYPE, typename KNOWLEDGE, size_t SIZE>
 class KnowledgeCache: public KnowledgeStorage, public KnowledgeLibrary<KNOWLEDGE> {
 public:
 	KnowledgeCache(): KnowledgeLibrary<KNOWLEDGE>(cache.data(), cache.size()) {

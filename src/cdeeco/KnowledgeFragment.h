@@ -11,15 +11,15 @@
 #include <cstdint>
 #include <cstring>
 
-typedef uint32_t ComponentType;
-typedef uint32_t ComponentId;
-
-const size_t MAX_PACKET_SIZE = 128;
-const size_t MAX_DATA_SIZE = 100;
-
 struct KnowledgeFragment {
-	ComponentType type;
-	ComponentId id;
+	typedef uint32_t Type;
+	typedef uint32_t Id;
+
+	static const size_t MAX_PACKET_SIZE = 128;
+	static const size_t MAX_DATA_SIZE = 100;
+
+	Type type;
+	Id id;
 	size_t size;
 	size_t offset;
 	char data[MAX_DATA_SIZE];
@@ -29,6 +29,6 @@ struct KnowledgeFragment {
 	}
 };
 
-static_assert(MAX_PACKET_SIZE >= sizeof(KnowledgeFragment), "Knowledge fragment too big to fit into packet.");
+static_assert(KnowledgeFragment::MAX_PACKET_SIZE >= sizeof(KnowledgeFragment), "Knowledge fragment too big to fit into packet.");
 
 #endif // KNOWLEDGE_FRAGMENT_H_

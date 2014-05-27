@@ -31,7 +31,7 @@ namespace TempExchange {
 		}
 
 		// Map temperatures from Thermometers to Alarm
-		Alarm::Knowledge::Temps map(const Alarm::Knowledge coord, const ComponentId memberId,
+		Alarm::Knowledge::Temps map(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
 				const Thermometer::Knowledge memberKnowledge) {
 			Alarm::Knowledge::Temps temps = coord.tempsNearby;
 

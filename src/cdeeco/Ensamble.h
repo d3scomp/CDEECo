@@ -42,7 +42,7 @@ namespace CDEECO {
 		 * @param member Member knowledge
 		 * @return Output knowledge for coordinator
 		 */
-		virtual OUT_KNOWLEDGE map(const COORD_KNOWLEDGE coord, const ComponentId memberId, const MEMBER_KNOWLEDGE memberKnowledge) = 0;
+		virtual OUT_KNOWLEDGE map(const COORD_KNOWLEDGE coord, const KnowledgeFragment::Id memberId, const MEMBER_KNOWLEDGE memberKnowledge) = 0;
 
 	private:
 		long period;

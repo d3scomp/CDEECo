@@ -26,7 +26,7 @@ namespace CDEECO {
 template<typename KNOWLEDGE>
 class Component {
 public:
-	Component(const ComponentType type, const ComponentId id, System &system) :
+	Component(const KnowledgeFragment::Type type, const KnowledgeFragment::Id id, System &system) :
 			type(type), id(id), system(system), rootTriggerTask(NULL) {
 	}
 

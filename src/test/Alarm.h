@@ -26,7 +26,7 @@ struct Knowledge: CDEECO::Knowledge {
 	} position;
 
 	struct Temp {
-		ComponentId id;
+		KnowledgeFragment::Id id;
 		float temp;
 	};
 
@@ -62,10 +62,10 @@ protected:
  */
 class Component: public CDEECO::Component<Knowledge> {
 public:
-	ComponentType Type = 0x00000002;
+	KnowledgeFragment::Type Type = 0x00000002;
 	Check check;
 
-	Component(System &system, ComponentId id) :
+	Component(System &system, KnowledgeFragment::Id id) :
 			CDEECO::Component<Knowledge>(Type, id, system), check(*this, this->knowledge.tempCritical) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));

@@ -47,10 +47,10 @@ protected:
  */
 class Component: public CDEECO::Component<Knowledge> {
 public:
-	static const ComponentType Type = 0x00000001;
+	static const KnowledgeFragment::Type Type = 0x00000001;
 	Temp temp;
 
-	Component(System &system, ComponentId id) :
+	Component(System &system, KnowledgeFragment::Id id) :
 			CDEECO::Component<Knowledge>(1, id, system), temp(*this, this->knowledge.temperature) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));

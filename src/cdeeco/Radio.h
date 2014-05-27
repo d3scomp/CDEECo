@@ -10,6 +10,7 @@
 
 #include "Receiver.h"
 #include "Broadcaster.h"
+#include "Console.h"
 
 #include "drivers/MRF24J40.h"
 
@@ -24,7 +25,6 @@ public:
 
 		mrf.setSPIPriority(0,0);
 		mrf.setRFPriority(2,0);
-
 		mrf.init();
 	}
 
