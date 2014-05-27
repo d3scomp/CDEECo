@@ -205,8 +205,8 @@ private:
 			uint8_t bytes[2];
 		} result;
 
-		result.bytes[0] = receiveByte();
 		result.bytes[1] = receiveByte();
+		result.bytes[0] = receiveByte();
 
 		return result.value;
 	}

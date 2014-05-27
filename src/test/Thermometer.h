@@ -15,6 +15,7 @@
 #include <random>
 
 #include "cdeeco/Component.h"
+#include "drivers/SHT1x.h"
 
 namespace Thermometer {
 
@@ -32,13 +33,18 @@ struct Knowledge: CDEECO::Knowledge {
 class Temp: public CDEECO::PeriodicTask<Knowledge, float> {
 public:
 	Temp(CDEECO::Component<Knowledge> &component, float &out) :
-			PeriodicTask(2000, component, out) {
+			PeriodicTask(2000, component, out), sensor(sensorProps) {
+		sensor.init();
 	}
 
 protected:
+	SHT1x::Properties sensorProps {
+		GPIOB, RCC_AHB1Periph_GPIOB, GPIO_Pin_8, GPIO_Pin_7
+	};
+	SHT1x sensor;
+
 	float run(const Knowledge in) {
-		std::default_random_engine gen;
-		return in.temperature + gen() % 5;
+		return sensor.readTemperature();
 	}
 };
 
@@ -51,7 +57,7 @@ public:
 	Temp temp;
 
 	Component(System &system, KnowledgeFragment::Id id) :
-			CDEECO::Component<Knowledge>(1, id, system), temp(*this, this->knowledge.temperature) {
+			CDEECO::Component<Knowledge>(Type, id, system), temp(*this, this->knowledge.temperature) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));
 	}
