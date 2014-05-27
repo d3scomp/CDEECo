@@ -42,9 +42,9 @@ public:
 
 	/** Broadcast knowledge fragment */
 	void broadcastFragment(KnowledgeFragment fragment) {
-		// TODO: Enqueue fragment for broadcasting
 		Console::log(">>>>>>>>> Sending knowledge fragment:");
 		Console::logFragment(fragment);
+		radio.broadcastFragment(fragment);
 	}
 
 	/** Process process received fragment */
