@@ -12,7 +12,8 @@
 #include "semphr.h"
 
 #include "main.h"
-#include "UART.h"
+#include "drivers/UART.h"
+#include "drivers/SHT1x.h"
 #include "cdeeco/KnowledgeCache.h"
 
 #include "test/TestComponent.h"
@@ -37,9 +38,11 @@ Timer delayTimer(tim6Props);
 
 /** System startup function */
 int main(void) {
+
 	delayTimer.setPriority(1, 1);
 	delayTimer.init();
 	Console::init();
+
 	Console::log("\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #");
 	Console::log(" # # # # # # # # # # # # # # # # # # #");
@@ -76,8 +79,7 @@ int main(void) {
 
 	// This should not be reached
 	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
-	while(1) {
-	}
+	while(1) {}
 }
 
 // FreeRTOS System error handlers

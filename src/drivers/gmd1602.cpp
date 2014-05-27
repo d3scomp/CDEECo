@@ -16,7 +16,7 @@ void GMD1602::init() {
 	GPIO_InitTypeDef  gpioInitStruct;
 
 	// Enable the GPIO_LED Clock
-	RCC_AHB1PeriphClockCmd(clk, ENABLE);
+	RCC_AHB1PeriphClockCmd(GPIOB_BASE, ENABLE);
 
 	// Configure the GPIO pin
 	gpioInitStruct.GPIO_Pin = E | RS | RW | D4 | D5 | D6 | D7;
