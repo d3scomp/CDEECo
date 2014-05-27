@@ -22,7 +22,6 @@ namespace TempExchange {
 		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, KnowledgeLibrary<Thermometer::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge>(coordinator,
 						coordinator.knowledge.tempsNearby, library, 5000) {
-
 		}
 
 	protected:

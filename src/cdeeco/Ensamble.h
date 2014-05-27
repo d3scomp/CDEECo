@@ -21,7 +21,6 @@ namespace CDEECO {
 				KnowledgeLibrary<MEMBER_KNOWLEDGE> &cache, long period) :
 				period(period), coordinator(coordinator), outKnowledge(outKnowledge), library(cache) {
 		}
-		;
 
 		virtual ~Ensamble() {
 		}
