@@ -41,11 +41,11 @@ public:
 	void receiveListener() {
 		Console::log(">>>> About to receive data from RF interface");
 
-		KnowledgeFragment fragment;
+		union {
+			KnowledgeFragment fragment;
+			uint8_t data[128];
+		} buffer;
 
-		// TODO: Do not copy data
-
-		uint8_t data[128];
 		uint8_t size;
 		uint8_t srcPanId[2];
 		uint8_t srcSAddr[2];
@@ -53,15 +53,13 @@ public:
 		uint8_t lqi;
 		uint8_t rssi;
 
-		bool ok = mrf.recvPacket(data, size, srcPanId, srcSAddr, fcs, lqi, rssi);
+		bool ok = mrf.recvPacket(buffer.data, size, srcPanId, srcSAddr, fcs, lqi, rssi);
+
+		// TODO: Check size match, pass link quality, rssi to be processed by rebroadcaster
 
 		if(ok) {
 			Console::log(">>>> Received knowledge via RF interface");
-
-			memcpy(&fragment, data, sizeof(fragment));
-
-			receiver.receiveFragment(fragment);
-
+			receiver.receiveFragment(buffer.fragment);
 		} else {
 			Console::log(">>>> Failed to receive knowledge via RF interface");
 		}
@@ -75,7 +73,6 @@ public:
 	static LED redLed;
 	static PulseLED greenPulseLed;
 	static PulseLED redPulseLed;
-
 
 	static MRF24J40 mrf;
 };
