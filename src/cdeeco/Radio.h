@@ -16,41 +16,33 @@
 class Radio: Broadcaster {
 public:
 	Radio(Receiver &receiver) :
-			receiver(receiver), greenLed(greenLedProps), redLed(redLedProps), greenPulseLed(greenLed, 1), redPulseLed(
-					redLed, 1), mrf(mrfProps, greenPulseLed, redPulseLed) {
+			receiver(receiver) {
 		greenLed.init();
 		redLed.init();
+		greenPulseLed.init();
+		redPulseLed.init();
+
+		mrf.setSPIPriority(0,0);
+		mrf.setRFPriority(2,0);
+
+		mrf.init();
 	}
 
 	void broadcastFragment(const KnowledgeFragment fragment) {
-		// TODO: Broadcast fragment
-
+		mrf.broadcastPacket((uint8_t*)&fragment, (uint8_t)fragment.length());
 	}
 
-private:
+public:
 	Receiver &receiver;
 
 	// Receiver and transmit LEDs
-	LED::Properties greenLedProps { GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD };
-	LED::Properties redLedProps { GPIOD, GPIO_Pin_14, RCC_AHB1Periph_GPIOD };
-	LED greenLed;
-	LED redLed;
-	PulseLED greenPulseLed;
-	PulseLED redPulseLed;
+	static LED greenLed;
+	static LED redLed;
+	static PulseLED greenPulseLed;
+	static PulseLED redPulseLed;
 
-	// MRF24J40
-	MRF24J40::Properties mrfProps {
-		GPIOE, GPIOE, GPIOB, GPIOD,
-		SPI3,
-		GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_2,
-		GPIO_PinSource4, GPIO_PinSource5, GPIO_PinSource3, GPIO_PinSource4, GPIO_PinSource5,
-		RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD,
-		RCC_APB1PeriphClockCmd, RCC_APB1Periph_SPI3,
-		GPIO_AF_SPI3,
-		EXTI_Line2, EXTI_PortSourceGPIOD, EXTI_PinSource2, EXTI2_IRQn,
-		SPI3_IRQn
-	};
-	MRF24J40 mrf;
+
+	static MRF24J40 mrf;
 };
 
 #endif // RADIO_H_

@@ -4,6 +4,7 @@
 #include "LED.h"
 
 #include "Console.h"
+#include "cdeeco/Radio.h"
 
 
 /** @addtogroup Template_Project
@@ -119,12 +120,7 @@ void DebugMon_Handler(void) {
  * @retval None
  */
 void USART2_IRQHandler(void) {
-//	GPIOA->BSRRL = GPIO_Pin_1;  // Requires test1Led to be initialized in main.cpp
-//	uartTOHD.txrxInterruptHandler();
-
 	Console::interrupt();
-
-//	GPIOA->BSRRH = GPIO_Pin_1;
 }
 
 /**
@@ -160,7 +156,7 @@ void EXTI1_IRQHandler(void) {
  * @retval None
  */
 void EXTI2_IRQHandler(void) {
-//	mrf.rfInterruptHandler();
+	Radio::mrf.rfInterruptHandler();
 }
 
 /**
@@ -170,7 +166,7 @@ void EXTI2_IRQHandler(void) {
  */
 void SPI3_IRQHandler(void) {
 //	GPIOA->BSRRL = GPIO_Pin_5;    // Requires test2Led to be initialized in main.cpp
-//	mrf.spiInterruptHandler();
+	Radio::mrf.spiInterruptHandler();
 //	GPIOA->BSRRH = GPIO_Pin_5;
 }
 

@@ -136,8 +136,7 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 			fragment.id, fragment.size, fragment.offset);
 
 	// Write fragment data
-	size_t validSize = sizeof(fragment) - sizeof(fragment.data) + fragment.size;
-	for(size_t i = 0; i < validSize; ++i) {
+	for(size_t i = 0; i < fragment.length(); ++i) {
 		// Hex output formating
 		if(i % 16 == 0) {
 			buffer[written++] = '\n';
