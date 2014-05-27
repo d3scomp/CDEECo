@@ -2,6 +2,7 @@
 #define CONSOLE_H_
 
 #include "cdeeco/KnowledgeFragment.h"
+#include "cdeeco/Receiver.h"
 
 //#define CONSOLE_LCD
 #define CONSOLE_SERIAL
@@ -16,11 +17,10 @@
 
 class Console {
 public:
-	typedef void (*Listener)(void* data, const KnowledgeFragment fragment);
 	static void init();
 	static void log(const char *text);
 	static void logFragment(const KnowledgeFragment fragment);
-	static void setRecvFragmentListener(Listener, void* data);
+	static void setFragmentReceiver(Receiver *receiver);
 	static void interrupt();
 private:
 #ifdef CONSOLE_LCD
@@ -30,8 +30,7 @@ private:
 #ifdef CONSOLE_SERIAL
 	static UART serial;
 #endif
-	static void *listenerData;
-	static Listener listenerFunc;
+	static Receiver *receiver;
 	static void receiveListener(void* data);
 
 	template<typename T>

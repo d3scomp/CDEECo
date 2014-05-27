@@ -21,8 +21,7 @@ GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3, RCC_APB1PeriphClockCmd
 UART Console::serial(serialProps);
 #endif
 
-void* Console::listenerData = NULL;
-Console::Listener Console::listenerFunc = NULL;
+Receiver* Console::receiver = NULL;
 
 void Console::init() {
 #ifdef CONSOLE_LCD
@@ -55,12 +54,9 @@ void Console::log(const char *text) {
 	xTaskResumeAll();
 }
 
-void Console::setRecvFragmentListener(Listener listener, void* data) {
-	// Store listener function and data
-	listenerData = data;
-	listenerFunc = listener;
-	assert(listenerData);
-	assert(listenerFunc);
+void Console::setFragmentReceiver(Receiver *receiver) {
+	Console::receiver = receiver;
+	assert(receiver);
 
 	// Enable event listening
 	serial.setRecvListener(receiveListener, NULL);
@@ -84,7 +80,8 @@ void Console::receiveListener(void* data) {
 		for(size_t i = 0; i < fragment.size; ++i)
 			fragment.data[i] = recv<char>();
 
-		listenerFunc(listenerData, fragment);
+		if(receiver)
+			receiver->receiveFragment(fragment);
 	}
 }
 

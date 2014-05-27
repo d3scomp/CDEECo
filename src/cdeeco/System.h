@@ -29,12 +29,7 @@ public:
 
 		// Init console input
 		Console::log("Setting fragment listener");
-		Console::setRecvFragmentListener(staticReceiveListener, this);
-	}
-
-	/** Static receive listener */
-	static void staticReceiveListener(void *data, KnowledgeFragment fragment) {
-		static_cast<System*>(data)->receiveFragment(fragment);
+		Console::setFragmentReceiver(this);
 	}
 
 	/** Receive listener */
