@@ -1,3 +1,10 @@
+/*
+ * Broadcaster.h
+ *
+ *  Created on: 7. 5. 2014
+ *      Author: Vladimír Matěna
+ */
+
 #ifndef BROADCASTER_H
 #define BROADCASTER_H
 

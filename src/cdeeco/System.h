@@ -16,11 +16,12 @@
 #include "Console.h"
 #include "KnowledgeCache.h"
 #include "Broadcaster.h"
+#include "Receiver.h"
 
 template<size_t SIZE>
 class RebroadcastStorage;
 
-class System: Broadcaster {
+class System: Broadcaster, Receiver {
 public:
 	System(): rebroadcast(*this) {
 		// Erase caches
@@ -33,11 +34,11 @@ public:
 
 	/** Static receive listener */
 	static void staticReceiveListener(void *data, KnowledgeFragment fragment) {
-		static_cast<System*>(data)->receiveListener(fragment);
+		static_cast<System*>(data)->receiveFragment(fragment);
 	}
 
 	/** Receive listener */
-	void receiveListener(const KnowledgeFragment fragment) {
+	void receiveFragment(const KnowledgeFragment fragment) {
 		Console::log(">>>>>>>>> Received knowledge fragment:");
 		Console::logFragment(fragment);
 		processFragment(fragment);
