@@ -17,13 +17,14 @@
 #include "KnowledgeCache.h"
 #include "Broadcaster.h"
 #include "Receiver.h"
+#include "Radio.h"
 
 template<size_t SIZE>
 class RebroadcastStorage;
 
 class System: Broadcaster, Receiver {
 public:
-	System(): rebroadcast(*this) {
+	System(): rebroadcast(*this), radio(*this) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
@@ -76,6 +77,8 @@ private:
 
 	std::array<KnowledgeStorage*, CACHES> caches;
 	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
+
+	Radio radio;
 };
 
 #endif /* SYSTEM_H_ */
