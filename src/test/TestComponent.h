@@ -62,12 +62,12 @@ class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge
 public:
 	// Task initialization
 	TestPeriodicTask(CDEECO::Component<TestKnowledge> &component, TestKnowledge::Position &out) :
-			PeriodicTask(1000, component, out), led(green) {
+			PeriodicTask(1000, component, out), led(blue) {
 		led.init();
 	}
 
 private:
-	LED::Properties green { GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD };
+	LED::Properties blue { GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD };
 	LED led;
 
 protected:
