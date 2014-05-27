@@ -23,7 +23,8 @@ public:
 		uint32_t sdaPin;
 	};
 
-	SHT1x(Properties &properties): properties(properties) {
+	SHT1x(Properties &properties) :
+			properties(properties) {
 		Console::log("\n\n\n\n\nSHT1x constructor");
 	}
 
@@ -103,6 +104,7 @@ private:
 		GPIO_InitStructure.GPIO_Pin = properties.sdaPin;
 		GPIO_Init(properties.gpio, &GPIO_InitStructure);
 	}
+
 	void sclPulse(void) {
 		sclHi();
 		delayTimer.uDelay(COM_DELAY);
