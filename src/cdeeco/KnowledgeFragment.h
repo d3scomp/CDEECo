@@ -16,7 +16,7 @@ struct KnowledgeFragment {
 	typedef uint32_t Id;
 
 	static const size_t MAX_PACKET_SIZE = 128;
-	static const size_t MAX_DATA_SIZE = 100;
+	static const size_t MAX_DATA_SIZE = 112;
 
 	Type type;
 	Id id;
@@ -29,6 +29,6 @@ struct KnowledgeFragment {
 	}
 };
 
-static_assert(KnowledgeFragment::MAX_PACKET_SIZE >= sizeof(KnowledgeFragment), "Knowledge fragment too big to fit into packet.");
+static_assert(KnowledgeFragment::MAX_PACKET_SIZE == sizeof(KnowledgeFragment), "Knowledge fragment size not equal to packet size.");
 
 #endif // KNOWLEDGE_FRAGMENT_H_
