@@ -47,15 +47,15 @@ private:
 
 	void reset();
 	void sdaMode(uint32_t mode);
-	void sdaHi(void);
-	void sdaLo(void);
+	void sdaHi();
+	void sdaLo();
 	bool sdaRead();
-	void sclPulse(void);
+	void sclPulse();
 	void sclHi();
 	void sclLo();
 	bool sendByte(uint8_t data);
 	uint8_t receiveByte();
-	void startCommand(void);
+	void startCommand();
 	uint16_t readCommand(uint8_t command);
 };
 

@@ -58,12 +58,12 @@ void SHT1x::sdaMode(uint32_t mode) {
 	properties.gpio->MODER |= (mode << (pinPos * 2));
 }
 
-void SHT1x::sdaHi(void) {
+void SHT1x::sdaHi() {
 	sdaMode(GPIO_Mode_OUT);
 	GPIO_SetBits(properties.gpio, properties.sdaPin);
 }
 
-void SHT1x::sdaLo(void) {
+void SHT1x::sdaLo() {
 	sdaMode(GPIO_Mode_OUT);
 	GPIO_ResetBits(properties.gpio, properties.sdaPin);
 }
@@ -73,7 +73,7 @@ bool SHT1x::sdaRead() {
 	return GPIO_ReadInputDataBit(properties.gpio, properties.sdaPin) != Bit_RESET;
 }
 
-void SHT1x::sclPulse(void) {
+void SHT1x::sclPulse() {
 	sclHi();
 	delayTimer.uDelay(COM_DELAY);
 	sclLo();
@@ -135,7 +135,7 @@ uint8_t SHT1x::receiveByte() {
 	return data;
 }
 
-void SHT1x::startCommand(void) {
+void SHT1x::startCommand() {
 	// Command start sequence
 	sdaHi();
 	sclLo();
