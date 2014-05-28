@@ -11,6 +11,7 @@
 #include "cstdio"
 #include <stm32f4xx.h>
 #include <stm32f4xx_gpio.h>
+#include <math.h>
 
 #include "Console.h"
 
@@ -32,7 +33,7 @@ public:
 		// Initialize GPIO
 		RCC_AHB1PeriphClockCmd(properties.gpioClk, ENABLE);
 		GPIO_InitTypeDef GPIO_InitStruct;
-		GPIO_InitStruct.GPIO_Pin = properties.sclPin;
+		GPIO_InitStruct.GPIO_Pin = properties.sclPin | properties.sdaPin;
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 		GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -44,20 +45,6 @@ public:
 
 	float readTemperature() {
 		uint16_t raw = readCommand(CMD_MEASURE_TEMP);
-
-		int w = 0;
-		char buff[20];
-		buff[w++] = 'b';
-		buff[w++] = '0';
-		buff[w++] = ':';
-		for(int i = 0; i < 16; ++i) {
-			if(raw & (1 << i))
-				buff[w++] = '1';
-			else
-				buff[w++] = '0';
-		}
-		Console::log(buff);
-
 		return TD1 + TD2 * raw;
 	}
 
@@ -86,23 +73,33 @@ private:
 		delayTimer.mDelay(11);
 	}
 
+	void sdaMode(uint32_t mode) {
+		// Find pin position
+		uint32_t pinPos = 0;
+		for(int i = 0; i < 8; ++i)
+			if(1 << i & properties.sdaPin) {
+				pinPos = i;
+				break;
+			}
+
+		// Set pin mode
+		properties.gpio->MODER  &= ~(GPIO_MODER_MODER0 << (pinPos * 2));
+		properties.gpio->MODER |= (mode << (pinPos * 2));
+	}
+
 	void sdaHi(void) {
-		GPIO_InitTypeDef GPIO_InitStructure;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-		GPIO_InitStructure.GPIO_Pin = properties.sdaPin;
-		GPIO_Init(properties.gpio, &GPIO_InitStructure);
+		sdaMode(GPIO_Mode_OUT);
+		GPIO_SetBits(properties.gpio, properties.sdaPin);
+
 	}
 	void sdaLo(void) {
-		GPIO_InitTypeDef GPIO_InitStructure;
-		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-		GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-		GPIO_InitStructure.GPIO_Pin = properties.sdaPin;
-		GPIO_Init(properties.gpio, &GPIO_InitStructure);
+		sdaMode(GPIO_Mode_OUT);
+		GPIO_ResetBits(properties.gpio, properties.sdaPin);
+	}
+
+	bool sdaRead() {
+		sdaMode(GPIO_Mode_IN);
+		return GPIO_ReadInputDataBit(properties.gpio, properties.sdaPin) != Bit_RESET;
 	}
 
 	void sclPulse(void) {
@@ -117,10 +114,6 @@ private:
 
 	void sclLo() {
 		GPIO_ResetBits(properties.gpio, properties.sclPin);
-	}
-
-	bool sdaRead() {
-		return GPIO_ReadInputDataBit(properties.gpio, properties.sdaPin) != Bit_RESET;
 	}
 
 	/**
