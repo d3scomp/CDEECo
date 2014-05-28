@@ -17,3 +17,4 @@ FILE_PATTERNS			=	*.c *.cpp *.h *.dox
 RECURSIVE				=	YES
 
 HAVE_DOT				=	YES
+UML_LOOK				=	YES
