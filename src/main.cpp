@@ -42,10 +42,12 @@ void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
 
 /** System startup function */
 int main(void) {
-
+	// Initialize delay timer
 	delayTimer.setPriority(1, 1);
 	delayTimer.init();
 	Console::init();
+
+	assert_param(false);
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #");
@@ -115,3 +117,28 @@ extern "C" {
 		return true;
 	}
 }
+
+
+#ifdef  USE_FULL_ASSERT
+/**
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
+void assert_failed(uint8_t* file, uint32_t line)
+{
+	/* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+	Console::log("Assert failed");
+	//Console::log("Assert: %s:%d", file, line);
+
+	/* Infinite loop */
+	while (1)
+	{
+	}
+}
+#endif
+
