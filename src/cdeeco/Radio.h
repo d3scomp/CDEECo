@@ -23,23 +23,53 @@ public:
 		greenPulseLed.init();
 		redPulseLed.init();
 
-		mrf.setSPIPriority(0,0);
-		mrf.setRFPriority(2,0);
+		NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 2 bits for pre-emption priority, 2 bits for non-preemptive subpriority
+		mrf.setSPIPriority(0, 0);
+		mrf.setRFPriority(2, 0);
 		mrf.init();
 
+		//	mrf.reset();
+
 		mrf.setRecvListener(receiverListenerStatic, this);
+		mrf.setBroadcastCompleteListener(broadcastCompleteListenerStatic, this);
 
-		mrf.setChannel(1);
+		mrf.setChannel(0);
 
-		uint8_t panId[] {128, 128};
-		uint8_t sAddr[] {128, 128};
+		uint8_t panId[] { 43, 44 };
+		uint8_t sAddr[] { 45, 46 };
 
 		mrf.setPANId(panId);
 		mrf.setSAddr(sAddr);
+
+		/*EXTI_InitTypeDef EXTI_InitStructure;
+		NVIC_InitTypeDef NVIC_InitStructure;
+
+		 // Configure trigger EXTI line
+		 EXTI_InitStructure.EXTI_Line = EXTI_Line2;
+		 EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+		 EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+		 EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+		 EXTI_Init(&EXTI_InitStructure);
+		 */
+		/*	// Enable and set trigger EXTI Interrupt to the lowest priority
+		 NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;
+		 NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+		 NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+		 NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+		 NVIC_Init(&NVIC_InitStructure);*/
 	}
 
+	int cnt = 0;
 	void broadcastFragment(const KnowledgeFragment fragment) {
-		mrf.broadcastPacket((uint8_t*)&fragment, (uint8_t)fragment.length());
+		//	if(cnt++ == 0)
+		mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
+	}
+
+	static void broadcastCompleteListenerStatic(void *data, bool success) {
+		if(!success)
+			Console::log(">>>> Broadcast failed ################");
+		else
+			Console::log(">>>> Broadcast complete ################");
 	}
 
 	static void receiverListenerStatic(void *data) {
@@ -47,7 +77,7 @@ public:
 	}
 
 	void receiveListener() {
-		Console::log(">>>> About to receive data from RF interface");
+		Console::log(">>>> About to receive data from RF interface #####################");
 
 		union {
 			KnowledgeFragment fragment;
