@@ -23,10 +23,7 @@ public:
 		uint32_t sdaPin;
 	};
 
-	SHT1x(Properties &properties) :
-			properties(properties) {
-		Console::log("\n\n\n\n\nSHT1x constructor");
-	}
+	SHT1x(Properties &properties);
 
 	void init();
 	float readTemperature();

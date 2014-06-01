@@ -14,6 +14,10 @@
 
 #include "Console.h"
 
+SHT1x::SHT1x(Properties &properties) :
+		properties(properties) {
+}
+
 void SHT1x::init() {
 	// Initialize GPIO
 	RCC_AHB1PeriphClockCmd(properties.gpioClk, ENABLE);
