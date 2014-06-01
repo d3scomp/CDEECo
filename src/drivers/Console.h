@@ -1,6 +1,8 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
+#include <cstdio>
+
 #include "cdeeco/KnowledgeFragment.h"
 #include "cdeeco/Receiver.h"
 
@@ -22,6 +24,21 @@ public:
 	static void logFragment(const KnowledgeFragment fragment);
 	static void setFragmentReceiver(Receiver *receiver);
 	static void interrupt();
+
+	template<typename T0>
+	static void log(const char *text, const T0 v0) {
+		char buff[40];
+		sprintf(buff, text, v0);
+		log(buff);
+	}
+
+	template<typename T0, typename T1>
+	static void log(const char *text, const T0 v0, const T1 v1) {
+		char buff[80];
+		sprintf(buff, text, v0, v1);
+		log(buff);
+	}
+
 private:
 #ifdef CONSOLE_LCD
 	static GMD1602 lcd;
