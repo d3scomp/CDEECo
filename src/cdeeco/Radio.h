@@ -28,6 +28,14 @@ public:
 		mrf.init();
 
 		mrf.setRecvListener(receiverListenerStatic, this);
+
+		mrf.setChannel(1);
+
+		uint8_t panId[] {128, 128};
+		uint8_t sAddr[] {128, 128};
+
+		mrf.setPANId(panId);
+		mrf.setSAddr(sAddr);
 	}
 
 	void broadcastFragment(const KnowledgeFragment fragment) {

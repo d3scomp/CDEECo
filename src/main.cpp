@@ -36,6 +36,10 @@ Timer::Properties tim6Props {
 TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
+void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
+	PulseLED::tickInterruptHandler();
+}
+
 /** System startup function */
 int main(void) {
 
@@ -72,6 +76,11 @@ int main(void) {
 	Console::log(">>> About to construct temperature exchange ensamble");
 	new TempExchange::Ensamble(*alarm, *cache);
 
+	Console::log(">>> Setting timer to make pulse leds work");
+
+	TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
+	xTimerStart(pulseLedTimerhandle, 10);
+
 	Console::log(">>> Running scheduler");
 
 	// Start the scheduler.
@@ -79,7 +88,8 @@ int main(void) {
 
 	// This should not be reached
 	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
-	while(1) {}
+	while(1) {
+	}
 }
 
 // FreeRTOS System error handlers
