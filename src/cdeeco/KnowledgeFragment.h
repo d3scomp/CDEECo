@@ -17,6 +17,7 @@ struct KnowledgeFragment {
 
 	static const size_t MAX_PACKET_SIZE = 128;
 	static const size_t MAX_DATA_SIZE = 112;
+	static const uint32_t CDEECO_MAGIC = 0xcdeec044;
 
 	Type type;
 	Id id;
