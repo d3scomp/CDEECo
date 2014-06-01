@@ -17,21 +17,21 @@
 #include "Thermometer.h"
 
 namespace TempExchange {
-	class Ensamble: CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge> {
+	class Ensamble: CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge, void> {
 	public:
 		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, KnowledgeLibrary<Thermometer::Knowledge> &library) :
-				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge>(coordinator,
-						coordinator.knowledge.tempsNearby, library, 5000) {
+				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge, void>(&coordinator,
+						&coordinator.knowledge.tempsNearby, &library, 5000) {
 		}
 
 	protected:
-		bool member(const Alarm::Knowledge coord, const Thermometer::Knowledge memberKnowledge) {
+		bool isMember(const Alarm::Knowledge coord, const Thermometer::Knowledge memberKnowledge) {
 			// TODO: Implement membership method. For now we assume all temperatures are members.
 			return true;
 		}
 
 		// Map temperatures from Thermometers to Alarm
-		Alarm::Knowledge::Temps map(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
+		Alarm::Knowledge::Temps memberToCoordMap(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
 				const Thermometer::Knowledge memberKnowledge) {
 			Alarm::Knowledge::Temps temps = coord.tempsNearby;
 
@@ -49,8 +49,13 @@ namespace TempExchange {
 			return temps;
 		}
 
+		// Map data from Alarm to Thermometer
+		void coordToMemberMap(const Thermometer::Knowledge member, const KnowledgeFragment::Id coordId, const Alarm::Knowledge coordKnowledge) {
+			// This does nothing
+		}
+
 	private:
-			std::default_random_engine gen;
+		std::default_random_engine gen;
 	};
 }
 
