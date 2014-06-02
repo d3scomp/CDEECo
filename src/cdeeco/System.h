@@ -84,12 +84,13 @@ public:
 private:
 	static const size_t CACHES = 3;
 	static const size_t REBROADCAST_SIZE = 8;
+	static const size_t RXBUFF_SIZE = 5;
 
 	std::array<KnowledgeStorage*, CACHES> caches;
 	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
 
 	Radio radio;
-	FragmentBuffer<5> rxBuffer;
+	FragmentBuffer<RXBUFF_SIZE> rxBuffer;
 	FreeRTOSSemaphore rxSem;
 	static const size_t MAX_TX_WAITING = 100;
 
