@@ -32,8 +32,9 @@ public:
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
+		Console::log(">>> System constructor");
+
 		// Init console input
-		Console::log("Setting fragment listener");
 		Console::setFragmentReceiver(this);
 	}
 

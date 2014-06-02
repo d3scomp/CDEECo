@@ -57,33 +57,26 @@ int main(void) {
 	delayTimer.mDelay(3000);
 	Console::log(">>> Starting system");
 
-	Console::log(">>> About to construct system object");
+
 	System *system = new System();
 
-	Console::log(">>> About to construct test component");
+	// Test component
 	new TestComponent(*system);
 
-	Console::log(">>> About to construct temperature component");
+	// Temperature monitoring system
 	new Thermometer::Component(*system, 1);
-
-	Console::log(">>> About to construct alarm component");
 	Alarm::Component* alarm = new Alarm::Component(*system, 1);
-
-	Console::log(">>> About to construct knowledge cache");
 	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>();
 	system->registerCache(cache);
-
-	Console::log(">>> About to construct temperature exchange ensamble");
 	new TempExchange::Ensamble(*alarm, *cache);
 
+	// TODO: This is not nice
 	Console::log(">>> Setting timer to make pulse leds work");
-
 	TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
 	xTimerStart(pulseLedTimerhandle, 10);
 
-	Console::log(">>> Running scheduler");
-
 	// Start the scheduler.
+	Console::log(">>> Running scheduler");
 	vTaskStartScheduler();
 
 	// This should not be reached
