@@ -2,12 +2,10 @@
  * FreeRTOSMutex.cpp
  *
  *  Created on: 17. 5. 2014
- *      Author: vlada
+ *      Author: Vladimír Matěna
  */
 
 #include "FreeRTOSMutex.h"
-
-#include "Console.h"
 
 FreeRTOSMutex::FreeRTOSMutex() :
 		sem(xSemaphoreCreateMutex()) {

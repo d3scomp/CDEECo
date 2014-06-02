@@ -2,7 +2,7 @@
  * FreeRTOSMutex.h
  *
  *  Created on: 17. 5. 2014
- *      Author: vlada
+ *      Author: Vladimír Matěna
  */
 
 #ifndef FREERTOSMUTEX_H_
