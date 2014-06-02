@@ -1,0 +1,3 @@
+#!/bin/sh
+stty -F $1 raw speed 921600 -crtscts cs8 -parenb -cstopb
+cat $1
