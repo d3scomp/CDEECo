@@ -59,7 +59,7 @@ public:
 
 	/** Register knowledge cache */
 	void registerCache(KnowledgeStorage *cache) {
-		assert(caches[caches.size() - 1] == NULL);
+		assert_param(caches[caches.size() - 1] == NULL);
 
 		for(size_t i = 0; i < CACHES; ++i)
 			if(caches[i] == NULL) {
@@ -68,7 +68,7 @@ public:
 			}
 
 		Console::log(">>>> OUT OF CACHE STORAGE <<<<");
-		assert(false);
+		assert_param(false);
 	}
 
 private:

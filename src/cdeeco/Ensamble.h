@@ -41,7 +41,7 @@ namespace CDEECO {
 		 *
 		 * @param coord Coordinator knowledge
 		 * @param member Member knowledge
-		 * @return Whenever the member is part of Ensamble
+		 * @return Whenever the member is part of Ensemble
 		 */
 		virtual bool isMember(const COORD_KNOWLEDGE coord, const MEMBER_KNOWLEDGE member) = 0;
 
@@ -96,7 +96,7 @@ namespace CDEECO {
 			} else {
 				// Error mixed setup
 				Console::log("Error mixed ensamble setup");
-				assert(false);
+				assert_param(false);
 			}
 		}
 

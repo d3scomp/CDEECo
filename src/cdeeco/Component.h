@@ -11,8 +11,6 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
-#include <assert.h>
-
 #include "System.h"
 #include "Knowledge.h"
 #include "PeriodicTask.h"
@@ -22,125 +20,127 @@
 
 namespace CDEECO {
 
-/** System component template */
-template<typename KNOWLEDGE>
-class Component {
-public:
-	Component(const KnowledgeFragment::Type type, const KnowledgeFragment::Id id, System &system) :
-			type(type), id(id), system(system), rootTriggerTask(NULL) {
-	}
-
-	KNOWLEDGE lockReadKnowledge() {
-		knowledgeMutex.lock();
-		KNOWLEDGE in = knowledge;
-		knowledgeMutex.unlock();
-
-		return in;
-	}
-
-	template<typename OUT_KNOWLEDGE>
-	void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
-		assert((size_t)&outKnowledge >= (size_t)&knowledge
-				&& (size_t)&outKnowledge + sizeof(OUT_KNOWLEDGE) <= (size_t)&knowledge + sizeof(KNOWLEDGE));
-
-		knowledgeMutex.lock();
-		// Update knowledge
-		outKnowledge = knowledgeData;
-
-		// Broadcast updated knowledge fragments
-		broadcastChange(((size_t)&outKnowledge) - ((size_t)&knowledge), sizeof(OUT_KNOWLEDGE));
-
-		knowledgeMutex.unlock();
-
-		checkAndRunTriggeredTasks(outKnowledge);
-	}
-
-	void addTriggeredTask(ListedTriggerTask &task) {
-		// Install new list head
-		if(rootTriggerTask == NULL) {
-			rootTriggerTask = &task;
-			return;
+	/** System component template */
+	template<typename KNOWLEDGE>
+	class Component {
+	public:
+		Component(const KnowledgeFragment::Type type, const KnowledgeFragment::Id id, System &system) :
+				type(type), id(id), system(system), rootTriggerTask(NULL) {
 		}
 
-		// Add to the end of the list
-		ListedTriggerTask *root = rootTriggerTask;
-		while(root->next != NULL)
-			root = root->next;
-		root->next = &task;
-	}
+		KNOWLEDGE lockReadKnowledge() {
+			knowledgeMutex.lock();
+			KNOWLEDGE in = knowledge;
+			knowledgeMutex.unlock();
 
-	/// Knowledge of the component
-	KNOWLEDGE knowledge;
-
-protected:
-	/// Component type
-	const uint32_t type;
-
-	/// Component identification
-	const uint32_t id;
-
-private:
-	System &system;
-	FreeRTOSMutex knowledgeMutex;
-	ListedTriggerTask *rootTriggerTask;
-
-	template<typename T>
-	void checkAndRunTriggeredTasks(T &changed) {
-		for(ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
-			task->checkTriggerCondition(changed);
+			return in;
 		}
-	}
 
-	/**
-	 * Broadcast knowledge change
-	 *
-	 * @param start Change start relative to knowledge
-	 * @param size Change size
-	 */
-	void broadcastChange(size_t start, size_t size) {
-		Console::log("Broadcasting change");
+		template<typename OUT_KNOWLEDGE>
+		void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
+			assert_param(
+					(size_t )&outKnowledge >= (size_t )&knowledge
+							&& (size_t )&outKnowledge + sizeof(OUT_KNOWLEDGE)
+									<= (size_t )&knowledge + sizeof(KNOWLEDGE));
 
-		size_t end = start + size;
-		assert(end <= sizeof(KNOWLEDGE));
+			knowledgeMutex.lock();
+			// Update knowledge
+			outKnowledge = knowledgeData;
 
-		// Until the change is broadcasted
-		do {
-			// Find start offset
-			size_t brdStart = 0;
-			bool found = false;
-			for(int i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
-				if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
-					found = true;
-					brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
-					break;
-				}
+			// Broadcast updated knowledge fragments
+			broadcastChange(((size_t) &outKnowledge) - ((size_t) &knowledge), sizeof(OUT_KNOWLEDGE));
+
+			knowledgeMutex.unlock();
+
+			checkAndRunTriggeredTasks(outKnowledge);
+		}
+
+		void addTriggeredTask(ListedTriggerTask &task) {
+			// Install new list head
+			if(rootTriggerTask == NULL) {
+				rootTriggerTask = &task;
+				return;
 			}
-			assert(found);
 
-			// Broadcast fragment
-			start = brdStart + broadcastFragment(brdStart);
-		} while (start < end);
-	}
+			// Add to the end of the list
+			ListedTriggerTask *root = rootTriggerTask;
+			while(root->next != NULL)
+				root = root->next;
+			root->next = &task;
+		}
 
-	/**
-	 * Broadcast knowledge fragment
-	 *
-	 * @param start Start fragment offset
-	 * @return Broadcasted knowledge data size
-	 */
-	size_t broadcastFragment(size_t start) {
-		KnowledgeFragment fragment;
-		fragment.id = id;
-		fragment.type = type;
-		fragment.offset = start;
-		fragment.size = std::min(sizeof(KNOWLEDGE) - start, sizeof(fragment.data));
-		memcpy(fragment.data, &((char*)&knowledge)[start], fragment.size);
+		/// Knowledge of the component
+		KNOWLEDGE knowledge;
 
-		system.broadcastFragment(fragment);
+	protected:
+		/// Component type
+		const uint32_t type;
 
-		return fragment.size;
-	}
-};
+		/// Component identification
+		const uint32_t id;
+
+	private:
+		System &system;
+		FreeRTOSMutex knowledgeMutex;
+		ListedTriggerTask *rootTriggerTask;
+
+		template<typename T>
+		void checkAndRunTriggeredTasks(T &changed) {
+			for(ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
+				task->checkTriggerCondition(changed);
+			}
+		}
+
+		/**
+		 * Broadcast knowledge change
+		 *
+		 * @param start Change start relative to knowledge
+		 * @param size Change size
+		 */
+		void broadcastChange(size_t start, size_t size) {
+			Console::log("Broadcasting change");
+
+			size_t end = start + size;
+			assert_param(end <= sizeof(KNOWLEDGE));
+
+			// Until the change is broadcasted
+			do {
+				// Find start offset
+				size_t brdStart = 0;
+				bool found = false;
+				for(int i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
+					if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
+						found = true;
+						brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
+						break;
+					}
+				}
+				assert_param(found);
+
+				// Broadcast fragment
+				start = brdStart + broadcastFragment(brdStart);
+			} while(start < end);
+		}
+
+		/**
+		 * Broadcast knowledge fragment
+		 *
+		 * @param start Start fragment offset
+		 * @return Broadcasted knowledge data size
+		 */
+		size_t broadcastFragment(size_t start) {
+			KnowledgeFragment fragment;
+			fragment.id = id;
+			fragment.type = type;
+			fragment.offset = start;
+			fragment.size = std::min(sizeof(KNOWLEDGE) - start, sizeof(fragment.data));
+			memcpy(fragment.data, &((char*) &knowledge)[start], fragment.size);
+
+			system.broadcastFragment(fragment);
+
+			return fragment.size;
+		}
+	};
 
 }
 

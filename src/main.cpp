@@ -47,8 +47,6 @@ int main(void) {
 	delayTimer.init();
 	Console::init();
 
-	assert_param(false);
-
 	Console::log("\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #");
 	Console::log(" # # # # # # # # # # # # # # # # # # #");

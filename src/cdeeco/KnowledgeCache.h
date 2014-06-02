@@ -8,7 +8,6 @@
 #ifndef KNOWLEDGECACHE_H_
 #define KNOWLEDGECACHE_H_
 
-#include <assert.h>
 #include <iterator>
 #include <array>
 
@@ -128,7 +127,7 @@ private:
 	std::array<typename KnowledgeLibrary<KNOWLEDGE>::CacheRecord, SIZE> cache;
 
 	void updateCache(size_t index, const KnowledgeFragment fragment) {
-		assert(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
+		assert_param(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
 
 		// Set knowledge data
 		memcpy(((char*) &cache[index].knowledge) + fragment.offset, fragment.data, fragment.size);

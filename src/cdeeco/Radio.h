@@ -8,9 +8,13 @@
 #ifndef RADIO_H_
 #define RADIO_H_
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include "Receiver.h"
 #include "Broadcaster.h"
 #include "Console.h"
+#include "FragmentBuffer.h"
 
 #include "drivers/MRF24J40.h"
 
@@ -59,13 +63,32 @@ public:
 		 NVIC_Init(&NVIC_InitStructure);*/
 	}
 
-	int cnt = 0;
 	void broadcastFragment(const KnowledgeFragment fragment) {
-		//	if(cnt++ == 0)
-		mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
+		vTaskSuspendAll();
+		buffer.put(fragment);
+		tryBroadcast();
+		xTaskResumeAll();
 	}
 
-	static void broadcastCompleteListenerStatic(void *data, bool success) {
+	void tryBroadcast() {
+		if(!buffer.isEmpty() && !txInProgress) {
+			KnowledgeFragment fragment;
+			buffer.get(fragment);
+			txInProgress = true;
+			mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
+		}
+	}
+
+	static void broadcastCompleteListenerStatic(void *data, const bool success) {
+		static_cast<Radio*>(data)->broadcastCompleteListener(success);
+	}
+
+	void broadcastCompleteListener(const bool success) {
+		vTaskSuspendAll();
+		txInProgress = false;
+		tryBroadcast();
+		xTaskResumeAll();
+
 		if(!success)
 			Console::log(">>>> Broadcast failed ################");
 		else
@@ -103,9 +126,12 @@ public:
 		}
 	}
 
-public:
+private:
 	Receiver &receiver;
+	bool txInProgress = false;
+	FragmentBuffer<5> buffer;
 
+public: //TODO: Should be private<
 	// Receiver and transmit LEDs
 	static LED greenLed;
 	static LED redLed;
