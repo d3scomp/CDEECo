@@ -104,30 +104,30 @@ private:
 	PulseLED& recvLed;
 	PulseLED& sendLed;
 
-	uint8_t channel;
+	uint8_t channel = 0;
 	uint8_t panId[2];
 	uint8_t sAddr[2];
 
-	int txCount;
-	int rxCount;
+	int txCount = 0;
+	int rxCount = 0;
 
-	uint8_t irqSPIPreemptionPriority;
-	uint8_t irqSPISubPriority;
-	uint8_t irqRFPreemptionPriority;
-	uint8_t irqRFSubPriority;
+	uint8_t irqSPIPreemptionPriority = 0;
+	uint8_t irqSPISubPriority = 0;
+	uint8_t irqRFPreemptionPriority = 0;
+	uint8_t irqRFSubPriority = 0;
 
-	RecvListener recvListener;
-	void* recvListenerObj;
+	RecvListener recvListener = NULL;
+	void* recvListenerObj = NULL;
 
-	BroadcastCompleteListener broadcastCompleteListener;
-	void* broadcastCompleteListenerObj;
+	BroadcastCompleteListener broadcastCompleteListener = NULL;
+	void* broadcastCompleteListenerObj = NULL;
 
 	void writeShort(uint8_t addr, uint8_t value);
 	void writeLong(uint16_t addr, uint8_t value);
 	uint8_t readShort(uint8_t addr);
 	uint8_t readLong(uint16_t addr);
 
-	uint8_t lastReadValue;
+	uint8_t lastReadValue = 0;
 
 	/* short registers */
 	static constexpr uint8_t RXMCR = 0x00;
