@@ -18,7 +18,7 @@ namespace CDEECO {
 
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
 	typename MEMBER_OUT_KNOWLEDGE>
-	class Ensamble: FreeRTOSTask<> {
+	class Ensamble: FreeRTOSTask {
 	public:
 		Ensamble(Component<COORD_KNOWLEDGE> *coordinator, COORD_OUT_KNOWLEDGE *coordOutKnowledge,
 				KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary, long period) :

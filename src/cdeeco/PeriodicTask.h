@@ -29,7 +29,7 @@ using namespace std;
 namespace CDEECO {
 
 template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
-class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask<> {
+class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask {
 public:
 	// Create the periodic task
 	PeriodicTask(long period, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge):

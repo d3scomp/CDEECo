@@ -16,11 +16,10 @@
 /**
  * C++ wrapper for FreeRTOS task
  */
-template <size_t STACK = 4096, unsigned long PRIORITY = tskIDLE_PRIORITY + 1UL>
 class FreeRTOSTask {
 public:
-	FreeRTOSTask() {
-		xTaskCreate(taskBody, "Task", STACK, this, PRIORITY, &handle);
+	FreeRTOSTask(size_t stackSize = 2048, unsigned long priority = 1UL) {
+		xTaskCreate(taskBody, "Task", stackSize, this, tskIDLE_PRIORITY + priority, &handle);
 	}
 	virtual ~FreeRTOSTask() {
 		vTaskDelete(handle);
@@ -37,7 +36,7 @@ private:
 
 	/// FreeRTOS task entry point
 	static void taskBody(void *data) {
-		static_cast<FreeRTOSTask<STACK, PRIORITY>*>(data)->run();
+		static_cast<FreeRTOSTask*>(data)->run();
 	}
 };
 

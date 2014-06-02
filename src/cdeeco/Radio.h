@@ -65,15 +65,15 @@ public:
 
 	void broadcastFragment(const KnowledgeFragment fragment) {
 		vTaskSuspendAll();
-		buffer.put(fragment);
+		txBuffer.put(fragment);
 		tryBroadcast();
 		xTaskResumeAll();
 	}
 
 	void tryBroadcast() {
-		if(!buffer.isEmpty() && !txInProgress) {
+		if(!txBuffer.isEmpty() && !txInProgress) {
 			KnowledgeFragment fragment;
-			buffer.get(fragment);
+			txBuffer.get(fragment);
 			txInProgress = true;
 			mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
 		}
@@ -129,7 +129,7 @@ public:
 private:
 	Receiver &receiver;
 	bool txInProgress = false;
-	FragmentBuffer<5> buffer;
+	FragmentBuffer<5> txBuffer;
 
 public: //TODO: Should be private<
 	// Receiver and transmit LEDs

@@ -13,7 +13,7 @@
 #include "FreeRTOSMutex.h"
 
 template<size_t SIZE>
-class RebroadcastStorage: FreeRTOSTask<> {
+class RebroadcastStorage: FreeRTOSTask {
 private:
 	typedef TickType_t Timestamp;
 	typedef size_t Index;
