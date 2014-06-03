@@ -38,7 +38,7 @@ TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
 PulseLED::Properties pulseProps {
-	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 3
+	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 6
 };
 
 /**

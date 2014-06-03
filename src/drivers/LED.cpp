@@ -79,7 +79,7 @@ void PulseLED::initTimer(Properties &props) {
 	TIM_TimeBaseInitTypeDef TIM_TimeBase_InitStructure;
 	TIM_TimeBase_InitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBase_InitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBase_InitStructure.TIM_Period = 100;
+	TIM_TimeBase_InitStructure.TIM_Period = 50;
 	TIM_TimeBase_InitStructure.TIM_Prescaler = 16800;
 	TIM_TimeBaseInit(props.timer, &TIM_TimeBase_InitStructure);
 	TIM_ITConfig(props.timer, TIM_IT_Update, ENABLE);
