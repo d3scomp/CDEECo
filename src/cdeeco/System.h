@@ -26,8 +26,8 @@ class RebroadcastStorage;
 
 class System: Broadcaster, Receiver {
 public:
-	System() :
-			rebroadcast(*this), radio(*this) {
+	System(KnowledgeFragment::Id id) :
+			id(id), rebroadcast(*this), radio(*this) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
@@ -76,7 +76,14 @@ public:
 		assert_param(false);
 	}
 
+	KnowledgeFragment::Id getId() {
+		return id;
+	}
+
 private:
+	// Used as Id of all system components
+	const KnowledgeFragment::Id id;
+
 	static const size_t CACHES = 3;
 	static const size_t REBROADCAST_SIZE = 8;
 	static const size_t RXBUFF_SIZE = 5;

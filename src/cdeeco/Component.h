@@ -24,8 +24,8 @@ namespace CDEECO {
 	template<typename KNOWLEDGE>
 	class Component {
 	public:
-		Component(const KnowledgeFragment::Type type, const KnowledgeFragment::Id id, System &system) :
-				type(type), id(id), system(system), rootTriggerTask(NULL) {
+		Component(const KnowledgeFragment::Type type, System &system) :
+				type(type), system(system), rootTriggerTask(NULL) {
 		}
 
 		KNOWLEDGE lockReadKnowledge() {
@@ -75,9 +75,6 @@ namespace CDEECO {
 	protected:
 		/// Component type
 		const uint32_t type;
-
-		/// Component identification
-		const uint32_t id;
 
 	private:
 		System &system;
@@ -130,7 +127,7 @@ namespace CDEECO {
 		 */
 		size_t broadcastFragment(size_t start) {
 			KnowledgeFragment fragment;
-			fragment.id = id;
+			fragment.id = system.getId();
 			fragment.type = type;
 			fragment.offset = start;
 			fragment.size = std::min(sizeof(KNOWLEDGE) - start, sizeof(fragment.data));

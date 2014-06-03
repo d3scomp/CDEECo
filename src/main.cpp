@@ -75,14 +75,14 @@ int main(void) {
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
-	System *system = new System();
+	System *system = new System(3);
 
 	// Test component
 	new TestComponent(*system);
 
 	// Temperature monitoring system
-	new Thermometer::Component(*system, 1);
-	Alarm::Component* alarm = new Alarm::Component(*system, 1);
+	new Thermometer::Component(*system);
+	Alarm::Component* alarm = new Alarm::Component(*system);
 	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<
 			Thermometer::Component::Type, Thermometer::Knowledge, 10>();
 	system->registerCache(cache);

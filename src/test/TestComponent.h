@@ -135,7 +135,7 @@ public:
 	TestTriggeredTask triggeredTask;
 
 	TestComponent(System &system) :
-			CDEECO::Component<TestKnowledge>(0x42, 0, system), periodicTask(*this, this->knowledge.position), triggeredTask(
+			CDEECO::Component<TestKnowledge>(0x42, system), periodicTask(*this, this->knowledge.position), triggeredTask(
 					this->knowledge.position, *this, this->knowledge.value) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
