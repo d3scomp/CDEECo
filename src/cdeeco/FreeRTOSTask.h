@@ -30,6 +30,14 @@ public:
 	 */
 	virtual void run() = 0;
 
+	void mDelay(uint16_t ms) {
+		 vTaskDelay(ms / portTICK_PERIOD_MS);
+	}
+
+	void suspend() {
+		vTaskSuspend(handle);
+	}
+
 private:
 	/// Task handle used by FreeRTOS
 	TaskHandle_t handle;
