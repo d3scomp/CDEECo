@@ -7,8 +7,8 @@
 
 #include "FreeRTOSSemaphore.h"
 
-FreeRTOSSemaphore::FreeRTOSSemaphore(const size_t max) :
-		sem(xSemaphoreCreateCounting(max, 0)) {
+FreeRTOSSemaphore::FreeRTOSSemaphore(const size_t max, const size_t start) :
+		sem(xSemaphoreCreateCounting(max, start)) {
 }
 
 void FreeRTOSSemaphore::take() {
@@ -17,5 +17,10 @@ void FreeRTOSSemaphore::take() {
 
 void FreeRTOSSemaphore::give() {
 	xSemaphoreGive(sem);
+}
+
+void FreeRTOSSemaphore::giveFromISR() {
+	signed long xHigherPriorityTaskWoken;
+	xSemaphoreGiveFromISR(sem, &xHigherPriorityTaskWoken);
 }
 

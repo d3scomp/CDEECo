@@ -40,13 +40,14 @@ public:
 
 	/** Receive listener */
 	void receiveFragment(const KnowledgeFragment fragment) {
-		Console::log(">>>>>>>>> Received knowledge fragment:");
-		Console::logFragment(fragment);
+	//	Console::log(">>>>>>>>> Received knowledge fragment:");
 
-		vTaskSuspendAll();
-		rxBuffer.put(fragment);
-		rxSem.give();
-		xTaskResumeAll();
+		processFragment(fragment);
+
+	//	vTaskSuspendAll();
+	//	rxBuffer.put(fragment);
+	//	rxSem.give();
+	//	xTaskResumeAll();
 	}
 
 	/** Broadcast knowledge fragment */
@@ -58,10 +59,11 @@ public:
 
 	/** Process process received fragment */
 	void processFragment(const KnowledgeFragment fragment) {
-		Console::log(">>>>>>>>> Processing knowledge fragment");
+		Console::log(">>>>>>>>> Processing knowledge fragment:");
+		Console::logFragment(fragment);
 
 		// Store fragment in rebroadcast storage
-		rebroadcast.storeFragment(fragment);
+	//	rebroadcast.storeFragment(fragment);
 
 		// Try to store fragment in one of the caches
 		for(size_t i = 0; i < caches.size() && caches[i]; ++i)

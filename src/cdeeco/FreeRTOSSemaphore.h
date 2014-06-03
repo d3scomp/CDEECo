@@ -13,9 +13,10 @@
 
 class FreeRTOSSemaphore {
 public:
-	FreeRTOSSemaphore(const size_t max);
+	FreeRTOSSemaphore(const size_t max, const size_t start = 0);
 	void take();
 	void give();
+	void giveFromISR();
 private:
 	SemaphoreHandle_t sem;
 };

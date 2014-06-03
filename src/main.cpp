@@ -40,10 +40,22 @@ void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
 	PulseLED::tickInterruptHandler();
 }
 
+/**
+ * Interrupt priority map
+ *
+ * HIGHEST
+ * 0 - MRF SPI
+ * 1 - MRF RF
+ * 2 - System scheduler
+ * 3 - UART - Console
+ *
+ *
+ */
+
 /** System startup function */
 int main(void) {
 	// Initialize delay timer
-	delayTimer.setPriority(1, 1);
+//	delayTimer.setPriority(1, 1);
 	delayTimer.init();
 	Console::init();
 
@@ -57,6 +69,8 @@ int main(void) {
 	delayTimer.mDelay(3000);
 	Console::log(">>> Starting system");
 
+	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 2 bits for pre-emption priority, 2 bits for non-preemptive subpriority
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
 	System *system = new System();
 
