@@ -6,16 +6,7 @@
 #include "cdeeco/KnowledgeFragment.h"
 #include "cdeeco/Receiver.h"
 
-//#define CONSOLE_LCD
-#define CONSOLE_SERIAL
-
-#ifdef CONSOLE_LCD
-#include "gmd1602.h"
-#endif
-
-#ifdef CONSOLE_SERIAL
 #include "UART.h"
-#endif
 
 class Console {
 public:
@@ -40,13 +31,7 @@ public:
 	}
 
 private:
-#ifdef CONSOLE_LCD
-	static GMD1602 lcd;
-	static char stored[20];
-#endif
-#ifdef CONSOLE_SERIAL
 	static UART serial;
-#endif
 	static Receiver *receiver;
 	static void receiveListener(void* data);
 

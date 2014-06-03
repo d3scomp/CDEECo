@@ -9,49 +9,31 @@
 
 #include "Console.h"
 
-#ifdef CONSOLE_LCD
-GMD1602 Console::lcd(GPIOE, RCC_AHB1Periph_GPIOE);
-char Console::stored[20];
-#endif
-#ifdef CONSOLE_SERIAL
 UART::Properties serialProps {
 GPIOA, USART2,
 GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3, RCC_APB1PeriphClockCmd, RCC_AHB1Periph_GPIOA,
-		RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
+RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
 UART Console::serial(serialProps);
-#endif
 
 Receiver* Console::receiver = NULL;
 
 void Console::init() {
-#ifdef CONSOLE_LCD
-	lcd.init();
-#endif
-
-#ifdef CONSOLE_SERIAL
+	serial.setPriority(15, 15);
 	serial.init();
-#endif
 }
 void Console::log(const char *text) {
-	vTaskSuspendAll();
+//	vTaskSuspendAll();
 
-#ifdef CONSOLE_LCD
-	lcd.clear();
-	lcd.writeXY(stored, 0, 0);
-	strcpy(stored, text);
-	lcd.writeXY(text, 0, 1);
-#endif
-
-#ifdef CONSOLE_SERIAL
 	for(const char* c = text; *c != 0; c++) {
-		while(!serial.canSend());
+		while(!serial.canSend())
+			;
 		serial.send(*c);
 	}
-	while(!serial.canSend());
+	while(!serial.canSend())
+		;
 	serial.send('\n');
-#endif
 
-	xTaskResumeAll();
+//	xTaskResumeAll();
 }
 
 void Console::setFragmentReceiver(Receiver *receiver) {
@@ -60,9 +42,10 @@ void Console::setFragmentReceiver(Receiver *receiver) {
 
 	// Enable event listening
 	serial.setRecvListener(receiveListener, NULL);
-	log("Enabling receive events");
-	serial.setPriority(2, 2);
-	serial.enableRecvEvents();
+	log("Disabling receive events, disabling send events");
+	// TODO: enable receive events for debug input. Make sure ISR do no collide with MRF ISR
+	serial.disableRecvEvents();
+	serial.disableSendEvents();
 }
 
 void Console::receiveListener(void* data) {
@@ -96,30 +79,47 @@ uint8_t Console::recv<uint8_t>() {
 
 uint8_t Console::recvHexVal() {
 	while(1) {
-		while(!serial.canRecv());
+		while(!serial.canRecv())
+			;
 		switch(serial.recv()) {
-			case '0': return 0b0000;
-			case '1': return 0b0001;
-			case '2': return 0b0010;
-			case '3': return 0b0011;
-			case '4': return 0b0100;
-			case '5': return 0b0101;
-			case '6': return 0b0110;
-			case '7': return 0b0111;
-			case '8': return 0b1000;
-			case '9': return 0b1001;
+			case '0':
+				return 0b0000;
+			case '1':
+				return 0b0001;
+			case '2':
+				return 0b0010;
+			case '3':
+				return 0b0011;
+			case '4':
+				return 0b0100;
+			case '5':
+				return 0b0101;
+			case '6':
+				return 0b0110;
+			case '7':
+				return 0b0111;
+			case '8':
+				return 0b1000;
+			case '9':
+				return 0b1001;
 			case 'a':
-			case 'A': return 0b1010;
+			case 'A':
+				return 0b1010;
 			case 'B':
-			case 'b': return 0b1011;
+			case 'b':
+				return 0b1011;
 			case 'C':
-			case 'c': return 0b1100;
+			case 'c':
+				return 0b1100;
 			case 'D':
-			case 'd': return 0b1101;
+			case 'd':
+				return 0b1101;
 			case 'E':
-			case 'e': return 0b1110;
+			case 'e':
+				return 0b1110;
 			case 'F':
-			case 'f': return 0b1111;
+			case 'f':
+				return 0b1111;
 		}
 	}
 
@@ -132,8 +132,8 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 	char buffer[bufLen];
 
 	// Write fragment header
-	size_t written = sprintf(buffer, "Fragment:Type:%lx Id:%lx Size:%x Offset:%x", fragment.type,
-			fragment.id, fragment.size, fragment.offset);
+	size_t written = sprintf(buffer, "Fragment:Type:%lx Id:%lx Size:%x Offset:%x", fragment.type, fragment.id,
+			fragment.size, fragment.offset);
 
 	// Write fragment data
 	for(size_t i = 0; i < fragment.length(); ++i) {
@@ -146,7 +146,7 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 			buffer[written++] = ' ';
 
 		// Print single byte
-		written += sprintf(buffer + written, "%02x", ((char*)&fragment)[i]);
+		written += sprintf(buffer + written, "%02x", ((char*) &fragment)[i]);
 
 		// Stop printing when running out of buffer
 		if(written > bufLen - 64) {
