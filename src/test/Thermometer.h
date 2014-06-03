@@ -44,7 +44,9 @@ protected:
 	SHT1x sensor;
 
 	float run(const Knowledge in) {
-		return sensor.readTemperature();
+		float temp = sensor.readTemperature();
+		Console::log("\n\n\nTemp: %d.%d°C\n\n\n", (int16_t)temp, (int16_t)temp * 10 % 10);
+		return temp;
 	}
 };
 
