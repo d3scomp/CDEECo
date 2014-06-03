@@ -40,14 +40,7 @@ public:
 
 	/** Receive listener */
 	void receiveFragment(const KnowledgeFragment fragment) {
-		//	Console::log(">>>>>>>>> Received knowledge fragment:");
-
 		processFragment(fragment);
-
-		//	vTaskSuspendAll();
-		//	rxBuffer.put(fragment);
-		//	rxSem.give();
-		//	xTaskResumeAll();
 	}
 
 	/** Broadcast knowledge fragment */
