@@ -100,22 +100,19 @@ int main(void) {
 
 	// This should not be reached
 	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
-	while(1) {
-	}
+	assert_param(false);
 }
 
 // FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName) {
 		Console::log("STACK OVERFLOW!!");
-		while(1) {
-		}
+		assert_param(false);
 	}
 
 	void vApplicationMallocFailedHook(void) {
 		Console::log("MALLOC FAILED!!!");
-		while(1) {
-		}
+		assert_param(false);
 	}
 }
 
