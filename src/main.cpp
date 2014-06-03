@@ -55,10 +55,26 @@ PulseLED::Properties pulseProps {
  *
  */
 
+/**
+ * Enable VFP unit, taken from FreeRTOS port
+ */
+static void enableVFP( void )
+{
+	__asm volatile
+	(
+		"	ldr.w r0, =0xE000ED88		\n" /* The FPU enable bits are in the CPACR. */
+		"	ldr r1, [r0]				\n"
+		"								\n"
+		"	orr r1, r1, #( 0xf << 20 )	\n" /* Enable CP10 and CP11 coprocessors, then save back. */
+		"	str r1, [r0]				\n"
+		"	bx r14						"
+	);
+}
 
 /** System startup function */
 int main(void) {
 	// Initialize basic system hardware
+	enableVFP();
 	delayTimer.init();
 	Console::init();
 	PulseLED::initTimer(pulseProps);
@@ -77,9 +93,8 @@ int main(void) {
 
 
 	// Get unique device id
-	uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
-	//Console::log("UNIQ: %x", uniqId);
-
+	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
+	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n", uniqId);
 
 	System *system = new System(uniqId);
 
