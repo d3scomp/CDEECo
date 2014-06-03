@@ -15,6 +15,7 @@
 #include "drivers/UART.h"
 #include "drivers/SHT1x.h"
 #include "cdeeco/KnowledgeCache.h"
+#include "drivers/LED.h"
 
 #include "test/TestComponent.h"
 #include "test/Thermometer.h"
@@ -36,29 +37,31 @@ Timer::Properties tim6Props {
 TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
-void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
-	PulseLED::tickInterruptHandler();
-}
+PulseLED::Properties pulseProps {
+	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 3
+};
 
 /**
  * Interrupt priority map
  *
  * HIGHEST
  * 0 - MRF SPI
- * ------------------- FreeRTOS critical section
+ * 1 ------------------- FreeRTOS critical section
  * 1 - MRF RF
  * 2 - System scheduler
  * 3 - UART - Console
+ * 7 - TIM7 - Pulse LED tick
  *
  *
  */
 
+
 /** System startup function */
 int main(void) {
-	// Initialize delay timer
-//	delayTimer.setPriority(1, 1);
+	// Initialize basic system hardware
 	delayTimer.init();
 	Console::init();
+	PulseLED::initTimer(pulseProps);
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #");
@@ -70,7 +73,6 @@ int main(void) {
 	delayTimer.mDelay(3000);
 	Console::log(">>> Starting system");
 
-	//NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	// 2 bits for pre-emption priority, 2 bits for non-preemptive subpriority
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
 	System *system = new System();
@@ -81,14 +83,10 @@ int main(void) {
 	// Temperature monitoring system
 	new Thermometer::Component(*system, 1);
 	Alarm::Component* alarm = new Alarm::Component(*system, 1);
-	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>();
+	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<
+			Thermometer::Component::Type, Thermometer::Knowledge, 10>();
 	system->registerCache(cache);
 	new TempExchange::Ensamble(*alarm, *cache);
-
-	// TODO: This is not nice
-	Console::log(">>> Setting timer to make pulse leds work");
-	TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
-	xTimerStart(pulseLedTimerhandle, 10);
 
 	// Start the scheduler.
 	Console::log(">>> Running scheduler");
@@ -124,7 +122,6 @@ extern "C" {
 	}
 }
 
-
 #ifdef  USE_FULL_ASSERT
 /**
  * @brief  Reports the name of the source file and the source line number
@@ -133,17 +130,15 @@ extern "C" {
  * @param  line: assert_param error line source number
  * @retval None
  */
-void assert_failed(uint8_t* file, uint32_t line)
-{
+void assert_failed(uint8_t* file, uint32_t line) {
 	/* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
 	Console::log("Assert failed");
 	//Console::log("Assert: %s:%d", file, line);
 
 	/* Infinite loop */
-	while (1)
-	{
+	while(1) {
 	}
 }
 #endif

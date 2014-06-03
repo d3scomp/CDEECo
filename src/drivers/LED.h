@@ -31,6 +31,14 @@ private:
 
 class PulseLED {
 public:
+	struct Properties {
+		uint32_t periph;
+		TIM_TypeDef *timer;
+		IRQn irq;
+		uint8_t priority;
+		uint8_t subPriority;
+	};
+
 	PulseLED(LED& led, int minimalOnTimeTicks);
 	~PulseLED();
 
@@ -38,6 +46,7 @@ public:
 	void init();
 
 	static void tickInterruptHandler();
+	static void initTimer(Properties &props);
 
 private:
 	LED& led;

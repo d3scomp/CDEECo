@@ -73,3 +73,22 @@ void PulseLED::tick() {
 	}
 }
 
+void PulseLED::initTimer(Properties &props) {
+	RCC_APB1PeriphClockCmd(props.periph, ENABLE);
+
+	TIM_TimeBaseInitTypeDef TIM_TimeBase_InitStructure;
+	TIM_TimeBase_InitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+	TIM_TimeBase_InitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBase_InitStructure.TIM_Period = 100;
+	TIM_TimeBase_InitStructure.TIM_Prescaler = 16800;
+	TIM_TimeBaseInit(props.timer, &TIM_TimeBase_InitStructure);
+	TIM_ITConfig(props.timer, TIM_IT_Update, ENABLE);
+
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = props.irq;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = props.priority;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = props.subPriority;
+	NVIC_Init(&NVIC_InitStructure);
+	TIM_Cmd(props.timer, ENABLE);
+}

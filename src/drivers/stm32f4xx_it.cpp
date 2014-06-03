@@ -170,6 +170,11 @@ void SPI3_IRQHandler(void) {
 //	GPIOA->BSRRH = GPIO_Pin_5;
 }
 
+void TIM7_IRQHandler() {
+	TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+	PulseLED::tickInterruptHandler();
+}
+
 /**
  * @}
  */
