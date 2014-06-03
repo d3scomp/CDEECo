@@ -45,7 +45,7 @@ protected:
 
 	float run(const Knowledge in) {
 		float temp = sensor.readTemperature();
-		Console::log("\n\n\nTemp: %d.%d°C\n\n\n", (int16_t)temp, (int16_t)temp * 10 % 10);
+		Console::log("\n\n\nTemp: %d.%d°C\n\n\n", (int16_t)temp, ((int16_t)(temp * 100) % 100));
 		return temp;
 	}
 };
