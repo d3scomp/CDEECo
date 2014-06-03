@@ -8,9 +8,11 @@
 #ifndef MRF24J40_H_
 #define MRF24J40_H_
 
+#include <cstdint>
+
 #include "stm32f4xx.h"
 #include "LED.h"
-#include "TOHQueue.h"
+#include "cdeeco/KnowledgeFragment.h"
 
 class MRF24J40 {
 public:
@@ -75,7 +77,7 @@ public:
 	uint16_t readSAddr();
 
 	void broadcastPacket(uint8_t *data, uint8_t dataLength);
-	bool recvPacket(uint8_t (&data)[TOHMessage::MAX_RF_PACKET_LENGTH], uint8_t& dataLength, uint8_t (&srcPanId)[2], uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi);
+	bool recvPacket(uint8_t (&data)[KnowledgeFragment::MAX_PACKET_SIZE], uint8_t& dataLength, uint8_t (&srcPanId)[2], uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi);
 
 
 	uint8_t getChannel() const {

@@ -11,11 +11,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <array>
+
 #include "main.h"
 #include "Receiver.h"
 #include "Broadcaster.h"
 #include "Console.h"
-#include "FragmentBuffer.h"
 #include "FreeRTOSSemaphore.h"
 #include "FreeRTOSTask.h"
 
@@ -28,14 +29,7 @@ public:
 	public:
 		void put(const T &item) {
 			data[start++ % SIZE] = item;
-			//sem.give();
 			sem.giveFromISR();
-		}
-
-		T* ptrPut() {
-			//		sem.give();
-			sem.giveFromISR();
-			return &data[start++ % SIZE];
 		}
 
 		T get() {

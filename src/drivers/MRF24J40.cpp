@@ -393,7 +393,7 @@ void MRF24J40::broadcastPacket(uint8_t* data, uint8_t dataLength) {
 	txCount++;
 }
 
-bool MRF24J40::recvPacket(uint8_t (&data)[TOHMessage::MAX_RF_PACKET_LENGTH], uint8_t& dataLength, uint8_t (&srcPanId)[2], uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi) {
+bool MRF24J40::recvPacket(uint8_t (&data)[KnowledgeFragment::MAX_PACKET_SIZE], uint8_t& dataLength, uint8_t (&srcPanId)[2], uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi) {
 	constexpr auto enableRXAfterNoBytes = 50;
 
 	recvLed.pulse();

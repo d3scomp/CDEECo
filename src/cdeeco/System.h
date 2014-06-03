@@ -19,7 +19,6 @@
 #include "Receiver.h"
 #include "Radio.h"
 #include "FreeRTOSTask.h"
-#include "FragmentBuffer.h"
 #include "FreeRTOSSemaphore.h"
 
 template<size_t SIZE>
