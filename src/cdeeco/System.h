@@ -63,7 +63,7 @@ public:
 		Console::logFragment(fragment);
 
 		// Store fragment in rebroadcast storage
-	//	rebroadcast.storeFragment(fragment);
+		rebroadcast.storeFragment(fragment);
 
 		// Try to store fragment in one of the caches
 		for(size_t i = 0; i < caches.size() && caches[i]; ++i)
