@@ -39,7 +39,9 @@ public:
 
 	/** Receive listener */
 	void receiveFragment(const KnowledgeFragment fragment) {
-		processFragment(fragment);
+		// If fragment is not local process it
+		if(fragment.id != id)
+			processFragment(fragment);
 	}
 
 	/** Broadcast knowledge fragment */
