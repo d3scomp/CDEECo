@@ -46,7 +46,7 @@ public:
 
 	struct Packet {
 		union {
-			uint8_t data[128];
+			uint8_t data[KnowledgeFragment::MAX_PACKET_SIZE];
 			KnowledgeFragment fragment;
 		} data;
 

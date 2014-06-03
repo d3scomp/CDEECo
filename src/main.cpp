@@ -75,7 +75,13 @@ int main(void) {
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
-	System *system = new System(3);
+
+	// Get unique device id
+	uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
+	//Console::log("UNIQ: %x", uniqId);
+
+
+	System *system = new System(uniqId);
 
 	// Test component
 	new TestComponent(*system);
