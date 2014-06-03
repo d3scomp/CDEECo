@@ -29,27 +29,13 @@ public:
 	void init();
 
 	inline void uDelay(uint16_t us) {
-		//taskENTER_CRITICAL();
-		vTaskSuspendAll();
-
-		uint32_t state = props.tim->CNT;
-
 		props.tim->CNT = 0;
 		while (props.tim->CNT < us);
-
-		props.tim->CNT = state;
-
-/*		uint32_t state = props.tim->CNT;
-		while (props.tim->CNT - us < state);
-*/
-		//taskEXIT_CRITICAL();
-		xTaskResumeAll();
 	}
 
 	inline void mDelay(uint16_t ms) {
-		while (ms-- > 0) {
+		while (ms-- > 0)
 			uDelay(1000);
-		}
 	}
 
 private:

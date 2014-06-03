@@ -29,14 +29,14 @@ void Timer::init() {
 	timInitStruct.TIM_RepetitionCounter = 0x00;
 	TIM_TimeBaseInit(props.tim, &timInitStruct);
 
-	NVIC_InitTypeDef NVIC_InitStructure;
+/*	NVIC_InitTypeDef NVIC_InitStructure;
 
 	NVIC_InitStructure.NVIC_IRQChannel = props.irqn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = irqPreemptionPriority;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = irqSubPriority;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 
-	NVIC_Init(&NVIC_InitStructure);
+	NVIC_Init(&NVIC_InitStructure);*/
 
 	TIM_Cmd(props.tim, ENABLE);
 }
