@@ -22,8 +22,7 @@ void Console::init() {
 	serial.init();
 }
 void Console::log(const char *text) {
-//	vTaskSuspendAll();
-
+	vTaskSuspendAll();
 	for(const char* c = text; *c != 0; c++) {
 		while(!serial.canSend())
 			;
@@ -32,8 +31,7 @@ void Console::log(const char *text) {
 	while(!serial.canSend())
 		;
 	serial.send('\n');
-
-//	xTaskResumeAll();
+	xTaskResumeAll();
 }
 
 void Console::setFragmentReceiver(Receiver *receiver) {
