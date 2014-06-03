@@ -25,10 +25,10 @@
 template<size_t SIZE>
 class RebroadcastStorage;
 
-class System: Broadcaster, Receiver, FreeRTOSTask {
+class System: Broadcaster, Receiver {
 public:
 	System() :
-			rebroadcast(*this), radio(*this), rxSem(MAX_TX_WAITING) {
+			rebroadcast(*this), radio(*this) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
@@ -40,14 +40,14 @@ public:
 
 	/** Receive listener */
 	void receiveFragment(const KnowledgeFragment fragment) {
-	//	Console::log(">>>>>>>>> Received knowledge fragment:");
+		//	Console::log(">>>>>>>>> Received knowledge fragment:");
 
 		processFragment(fragment);
 
-	//	vTaskSuspendAll();
-	//	rxBuffer.put(fragment);
-	//	rxSem.give();
-	//	xTaskResumeAll();
+		//	vTaskSuspendAll();
+		//	rxBuffer.put(fragment);
+		//	rxSem.give();
+		//	xTaskResumeAll();
 	}
 
 	/** Broadcast knowledge fragment */
@@ -93,25 +93,6 @@ private:
 	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
 
 	Radio radio;
-	FragmentBuffer<RXBUFF_SIZE> rxBuffer;
-	FreeRTOSSemaphore rxSem;
-	static const size_t MAX_TX_WAITING = 100;
-
-	void run() {
-		Console::log(">>>> System fragment processing task start");
-
-		while(true) {
-			rxSem.take();
-
-			vTaskSuspendAll();
-			KnowledgeFragment fragment;
-			bool ok = rxBuffer.get(fragment);
-			xTaskResumeAll();
-
-			if(ok)
-				processFragment(fragment);
-		}
-	}
 };
 
 #endif /* SYSTEM_H_ */
