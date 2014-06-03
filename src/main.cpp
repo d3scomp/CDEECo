@@ -45,6 +45,7 @@ void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
  *
  * HIGHEST
  * 0 - MRF SPI
+ * ------------------- FreeRTOS critical section
  * 1 - MRF RF
  * 2 - System scheduler
  * 3 - UART - Console

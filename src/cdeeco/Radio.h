@@ -93,74 +93,14 @@ public:
 
 	void broadcastFragment(const KnowledgeFragment fragment) {
 		txBuffer.put(fragment);
-
-		/*	vTaskSuspendAll();
-		 txBuffer.put(fragment);
-		 tryBroadcast();
-		 xTaskResumeAll();*/
-		/*
-		 taskDISABLE_INTERRUPTS();
-		 if(!txInProgress) {
-		 txInProgress = true;
-		 mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-		 } else {
-		 txBuffer.put(fragment);
-		 }
-		 taskENABLE_INTERRUPTS();
-		 */
-
-		//	bool go = false;
-		//go = __sync_bool_compare_and_swap(&txInProgress, false, true);
-		//	vTaskSuspendAll();
-		//	go = __atomic_exchange_n(&txInProgress, true, __ATOMIC_SEQ_CST);
-//		taskDISABLE_INTERRUPTS();
-		//	if(!txInProgress) {
-		//		txInProgress = true;
-		//		go = true;
-		//	}
-		//	taskENABLE_INTERRUPTS();
-		//	if(go)
-		//		mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-		//	xTaskResumeAll();
 	}
-
-	/*	void tryBroadcast() {
-	 if(!txBuffer.isEmpty() && !txInProgress) {
-	 KnowledgeFragment fragment;
-	 txBuffer.get(fragment);
-	 txInProgress = true;
-	 mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-	 }
-	 }*/
 
 	static void broadcastCompleteListenerStatic(void *data, const bool success) {
 		static_cast<Radio*>(data)->broadcastCompleteListener(success);
 	}
 
 	void broadcastCompleteListener(const bool success) {
-		//	vTaskSuspendAll();
-		//	txSem.giveFromISR();
-
-		/*		taskDISABLE_INTERRUPTS();
-
-		 KnowledgeFragment fragment;
-		 if(txBuffer.get(fragment)) {
-		 mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-		 } else {
-		 txInProgress = false;
-		 }
-
-		 /*		txInProgress = false;
-		 tryBroadcast();*/
-
-//		taskENABLE_INTERRUPTS();
-		//	xTaskResumeAll();
-		//	if(!success)
-		//		Console::log(">>>> Broadcast failed");
-		/*
-		 KnowledgeFragment fragment;
-		 fragment.size = 112;
-		 mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());*/
+		txSem.giveFromISR();
 	}
 
 	static void receiverListenerStatic(void *data) {
@@ -206,12 +146,11 @@ private:
 		}
 		void run() {
 			while(true) {
-				//taskDISABLE_INTERRUPTS();
-				txSem.take();
-			//	delayTimer.mDelay(100);
 				KnowledgeFragment fragment = txBuffer.get();
+				txSem.take();
+				taskDISABLE_INTERRUPTS();
 				mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-				//taskENABLE_INTERRUPTS();
+				taskENABLE_INTERRUPTS();
 			}
 		}
 		RingBuffer<KnowledgeFragment, 5> &txBuffer;

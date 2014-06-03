@@ -20,6 +20,7 @@ void FreeRTOSSemaphore::give() {
 }
 
 void FreeRTOSSemaphore::giveFromISR() {
+	// TODO: Do possible yieldon ISR end
 	signed long xHigherPriorityTaskWoken;
 	xSemaphoreGiveFromISR(sem, &xHigherPriorityTaskWoken);
 }
