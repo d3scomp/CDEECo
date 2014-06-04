@@ -10,11 +10,12 @@
 
 #include "UART.h"
 
-enum class Level: uint8_t {
-	None = 100,
-	Error = 3,
-	Debug = 2,
-	Info = 1,
+enum Level {
+	None = 5,
+	Error = 4,
+	TaskInfo = 3,
+	Info = 2,
+	Debug = 1,
 	All = 0
 };
 

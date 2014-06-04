@@ -18,42 +18,75 @@ UART Console::serial(serialProps);
 CDEECO::Receiver* Console::receiver = NULL;
 char Console::buffer[MAX_LENGTH];
 constexpr const char* ConsoleStream::forms[2];
-Level Console::level = Level::All;
+Level Console::level = All;
 
 void Console::init() {
 	serial.setPriority(15, 15);
 	serial.init();
 }
 
-void Console::log(const char* format, ...) {
-	if(Level::Info < Console::level)
-		return;
+void Console::toggleLevel() {
+	switch(level) {
+		case None:
+			level = All;
+			putString("\n\n\n### Log level: All\n\n\n");
+			break;
 
-	vTaskSuspendAll();
-	va_list args;
-	va_start(args, format);
-	vsprintf(buffer, format, args);
-	putString(buffer);
-	va_end(args);
-	xTaskResumeAll();
+		case Error:
+			level = None;
+			putString("\n\n\n### Log level: None\n\n\n");
+			break;
+
+		case Debug:
+			level = Error;
+			putString("\n\n\n### Log level: Error\n\n\n");
+			break;
+
+		case Info:
+			level = Debug;
+			putString("\n\n\n### Log level: Debug\n\n\n");
+			break;
+
+		case TaskInfo:
+			level = Info;
+			putString("\n\n\n### Log level: Info\n\n\n");
+			break;
+
+		case All:
+			level = TaskInfo;
+			putString("\n\n\n### Log level: TaskInfo\n\n\n");
+			break;
+	}
+}
+
+void Console::log(const char* format, ...) {
+	if(Info >= Console::level) {
+		vTaskSuspendAll();
+		va_list args;
+		va_start(args, format);
+		vsprintf(buffer, format, args);
+		putString(buffer);
+		va_end(args);
+		xTaskResumeAll();
+	}
 }
 
 void Console::print(const Level level, const char* format, ...) {
-	if(level < Console::level)
-		return;
-
-	vTaskSuspendAll();
-	va_list args;
-	va_start(args, format);
-	vsprintf(buffer, format, args);
-	putString(buffer);
-	va_end(args);
-	xTaskResumeAll();
+	if(level >= Console::level) {
+		vTaskSuspendAll();
+		va_list args;
+		va_start(args, format);
+		vsprintf(buffer, format, args);
+		putString(buffer);
+		va_end(args);
+		xTaskResumeAll();
+	}
 }
 
 void Console::putString(const char *text) {
 	for(const char* c = text; *c != 0; c++) {
-		while(!serial.canSend());
+		while(!serial.canSend())
+			;
 		serial.send(*c);
 	}
 }
@@ -183,6 +216,5 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 
 	Console::print(Level::Debug, buffer);
 }
-
 
 Hex hex;

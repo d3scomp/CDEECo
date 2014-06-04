@@ -27,6 +27,7 @@ SRCS += ${SRC_DIR}/drivers/UART.cpp
 SRCS += ${SRC_DIR}/drivers/stm32f4xx_it.cpp
 SRCS += ${SRC_DIR}/drivers/MRF24J40.cpp
 SRCS += ${SRC_DIR}/drivers/SHT1x.cpp
+SRCS += ${SRC_DIR}/drivers/Button.cpp
 
 
 # STM32F4 code

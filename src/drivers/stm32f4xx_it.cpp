@@ -138,7 +138,7 @@ void USART6_IRQHandler(void) {
  * @retval None
  */
 void EXTI0_IRQHandler(void) {
-//	infoButton.pressedInterruptHandler();
+	toggleButton.pressedInterruptHandler();
 }
 
 /**

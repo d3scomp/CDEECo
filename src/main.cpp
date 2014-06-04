@@ -39,6 +39,11 @@ PulseLED::Properties pulseProps {
 	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 6
 };
 
+Button::Properties userButtonProps {
+	GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn
+};
+Button toggleButton(userButtonProps);
+
 /**
  * Interrupt priority map
  *
@@ -49,7 +54,7 @@ PulseLED::Properties pulseProps {
  * 2 - System scheduler
  * 3 - UART - Console
  * 7 - TIM7 - Pulse LED tick
- *
+ * 8 - user button
  *
  */
 
@@ -69,6 +74,14 @@ static void enableVFP( void )
 	);
 }
 
+TickType_t lastUserPress;
+void userPressed(void* data) {
+	TickType_t now = xTaskGetTickCount();
+	if((now - lastUserPress) > portTICK_PERIOD_MS * 10)
+		Console::toggleLevel();
+	lastUserPress = now;
+}
+
 /** System startup function */
 int main(void) {
 	// Initialize basic system hardware
@@ -76,6 +89,9 @@ int main(void) {
 	delayTimer.init();
 	Console::init();
 	PulseLED::initTimer(pulseProps);
+	toggleButton.setPriority(8, 0);
+	toggleButton.setPressedListener(userPressed, NULL);
+	toggleButton.init();
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #\n");

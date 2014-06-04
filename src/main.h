@@ -19,6 +19,7 @@
 #include "GPS.h"
 
 extern Timer delayTimer;
+extern Button toggleButton;
 
 
 #endif /* MAIN_H_ */
