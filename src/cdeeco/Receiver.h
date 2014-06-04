@@ -11,7 +11,7 @@
 
 namespace CDEECO {
 	/**
-	 * Interface to knowledge reciever
+	 * Interface to knowledge receiver
 	 */
 	class Receiver {
 	public:
