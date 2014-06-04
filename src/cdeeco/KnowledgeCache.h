@@ -98,7 +98,7 @@ public:
 		if(fragment.type != TYPE)
 			return; // Not our knowledge type
 
-		Console::log("Storing fragment in cache");
+		Console::log(">>> Storing fragment in cache\n");
 
 		this->cacheAccess.lock();
 

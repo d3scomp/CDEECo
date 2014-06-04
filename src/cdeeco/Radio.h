@@ -124,7 +124,7 @@ namespace CDEECO {
 					receiver(receiver), rxBuffer(rxBuffer) {
 			}
 			void run() {
-				Console::log(">>>> System fragment processing task start");
+				Console::log(">>>> Radio RX thread started\n");
 				while(true) {
 					Packet packet = rxBuffer.get();
 					if(packet.valid && packet.data.fragment.length() == packet.size)
@@ -141,6 +141,7 @@ namespace CDEECO {
 					FreeRTOSTask(1024, 2), txBuffer(txBuffer), txSem(txSem) {
 			}
 			void run() {
+				Console::log(">>>> Radio TX thread started\n");
 				while(true) {
 					KnowledgeFragment fragment = txBuffer.get();
 					txSem.take();

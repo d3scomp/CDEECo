@@ -24,8 +24,6 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 namespace CDEECO {
 
 template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
@@ -34,7 +32,7 @@ public:
 	// Create the periodic task
 	PeriodicTask(long period, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge):
 			Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), period(period) {
-		Console::log(">> PeriodicTask constructor");
+		Console::log(">> PeriodicTask constructor\n");
 	}
 private:
 	long period;

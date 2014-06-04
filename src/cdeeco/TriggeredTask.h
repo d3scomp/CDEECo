@@ -18,8 +18,6 @@
 #include "LED.h"
 #include "FreeRTOSSemaphore.h"
 
-using namespace std;
-
 namespace CDEECO {
 
 	template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename OUT_KNOWLEDGE>
@@ -28,7 +26,7 @@ namespace CDEECO {
 		// Create the triggered task
 		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), trigger(trigger), triggerSem(MAX_WAITING) {
-			Console::log(">> TrigerredTask constructor");
+			Console::log(">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);

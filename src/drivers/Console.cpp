@@ -16,22 +16,46 @@ RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
 UART Console::serial(serialProps);
 
 CDEECO::Receiver* Console::receiver = NULL;
+char Console::buffer[MAX_LENGTH];
+constexpr const char* ConsoleStream::forms[2];
+Level Console::level = Level::All;
 
 void Console::init() {
 	serial.setPriority(15, 15);
 	serial.init();
 }
-void Console::log(const char *text) {
+
+void Console::log(const char* format, ...) {
+	if(Level::Info < Console::level)
+		return;
+
 	vTaskSuspendAll();
+	va_list args;
+	va_start(args, format);
+	vsprintf(buffer, format, args);
+	putString(buffer);
+	va_end(args);
+	xTaskResumeAll();
+}
+
+void Console::print(const Level level, const char* format, ...) {
+	if(level < Console::level)
+		return;
+
+	vTaskSuspendAll();
+	va_list args;
+	va_start(args, format);
+	vsprintf(buffer, format, args);
+	putString(buffer);
+	va_end(args);
+	xTaskResumeAll();
+}
+
+void Console::putString(const char *text) {
 	for(const char* c = text; *c != 0; c++) {
-		while(!serial.canSend())
-			;
+		while(!serial.canSend());
 		serial.send(*c);
 	}
-	while(!serial.canSend())
-		;
-	serial.send('\n');
-	xTaskResumeAll();
 }
 
 void Console::setFragmentReceiver(CDEECO::Receiver *receiver) {
@@ -157,5 +181,8 @@ void Console::logFragment(const KnowledgeFragment fragment) {
 	buffer[written++] = '\n';
 	buffer[written++] = 0;
 
-	Console::log(buffer);
+	Console::print(Level::Debug, buffer);
 }
+
+
+Hex hex;

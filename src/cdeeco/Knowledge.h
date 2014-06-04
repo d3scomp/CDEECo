@@ -20,7 +20,7 @@ template<class KNOWLEDGE>
 struct KnowledgeTrait {
 	static constexpr void* offsets[] = { };
 	static void humanPrint() {
-		Console::log("No human printing defined for this knowledge");
+		Console::log("No human printing defined for this knowledge\n");
 	}
 };
 

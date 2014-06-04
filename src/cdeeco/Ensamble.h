@@ -79,7 +79,7 @@ namespace CDEECO {
 			// Schedule the task periodically
 			while(1) {
 				// For all knowledge from the cache check member and execute map
-				Console::log(">>>> Ensamble task running now");
+				Console::log(">>>> Ensamble task running now\n");
 
 				runExchange();
 
@@ -106,13 +106,13 @@ namespace CDEECO {
 			COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : *memberLibrary) {
 				if(record.complete) {
-					Console::log(">>>> Found complete record, trying membership <<<<");
+					Console::log(">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(coordKnowledge, record.knowledge)) {
 						Console::log(">>>> Record's knowledge is member of this Ensable, running exchange");
 						COORD_OUT_KNOWLEDGE out = memberToCoordMap(coordKnowledge, record.id, record.knowledge);
 						coordinator->lockWriteKnowledge(*coordOutKnowledge, out);
 					} else {
-						Console::log(">>>> Record's knowledge is not member <<<<");
+						Console::log(">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}
@@ -128,7 +128,7 @@ namespace CDEECO {
 			MEMBER_KNOWLEDGE memberKnowledge = member->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<COORD_KNOWLEDGE>::CacheRecord &record : *coordLibrary) {
 				if(record.complete) {
-					Console::log(">>>> Found complete record, trying membership <<<<");
+					Console::log(">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(record.knowledge, memberKnowledge)) {
 						Console::log(">>>> Record's knowledge is member of this Ensable, running exchange");
 
@@ -136,7 +136,7 @@ namespace CDEECO {
 						member->lockWriteKnowledge(*memberOutKnowledge, out);
 
 					} else {
-						Console::log(">>>> Record's knowledge is not member <<<<");
+						Console::log(">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}

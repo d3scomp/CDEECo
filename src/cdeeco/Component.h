@@ -95,7 +95,7 @@ namespace CDEECO {
 		 * @param size Change size
 		 */
 		void broadcastChange(size_t start, size_t size) {
-			Console::log("Broadcasting change");
+			Console::log("Broadcasting change\n");
 
 			size_t end = start + size;
 			assert_param(end <= sizeof(KNOWLEDGE));

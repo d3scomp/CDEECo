@@ -27,8 +27,6 @@
 #include <string>
 #include <signal.h>
 
-using namespace std;
-
 // Initialize system console
 #include "Console.h"
 
@@ -79,22 +77,22 @@ int main(void) {
 	Console::init();
 	PulseLED::initTimer(pulseProps);
 
-	Console::log("\n\n\n\n\n\n\n\n\n\n");
-	Console::log("# # # # # # # # # # # # # # # # # # # #");
-	Console::log(" # # # # # # # # # # # # # # # # # # #");
-	Console::log("# # # # # # # # # # # # # # # # # # # #");
-	Console::log("\n>>> SYSTEM INIT <<<");
+	Console::log("\n\n\n\n\n\n\n\n\n\n\n");
+	Console::log("# # # # # # # # # # # # # # # # # # # #\n");
+	Console::log(" # # # # # # # # # # # # # # # # # # #\n");
+	Console::log("# # # # # # # # # # # # # # # # # # # #\n");
+	Console::log("\n>>> SYSTEM INIT <<<\n");
 
-	Console::log(">>> Waiting 3s for debugger to stop me...");
+	Console::log(">>> Waiting 3s for debugger to stop me...\n");
 	delayTimer.mDelay(3000);
-	Console::log(">>> Starting system");
+	Console::log(">>> Starting system\n");
 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
 
 	// Get unique device id
 	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
-	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n", uniqId);
+	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
 	CDEECO::System *system = new CDEECO::System(uniqId);
 
@@ -110,23 +108,23 @@ int main(void) {
 	new TempExchange::Ensamble(*alarm, *cache);
 
 	// Start the scheduler.
-	Console::log(">>> Running scheduler");
+	Console::log(">>> Running scheduler\n");
 	vTaskStartScheduler();
 
 	// This should not be reached
-	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!");
+	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!\n");
 	assert_param(false);
 }
 
 // FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName) {
-		Console::log("STACK OVERFLOW!!");
+		Console::log("STACK OVERFLOW!!\n");
 		assert_param(false);
 	}
 
 	void vApplicationMallocFailedHook(void) {
-		Console::log("MALLOC FAILED!!!");
+		Console::log("MALLOC FAILED!!!\n");
 		assert_param(false);
 	}
 }
