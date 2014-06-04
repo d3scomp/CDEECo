@@ -17,7 +17,7 @@ class RebroadcastStorage: FreeRTOSTask {
 private:
 	typedef TickType_t Timestamp;
 	typedef size_t Index;
-	static const Timestamp PERIOD = 1000;
+	static const Timestamp PERIOD = 50;
 
 	struct ReboadcastRecord {
 		bool used;
@@ -32,17 +32,18 @@ public:
 		memset(&records, 0, sizeof(records));
 	}
 
-	void storeFragment(const KnowledgeFragment fragment) {
+	void storeFragment(const KnowledgeFragment fragment, uint8_t lqi) {
 		// TODO: Implement some smarter rebroadcast mechanism
 		const Timestamp RebroadcastInterval = 5000;
 
-		// TODO: Do not rebroadcast locally hosted knowledge ?
+		// Calculate rebroadcast delay
+		const Timestamp rebroadcastDelay = 255 * RebroadcastInterval / (255 - lqi);
 
 		recordsMutex.lock();
 		Index free = getFree();
 		records[free].used = true;
 		records[free].received = xTaskGetTickCount();
-		records[free].rebroadcast = xTaskGetTickCount() + RebroadcastInterval / portTICK_PERIOD_MS;
+		records[free].rebroadcast = xTaskGetTickCount() + rebroadcastDelay / portTICK_PERIOD_MS;
 		records[free].fragment = fragment;
 		recordsMutex.unlock();
 	}
@@ -55,6 +56,7 @@ public:
 	}
 
 	Index pushRecord() {
+		Console::log(">>>>>>>> Out of rebroadcast storage - force rebroadcast of oldest record");
 		Index oldest = 0;
 		for(Index i = 0; i < records.size(); ++i)
 			if(records[i].received < records[oldest].received)

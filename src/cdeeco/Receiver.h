@@ -9,19 +9,21 @@
 
 #include "KnowledgeFragment.h"
 
-/**
- * Interface to knowledge reciever
- */
-class Receiver {
-public:
+namespace CDEECO {
 	/**
-	 * Receiver knowledge fragment
-	 *
-	 * @param fragment Knowledge fragment to broadcast
+	 * Interface to knowledge reciever
 	 */
-	virtual void receiveFragment(const KnowledgeFragment fragment) = 0;
-	virtual ~Receiver() {
-	}
+	class Receiver {
+	public:
+		/**
+		 * Receiver knowledge fragment
+		 *
+		 * @param fragment Knowledge fragment to broadcast
+		 */
+		virtual void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi) = 0;
+		virtual ~Receiver() {
+		}
+	};
 };
 
 #endif // RECEIVER_H

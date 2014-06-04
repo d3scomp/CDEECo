@@ -96,7 +96,7 @@ int main(void) {
 	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
 	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n", uniqId);
 
-	System *system = new System(uniqId);
+	CDEECO::System *system = new CDEECO::System(uniqId);
 
 	// Test component
 	new TestComponent(*system);

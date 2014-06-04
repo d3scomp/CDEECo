@@ -13,7 +13,7 @@ public:
 	static void init();
 	static void log(const char *text);
 	static void logFragment(const KnowledgeFragment fragment);
-	static void setFragmentReceiver(Receiver *receiver);
+	static void setFragmentReceiver(CDEECO::Receiver *receiver);
 	static void interrupt();
 
 	template<typename T0>
@@ -32,7 +32,7 @@ public:
 
 private:
 	static UART serial;
-	static Receiver *receiver;
+	static CDEECO::Receiver *receiver;
 	static void receiveListener(void* data);
 
 	template<typename T>

@@ -24,75 +24,78 @@
 template<size_t SIZE>
 class RebroadcastStorage;
 
-class System: Broadcaster, Receiver {
-public:
-	System(KnowledgeFragment::Id id) :
-			id(id), rebroadcast(*this), radio(*this) {
-		// Erase caches
-		memset(&caches, 0, sizeof(caches));
+namespace CDEECO {
 
-		Console::log(">>> System constructor");
+	class System: Broadcaster, Receiver {
+	public:
+		System(KnowledgeFragment::Id id) :
+				id(id), rebroadcast(*this), radio(*this) {
+			// Erase caches
+			memset(&caches, 0, sizeof(caches));
 
-		// Init console input
-		Console::setFragmentReceiver(this);
-	}
+			Console::log(">>> System constructor");
 
-	/** Receive listener */
-	void receiveFragment(const KnowledgeFragment fragment) {
-		// If fragment is not local process it
-		if(fragment.id != id)
-			processFragment(fragment);
-	}
+			// Init console input
+			Console::setFragmentReceiver(this);
+		}
 
-	/** Broadcast knowledge fragment */
-	void broadcastFragment(KnowledgeFragment fragment) {
-		Console::log(">>>>>>>>> Sending knowledge fragment:");
-		Console::logFragment(fragment);
-		radio.broadcastFragment(fragment);
-	}
+		/** Receive listener */
+		void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi) {
+			// If fragment is not local process it
+			if(fragment.id != id)
+				processFragment(fragment, lqi);
+		}
 
-	/** Process process received fragment */
-	void processFragment(const KnowledgeFragment fragment) {
-		Console::log(">>>>>>>>> Processing knowledge fragment:");
-		Console::logFragment(fragment);
+		/** Broadcast knowledge fragment */
+		void broadcastFragment(KnowledgeFragment fragment) {
+			Console::log(">>>>>>>>> Sending knowledge fragment:");
+			Console::logFragment(fragment);
+			radio.broadcastFragment(fragment);
+		}
 
-		// Store fragment in rebroadcast storage
-		rebroadcast.storeFragment(fragment);
+		/** Process process received fragment */
+		void processFragment(const KnowledgeFragment fragment, uint8_t lqi) {
+			Console::log(">>>>>>>>> Processing knowledge fragment:");
+			Console::logFragment(fragment);
 
-		// Try to store fragment in one of the caches
-		for(size_t i = 0; i < caches.size() && caches[i]; ++i)
-			caches[i]->storeFragment(fragment);
-	}
+			// Store fragment in rebroadcast storage
+			rebroadcast.storeFragment(fragment, lqi);
 
-	/** Register knowledge cache */
-	void registerCache(KnowledgeStorage *cache) {
-		assert_param(caches[caches.size() - 1] == NULL);
+			// Try to store fragment in one of the caches
+			for(size_t i = 0; i < caches.size() && caches[i]; ++i)
+				caches[i]->storeFragment(fragment);
+		}
 
-		for(size_t i = 0; i < CACHES; ++i)
-			if(caches[i] == NULL) {
-				caches[i] = cache;
-				return;
-			}
+		/** Register knowledge cache */
+		void registerCache(KnowledgeStorage *cache) {
+			assert_param(caches[caches.size() - 1] == NULL);
 
-		Console::log(">>>> OUT OF CACHE STORAGE <<<<");
-		assert_param(false);
-	}
+			for(size_t i = 0; i < CACHES; ++i)
+				if(caches[i] == NULL) {
+					caches[i] = cache;
+					return;
+				}
 
-	KnowledgeFragment::Id getId() {
-		return id;
-	}
+			Console::log(">>>> OUT OF CACHE STORAGE <<<<");
+			assert_param(false);
+		}
 
-private:
-	// Used as Id of all system components
-	const KnowledgeFragment::Id id;
+		KnowledgeFragment::Id getId() {
+			return id;
+		}
 
-	static const size_t CACHES = 3;
-	static const size_t REBROADCAST_SIZE = 8;
+	private:
+		// Used as Id of all system components
+		const KnowledgeFragment::Id id;
 
-	std::array<KnowledgeStorage*, CACHES> caches;
-	RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
+		static const size_t CACHES = 3;
+		static const size_t REBROADCAST_SIZE = 32;
 
-	Radio radio;
-};
+		std::array<KnowledgeStorage*, CACHES> caches;
+		RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
+
+		Radio radio;
+	};
+}
 
 #endif /* SYSTEM_H_ */

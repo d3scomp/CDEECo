@@ -65,7 +65,7 @@ public:
 	KnowledgeFragment::Type Type = 0x00000002;
 	Check check;
 
-	Component(System &system) :
+	Component(CDEECO::System &system) :
 			CDEECO::Component<Knowledge>(Type, system), check(*this, this->knowledge.tempCritical) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));

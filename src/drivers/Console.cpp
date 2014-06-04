@@ -15,7 +15,7 @@ GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3, RCC_APB1PeriphClockCmd
 RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
 UART Console::serial(serialProps);
 
-Receiver* Console::receiver = NULL;
+CDEECO::Receiver* Console::receiver = NULL;
 
 void Console::init() {
 	serial.setPriority(15, 15);
@@ -34,7 +34,7 @@ void Console::log(const char *text) {
 	xTaskResumeAll();
 }
 
-void Console::setFragmentReceiver(Receiver *receiver) {
+void Console::setFragmentReceiver(CDEECO::Receiver *receiver) {
 	Console::receiver = receiver;
 	assert(receiver);
 
@@ -62,7 +62,7 @@ void Console::receiveListener(void* data) {
 			fragment.data[i] = recv<char>();
 
 		if(receiver)
-			receiver->receiveFragment(fragment);
+			receiver->receiveFragment(fragment, 128);
 	}
 }
 

@@ -156,7 +156,7 @@ void EXTI1_IRQHandler(void) {
  * @retval None
  */
 void EXTI2_IRQHandler(void) {
-	Radio::mrf.rfInterruptHandler();
+	CDEECO::Radio::mrf.rfInterruptHandler();
 }
 
 /**
@@ -166,7 +166,7 @@ void EXTI2_IRQHandler(void) {
  */
 void SPI3_IRQHandler(void) {
 //	GPIOA->BSRRL = GPIO_Pin_5;    // Requires test2Led to be initialized in main.cpp
-	Radio::mrf.spiInterruptHandler();
+	CDEECO::Radio::mrf.spiInterruptHandler();
 //	GPIOA->BSRRH = GPIO_Pin_5;
 }
 

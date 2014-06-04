@@ -21,8 +21,8 @@ MRF24J40::Properties mrfProps {
 	SPI3_IRQn
 };
 
-LED Radio::greenLed = LED(greenLedProps);
-LED Radio::redLed = LED(redLedProps);
-PulseLED Radio::greenPulseLed = PulseLED(Radio::greenLed, 1);
-PulseLED Radio::redPulseLed = PulseLED(Radio::redLed, 1);
-MRF24J40 Radio::mrf = MRF24J40(mrfProps, Radio::greenPulseLed, Radio::redPulseLed);
+LED CDEECO::Radio::greenLed = LED(greenLedProps);
+LED CDEECO::Radio::redLed = LED(redLedProps);
+PulseLED CDEECO::Radio::greenPulseLed = PulseLED(Radio::greenLed, 1);
+PulseLED CDEECO::Radio::redPulseLed = PulseLED(Radio::redLed, 1);
+MRF24J40 CDEECO::Radio::mrf = MRF24J40(mrfProps, Radio::greenPulseLed, Radio::redPulseLed);

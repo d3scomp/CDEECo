@@ -33,7 +33,7 @@ struct Knowledge: CDEECO::Knowledge {
 class Temp: public CDEECO::PeriodicTask<Knowledge, float> {
 public:
 	Temp(CDEECO::Component<Knowledge> &component, float &out) :
-			PeriodicTask(2000, component, out), sensor(sensorProps) {
+			PeriodicTask(1800, component, out), sensor(sensorProps) {
 		sensor.init();
 	}
 
@@ -58,7 +58,7 @@ public:
 	static const KnowledgeFragment::Type Type = 0x00000001;
 	Temp temp;
 
-	Component(System &system) :
+	Component(CDEECO::System &system) :
 			CDEECO::Component<Knowledge>(Type, system), temp(*this, this->knowledge.temperature) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));
