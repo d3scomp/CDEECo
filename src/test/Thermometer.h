@@ -43,7 +43,7 @@ namespace Thermometer {
 
 		float run(const Knowledge in) {
 			float temp = sensor.readTemperature();
-			Console::print(TaskInfo, "\n\n\nTemp: %d.%d°C\n\n\n\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
+			Console::print(TaskInfo, "Thermometer task:\nTemp: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
 			return temp;
 		}
 	};
