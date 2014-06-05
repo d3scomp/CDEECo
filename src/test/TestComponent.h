@@ -62,7 +62,7 @@ class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge
 public:
 	// Task initialization
 	TestPeriodicTask(CDEECO::Component<TestKnowledge> &component, TestKnowledge::Position &out) :
-			PeriodicTask(20, component, out), led(blue) {
+			PeriodicTask(1500, component, out), led(blue) {
 		led.init();
 	}
 

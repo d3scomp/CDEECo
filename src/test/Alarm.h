@@ -18,72 +18,86 @@
 
 namespace Alarm {
 
-/// Portable thermometer knowledge
-struct Knowledge: CDEECO::Knowledge {
-	struct Position {
-		int x;
-		int y;
-	} position;
+	/**
+	 * Portable thermometer knowledge
+	 */
+	struct Knowledge: CDEECO::Knowledge {
+		struct Position {
+			int x;
+			int y;
+		} position;
 
-	struct Temp {
-		KnowledgeFragment::Id id;
-		float temp;
+		struct SensorInfo {
+			KnowledgeFragment::Id id;
+			Sensor::Knowledge::Value value;
+		};
+
+		typedef std::array<SensorInfo, 10> SensorData;
+
+		SensorData nearbySensors;
+
+		bool tempCritical;
 	};
 
-	typedef std::array<Temp, 10> Temps;
+	/**
+	 * Temperature check task
+	 */
+	class Check: public CDEECO::PeriodicTask<Knowledge, bool> {
+	public:
+		Check(CDEECO::Component<Knowledge> &component, bool &out) :
+				PeriodicTask(3000, component, out) {
+		}
 
-	Temps tempsNearby;
+	protected:
+		bool run(const Knowledge in) {
+			Console::print(TaskInfo, ">>>> Running alarm temp check\n");
 
-	bool tempCritical;
-};
+			// Check temperatures for dangerous conditions
+			const float threshold = 30.0f;
 
-/// Temperature check task
-class Check: public CDEECO::PeriodicTask<Knowledge, bool> {
-public:
-	Check(CDEECO::Component<Knowledge> &component, bool &out) :
-			PeriodicTask(3000, component, out) {
-	}
+			for(auto info : in.nearbySensors)
+				if(info.value.temperature > threshold)
+					return true;
 
-protected:
-	bool run(const Knowledge in) {
-		// Check temperatures for dangerous conditions
-		const float threshold = 50.0f;
+			return false;
+		}
+	};
 
-		for(size_t i = 0 ; i < in.tempsNearby.size(); ++i)
-			if(in.tempsNearby[i].temp > threshold)
-				return true;
+	/**
+	 * PortableThermometer component class
+	 */
+	class Component: public CDEECO::Component<Knowledge> {
+	public:
+		KnowledgeFragment::Type Type = 0x00000002;
+		Check check;
 
-		return false;
-	}
-};
-
-/**
- * PortableThermometer component class
- */
-class Component: public CDEECO::Component<Knowledge> {
-public:
-	KnowledgeFragment::Type Type = 0x00000002;
-	Check check;
-
-	Component(CDEECO::System &system) :
-			CDEECO::Component<Knowledge>(Type, system), check(*this, this->knowledge.tempCritical) {
-		// Initialize knowledge
-		memset(&knowledge, 0, sizeof(Knowledge));
-	}
-};
+		Component(CDEECO::System &system) :
+				CDEECO::Component<Knowledge>(Type, system), check(*this, this->knowledge.tempCritical) {
+			// Initialize knowledge
+			memset(&knowledge, 0, sizeof(Knowledge));
+		}
+	};
 
 }
 
 namespace CDEECO {
 
-/// Allowed offsets to guarantee knowledge consistency
-template<>
-struct KnowledgeTrait<Alarm::Knowledge> {
-	static constexpr std::array<size_t, 1> offsets = { { offsetof(Alarm::Knowledge, position) } };
-};
-// This declaration do not require array size to be specified twice, but drives eclipse crazy.
-//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-constexpr std::array<size_t, 1> KnowledgeTrait<Alarm::Knowledge>::offsets;
+	/**
+	 * Allowed offsets to guarantee knowledge consistency
+	 */
+	template<>
+	struct KnowledgeTrait<Alarm::Knowledge> {
+		static constexpr std::array<size_t, 3> offsets = {
+				offsetof(Alarm::Knowledge, position),
+				offsetof(Alarm::Knowledge, nearbySensors),
+				offsetof(Alarm::Knowledge, nearbySensors) + 100
+		};
+	};
+	/**
+	 * This declaration do not require array size to be specified twice, but drives eclipse crazy.
+	 * constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
+	 */
+	constexpr std::array<size_t, 3> KnowledgeTrait<Alarm::Knowledge>::offsets;
 
 }
 

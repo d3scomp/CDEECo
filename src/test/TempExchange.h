@@ -14,43 +14,43 @@
 #include "cdeeco/Ensamble.h"
 #include "cdeeco/KnowledgeCache.h"
 #include "Alarm.h"
-#include "Thermometer.h"
+#include "PortableSensor.h"
 
 namespace TempExchange {
-	class Ensamble: CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge, void> {
+	class Ensamble: CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge, void> {
 	public:
-		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, KnowledgeLibrary<Thermometer::Knowledge> &library) :
-				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::Temps, Thermometer::Knowledge, void>(&coordinator,
-						&coordinator.knowledge.tempsNearby, &library, 5000) {
+		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, KnowledgeLibrary<Sensor::Knowledge> &library) :
+				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge, void>(&coordinator,
+						&coordinator.knowledge.nearbySensors, &library, 5000) {
 		}
 
 	protected:
-		bool isMember(const Alarm::Knowledge coord, const Thermometer::Knowledge memberKnowledge) {
+		bool isMember(const Alarm::Knowledge coord, const Sensor::Knowledge memberKnowledge) {
 			// TODO: Implement membership method. For now we assume all temperatures are members.
 			return true;
 		}
 
 		// Map temperatures from Thermometers to Alarm
-		Alarm::Knowledge::Temps memberToCoordMap(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
-				const Thermometer::Knowledge memberKnowledge) {
-			Alarm::Knowledge::Temps temps = coord.tempsNearby;
+		Alarm::Knowledge::SensorData memberToCoordMap(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
+				const Sensor::Knowledge memberKnowledge) {
+			auto values = coord.nearbySensors;
 
 			// Try to update record
-			for(Alarm::Knowledge::Temp &temp : temps)
-				if(temp.id == memberId) {
-					temp.temp = memberKnowledge.temperature;
-					return temps;
+			for(auto &info : values)
+				if(info.id == memberId) {
+					info.value = memberKnowledge.value;
+					return values;
 				}
 
 			// Replace random record
-			size_t index = gen() % temps.size();
-			temps[index].id = memberId;
-			temps[index].temp = memberKnowledge.temperature;
-			return temps;
+			size_t index = gen() % values.size();
+			values[index].id = memberId;
+			values[index].value = memberKnowledge.value;
+			return values;
 		}
 
 		// Map data from Alarm to Thermometer
-		void coordToMemberMap(const Thermometer::Knowledge member, const KnowledgeFragment::Id coordId, const Alarm::Knowledge coordKnowledge) {
+		void coordToMemberMap(const Sensor::Knowledge member, const KnowledgeFragment::Id coordId, const Alarm::Knowledge coordKnowledge) {
 			// This does nothing
 		}
 
