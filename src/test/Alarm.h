@@ -65,7 +65,7 @@ namespace Alarm {
 			Console::print(TaskInfo, "\n\n\n");
 
 			// Check temperatures for dangerous conditions
-			const float threshold = 30.0f;
+			const float threshold = 26.0f;
 
 			for(auto info : in.nearbySensors)
 				if(info.value.temperature > threshold)
@@ -76,15 +76,36 @@ namespace Alarm {
 	};
 
 	/**
+	 * Temperature critical trigger task
+	 */
+	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, Knowledge::Position> {
+	public:
+		Critical(CDEECO::Component<Knowledge> &component, bool &trigger, Knowledge::Position &out):
+			TriggeredTask(trigger, component, out) {
+		}
+	protected:
+		Knowledge::Position run(const Knowledge in) {
+			if(in.tempCritical) {
+				Console::print(TaskInfo, "##############################################################\n");
+				Console::print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
+				Console::print(TaskInfo, "##############################################################\n");
+			}
+
+			return in.position;
+		}
+	};
+
+	/**
 	 * PortableThermometer component class
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
 		KnowledgeFragment::Type Type = 0x00000002;
-		Check check;
+		Check check = Check(*this, this->knowledge.tempCritical);
+		Critical critical = Critical(*this, this->knowledge.tempCritical, this->knowledge.position);
 
 		Component(CDEECO::System &system) :
-				CDEECO::Component<Knowledge>(Type, system), check(*this, this->knowledge.tempCritical) {
+				CDEECO::Component<Knowledge>(Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
