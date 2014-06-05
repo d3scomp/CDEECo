@@ -97,7 +97,7 @@ void Console::setFragmentReceiver(CDEECO::Receiver *receiver) {
 
 	// Enable event listening
 	serial.setRecvListener(receiveListener, NULL);
-	log("Disabling receive events, disabling send events");
+	print(Info, "Disabling receive events, disabling send events\n");
 	// TODO: enable receive events for debug input. Make sure ISR do no collide with MRF ISR
 	serial.disableRecvEvents();
 	serial.disableSendEvents();
