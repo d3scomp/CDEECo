@@ -27,6 +27,7 @@ public:
 
 	void init();
 	float readTemperature();
+	float readHumidity();
 
 private:
 	static const uint8_t CMD_MEASURE_TEMP = 0b00000011;
@@ -37,8 +38,13 @@ private:
 
 	static const uint16_t COM_DELAY = 3;
 
-	static constexpr float TD1 = -39.7f;
-	static constexpr float TD2 = 0.01f;
+	static constexpr float TC1 = -39.7f;
+	static constexpr float TC2 = 0.01f;
+
+	static constexpr float HC1 = -2.0468f;
+	static constexpr float HC2 = 0.0367f;
+	static constexpr float HC3 = -1.5955E-6f;
+
 
 	Properties &properties;
 
