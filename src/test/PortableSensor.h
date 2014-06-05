@@ -55,9 +55,9 @@ namespace Sensor {
 			float temp = sensor.readTemperature();
 			float humid = sensor.readHumidity();
 
-			Console::print(TaskInfo, "Sensor task:\n");
-			Console::print(TaskInfo, "Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
-			Console::print(TaskInfo, "Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
+			Console::print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
+			Console::print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
+			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n\n\n\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
 
 			return {temp, humid};
 		}

@@ -13,6 +13,7 @@
 
 #include <array>
 #include <algorithm>
+#include <climits>
 
 #include "cdeeco/Component.h"
 
@@ -27,13 +28,13 @@ namespace Alarm {
 			int y;
 		} position;
 
+		static const KnowledgeFragment::Id NO_MEMBER = ULONG_MAX;
 		struct SensorInfo {
 			KnowledgeFragment::Id id;
 			Sensor::Knowledge::Value value;
 		};
 
 		typedef std::array<SensorInfo, 10> SensorData;
-
 		SensorData nearbySensors;
 
 		bool tempCritical;
@@ -50,7 +51,18 @@ namespace Alarm {
 
 	protected:
 		bool run(const Knowledge in) {
-			Console::print(TaskInfo, ">>>> Running alarm temp check\n");
+			Console::print(TaskInfo, "\n\n\n>>>> Running alarm temp check\n");
+			Console::print(TaskInfo, ">>>> Registered sensor and values:\n");
+			for(auto info : in.nearbySensors) {
+				if(info.id != Knowledge::NO_MEMBER) {
+					Console::print(TaskInfo, ">>>>>> Id: %x ", info.id);
+					float t = info.value.temperature;
+					float h = info.value.humidity;
+					Console::print(TaskInfo, "Temp: %d.%d°C ", (int16_t) t, ((int16_t) (t * 100) % 100));
+					Console::print(TaskInfo, "Humi: %d.%d%%\n", (int16_t) h, ((int16_t) (h * 100) % 100));
+				}
+			}
+			Console::print(TaskInfo, "\n\n\n");
 
 			// Check temperatures for dangerous conditions
 			const float threshold = 30.0f;
@@ -75,6 +87,7 @@ namespace Alarm {
 				CDEECO::Component<Knowledge>(Type, system), check(*this, this->knowledge.tempCritical) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));
+			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
 		}
 	};
 
@@ -87,11 +100,9 @@ namespace CDEECO {
 	 */
 	template<>
 	struct KnowledgeTrait<Alarm::Knowledge> {
-		static constexpr std::array<size_t, 3> offsets = {
-				offsetof(Alarm::Knowledge, position),
-				offsetof(Alarm::Knowledge, nearbySensors),
-				offsetof(Alarm::Knowledge, nearbySensors) + 100
-		};
+		static constexpr std::array<size_t, 3> offsets = { offsetof(Alarm::Knowledge, position), offsetof(
+				Alarm::Knowledge, nearbySensors),
+		offsetof(Alarm::Knowledge, nearbySensors) + 100 };
 	};
 	/**
 	 * This declaration do not require array size to be specified twice, but drives eclipse crazy.
