@@ -56,7 +56,7 @@ public:
 	}
 
 	Index pushRecord() {
-		Console::log(">>>>>>>> Out of rebroadcast storage - force rebroadcast of oldest record\n");
+		Console::print(Error, ">>>>>>>> Out of rebroadcast storage - force rebroadcast of oldest record\n");
 		Index oldest = 0;
 		for(Index i = 0; i < records.size(); ++i)
 			if(records[i].received < records[oldest].received)
@@ -66,7 +66,7 @@ public:
 	}
 
 	void rebroadcast(Index index) {
-		Console::log(">>> Rebroadcasting fragment\n");
+		Console::print(Info, ">>> Rebroadcasting fragment\n");
 		broadcaster.broadcastFragment(records[index].fragment);
 		records[index].used = false;
 	}

@@ -108,7 +108,6 @@ int main(void) {
 	delayTimer.mDelay(3000);
 	Console::log(">>> Starting system\n");
 
-
 	// Get unique device id
 	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
 	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);

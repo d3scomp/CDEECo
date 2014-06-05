@@ -48,14 +48,14 @@ namespace CDEECO {
 
 		/** Broadcast knowledge fragment */
 		void broadcastFragment(KnowledgeFragment fragment) {
-			Console::log(">>>>>>>>> Sending knowledge fragment:\n");
+			Console::print(Info, ">>>>>>>>> Sending knowledge fragment:\n");
 			Console::logFragment(fragment);
 			radio.broadcastFragment(fragment);
 		}
 
 		/** Process process received fragment */
 		void processFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			Console::log(">>>>>>>>> Processing knowledge fragment:\n");
+			Console::print(Info, ">>>>>>>>> Processing knowledge fragment:\n");
 			Console::logFragment(fragment);
 
 			// Store fragment in rebroadcast storage
@@ -76,7 +76,7 @@ namespace CDEECO {
 					return;
 				}
 
-			Console::log(">>>> OUT OF CACHE STORAGE <<<<\n");
+			Console::print(Error, ">>>> OUT OF CACHE STORAGE <<<<\n");
 			assert_param(false);
 		}
 
