@@ -60,9 +60,11 @@ Button toggleButton(userButtonProps);
  * Enable VFP unit, taken from FreeRTOS port
  */
 static void enableVFP(void) {
-	__asm volatile ("ldr.w r0, =0xE000ED88"); // The FPU enable bits are in the CPACR.
+	__asm volatile ("ldr.w r0, =0xE000ED88");
+	// The FPU enable bits are in the CPACR.
 	__asm volatile ("ldr r1, [r0]");
-	__asm volatile ("orr r1, r1, #( 0xf << 20 )"); // Enable CP10 and CP11 co-processors, then save back.
+	__asm volatile ("orr r1, r1, #( 0xf << 20 )");
+	// Enable CP10 and CP11 co-processors, then save back.
 	__asm volatile ("str r1, [r0]");
 	__asm volatile ("bx r14");
 }
@@ -81,26 +83,24 @@ void userPressed(void* data) {
 
 void cdeecoSetup(const uint32_t uniqId) {
 	//// System setup
-	CDEECO::System *system = new CDEECO::System(uniqId);
+	auto system = new CDEECO::System(uniqId);
 
 	// Test component
 	new TestComponent(*system);
 
 	///// Temperature monitoring system
 	// Components
-	Sensor::Component *sensor = new Sensor::Component(*system);
-	Alarm::Component* alarm = new Alarm::Component(*system);
+	auto sensor = new Sensor::Component(*system);
+	auto alarm = new Alarm::Component(*system);
 
 	// Caches
-	KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>* cache = new KnowledgeCache<Sensor::Component::Type,
-			Sensor::Knowledge, 10>();
-	KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>* alarmCache = new KnowledgeCache<
-			Alarm::Component::Type, Alarm::Knowledge, 10>();
-	system->registerCache(cache);
+	auto sensorCache = new KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>();
+	auto alarmCache = new KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>();
+	system->registerCache(sensorCache);
 	system->registerCache(alarmCache);
 
 	// Ensembles
-	new TempExchange::Ensamble(*alarm, *cache);
+	new TempExchange::Ensamble(*alarm, *sensorCache);
 	new TempExchange::Ensamble(*sensor, *alarmCache);
 }
 

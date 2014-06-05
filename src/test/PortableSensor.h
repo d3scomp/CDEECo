@@ -57,7 +57,8 @@ namespace Sensor {
 
 			Console::print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
 			Console::print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
-			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n\n\n\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
+			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
+			Console::print(TaskInfo, ">>>>>> AlarmId: %d\n\n\n\n", in.coordId);
 
 			return {temp, humid};
 		}
