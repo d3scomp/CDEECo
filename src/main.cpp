@@ -36,7 +36,7 @@ TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
 PulseLED::Properties pulseProps {
-	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 6
+	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 0
 };
 
 Button::Properties userButtonProps {
@@ -82,9 +82,14 @@ void userPressed(void* data) {
 	lastUserPress = now;
 }
 
+/* void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
+	PulseLED::tickInterruptHandler();
+}*/
+
 /** System startup function */
 int main(void) {
 	// Initialize basic system hardware
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 	enableVFP();
 	delayTimer.init();
 	Console::init();
@@ -103,8 +108,6 @@ int main(void) {
 	delayTimer.mDelay(3000);
 	Console::log(">>> Starting system\n");
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-
 
 	// Get unique device id
 	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
@@ -122,6 +125,11 @@ int main(void) {
 			Thermometer::Component::Type, Thermometer::Knowledge, 10>();
 	system->registerCache(cache);
 	new TempExchange::Ensamble(*alarm, *cache);
+
+/*	// TODO: This is not nice
+	Console::log(">>> Setting timer to make pulse leds work");
+	TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
+	xTimerStart(pulseLedTimerhandle, 10);*/
 
 	// Start the scheduler.
 	Console::log(">>> Running scheduler\n");
