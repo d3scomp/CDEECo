@@ -11,6 +11,8 @@
 #include "FreeRTOS.h"
 #include "semphr.h"
 
+#include <climits>
+
 #include "System.h"
 #include "Knowledge.h"
 #include "PeriodicTask.h"
@@ -101,18 +103,25 @@ namespace CDEECO {
 			assert_param(end <= sizeof(KNOWLEDGE));
 
 			// Until the change is broadcasted
+			size_t cnt = 0;
+			size_t last = ULONG_MAX;
 			do {
 				// Find start offset
 				size_t brdStart = 0;
 				bool found = false;
-				for(int i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
+				for(size_t i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
 					if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
+						assert_param(last != i);
+						last = i;
 						found = true;
 						brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
 						break;
 					}
 				}
 				assert_param(found);
+
+				// Check and notify
+				Console::print(Debug, ">>>> Created fragment %d of the changed knowledge\n", cnt++);
 
 				// Broadcast fragment
 				start = brdStart + broadcastFragment(brdStart);
