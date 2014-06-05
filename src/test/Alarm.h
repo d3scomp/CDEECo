@@ -78,20 +78,18 @@ namespace Alarm {
 	/**
 	 * Temperature critical trigger task
 	 */
-	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, Knowledge::Position> {
+	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, void> {
 	public:
-		Critical(CDEECO::Component<Knowledge> &component, bool &trigger, Knowledge::Position &out):
-			TriggeredTask(trigger, component, out) {
+		Critical(CDEECO::Component<Knowledge> &component, bool &trigger):
+			TriggeredTask(trigger, component) {
 		}
 	protected:
-		Knowledge::Position run(const Knowledge in) {
+		void run(const Knowledge in) {
 			if(in.tempCritical) {
 				Console::print(TaskInfo, "##############################################################\n");
 				Console::print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
 				Console::print(TaskInfo, "##############################################################\n");
 			}
-
-			return in.position;
 		}
 	};
 
@@ -102,7 +100,7 @@ namespace Alarm {
 	public:
 		KnowledgeFragment::Type Type = 0x00000002;
 		Check check = Check(*this, this->knowledge.tempCritical);
-		Critical critical = Critical(*this, this->knowledge.tempCritical, this->knowledge.position);
+		Critical critical = Critical(*this, this->knowledge.tempCritical);
 
 		Component(CDEECO::System &system) :
 				CDEECO::Component<Knowledge>(Type, system) {
@@ -111,7 +109,6 @@ namespace Alarm {
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
 		}
 	};
-
 }
 
 namespace CDEECO {

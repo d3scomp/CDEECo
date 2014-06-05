@@ -15,41 +15,72 @@
 
 namespace CDEECO {
 
-template<typename KNOWLEDGE>
-class Component;
+	template<typename KNOWLEDGE>
+	class Component;
 
-/** Prototype for component tasks */
-template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
-class Task {
-public:
-	Task(Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge):
-		component(component), outKnowledge(outKnowledge) {
+	/** Prototype for component tasks */
+	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
+	class Task {
+	public:
+		Task(Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
+				component(component), outKnowledge(outKnowledge) {
+		}
+		virtual ~Task() {
+		}
+
+		/** Task user code */
+		virtual OUT_KNOWLEDGE run(const KNOWLEDGE knowledge) = 0;
+
+		const size_t DefaultStackSize = 4096;
+		const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
+
+	private:
+		Component<KNOWLEDGE> &component;
+		OUT_KNOWLEDGE &outKnowledge;
+
+	protected:
+		/** Task execution code, responsible for data passing */
+		void execute() {
+			// Lock and copy input data
+			KNOWLEDGE in = component.lockReadKnowledge();
+
+			// Execute user code defined for the task
+			OUT_KNOWLEDGE out = run(in);
+
+			// Lock and copy output data
+			component.lockWriteKnowledge(outKnowledge, out);
+		}
 	};
-	virtual ~Task() {};
 
-	/** Task user code */
-	virtual OUT_KNOWLEDGE run(const KNOWLEDGE knowledge) = 0;
+	/** Prototype for component tasks */
+	template<typename KNOWLEDGE>
+	class Task<KNOWLEDGE, void> {
+	public:
+		Task(Component<KNOWLEDGE> &component) :
+				component(component) {
+		}
+		virtual ~Task() {
+		}
 
-	const size_t DefaultStackSize = 4096;
-	const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
+		/** Task user code */
+		virtual void run(const KNOWLEDGE knowledge) = 0;
 
-private:
-	Component<KNOWLEDGE> &component;
-	OUT_KNOWLEDGE &outKnowledge;
+		const size_t DefaultStackSize = 4096;
+		const unsigned long DefaultPriority = tskIDLE_PRIORITY + 1UL;
 
-protected:
-	/** Task execution code, responsible for data passing */
-	void execute() {
-		// Lock and copy input data
-		KNOWLEDGE in = component.lockReadKnowledge();
+	private:
+		Component<KNOWLEDGE> &component;
 
-		// Execute user code defined for the task
-		OUT_KNOWLEDGE out = run(in);
+	protected:
+		/** Task execution code, responsible for data passing */
+		void execute() {
+			// Lock and copy input data
+			KNOWLEDGE in = component.lockReadKnowledge();
 
-		// Lock and copy output data
-		component.lockWriteKnowledge(outKnowledge, out);
-	}
-};
+			// Execute user code defined for the task
+			run(in);
+		}
+	};
 
 }
 
