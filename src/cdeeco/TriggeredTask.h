@@ -19,7 +19,9 @@
 #include "FreeRTOSSemaphore.h"
 
 namespace CDEECO {
-
+	/**
+	 * Triggered task implementation with output knowledge
+	 */
 	template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask, FreeRTOSTask {
 	public:
@@ -65,6 +67,9 @@ namespace CDEECO {
 	};
 
 
+	/**
+	 * Triggered task implementation without output knowledge
+	 */
 	template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE>
 	class TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, void>: Task<KNOWLEDGE, void>, ListedTriggerTask, FreeRTOSTask {
 	public:

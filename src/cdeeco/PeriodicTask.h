@@ -25,7 +25,9 @@
 #include <string>
 
 namespace CDEECO {
-
+	/**
+	 * Periodic task implementation with output knowledge
+	 */
 	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask {
 	public:
@@ -50,6 +52,9 @@ namespace CDEECO {
 		}
 	};
 
+	/**
+	 * Periodic task implementation without output knowledge
+	 */
 	template<typename KNOWLEDGE>
 	class PeriodicTask<KNOWLEDGE, void>: Task<KNOWLEDGE, void>, FreeRTOSTask {
 	public:
@@ -73,7 +78,6 @@ namespace CDEECO {
 			}
 		}
 	};
-
 }
 
 #endif /* PERIODICTASK_H_ */
