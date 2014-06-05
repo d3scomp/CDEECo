@@ -61,6 +61,11 @@ namespace CDEECO {
 			// Store fragment in rebroadcast storage
 			rebroadcast.storeFragment(fragment, lqi);
 
+			storeFragment(fragment);
+		}
+
+		/** Store fragment in knowledge cache */
+		void storeFragment(const KnowledgeFragment fragment) {
 			// Try to store fragment in one of the caches
 			for(size_t i = 0; i < caches.size() && caches[i]; ++i)
 				caches[i]->storeFragment(fragment);

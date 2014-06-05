@@ -144,6 +144,10 @@ namespace CDEECO {
 
 			system.broadcastFragment(fragment);
 
+			/* TODO: This is local loopback for registreing fragment from local components. Doing this makes no
+			 *  sense in real application. */
+			system.storeFragment(fragment);
+
 			return fragment.size;
 		}
 	};
