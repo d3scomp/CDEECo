@@ -27,7 +27,7 @@ namespace CDEECO {
 		}
 
 		Ensamble(Component<MEMBER_KNOWLEDGE> *member, MEMBER_OUT_KNOWLEDGE *memberOutKnowledge,
-				KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary, long period) :
+				KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary, long period) :
 				period(period), coordinator(NULL), member(member), coordOutKnowledge(NULL), memberOutKnowledge(
 						memberOutKnowledge), memberLibrary(NULL), coordLibrary(coordLibrary) {
 		}

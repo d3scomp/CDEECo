@@ -98,7 +98,7 @@ namespace Alarm {
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
-		KnowledgeFragment::Type Type = 0x00000002;
+		static const KnowledgeFragment::Type Type = 0x00000002;
 		Check check = Check(*this, this->knowledge.tempCritical);
 		Critical critical = Critical(*this, this->knowledge.tempCritical);
 
@@ -109,6 +109,7 @@ namespace Alarm {
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
 		}
 	};
+
 }
 
 namespace CDEECO {

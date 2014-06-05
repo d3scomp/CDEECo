@@ -36,12 +36,10 @@ TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
 PulseLED::Properties pulseProps {
-	RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 0
-};
+RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 0 };
 
 Button::Properties userButtonProps {
-	GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn
-};
+GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn };
 Button toggleButton(userButtonProps);
 
 /**
@@ -61,17 +59,12 @@ Button toggleButton(userButtonProps);
 /**
  * Enable VFP unit, taken from FreeRTOS port
  */
-static void enableVFP( void )
-{
-	__asm volatile
-	(
-		"	ldr.w r0, =0xE000ED88		\n" /* The FPU enable bits are in the CPACR. */
-		"	ldr r1, [r0]				\n"
-		"								\n"
-		"	orr r1, r1, #( 0xf << 20 )	\n" /* Enable CP10 and CP11 coprocessors, then save back. */
-		"	str r1, [r0]				\n"
-		"	bx r14						"
-	);
+static void enableVFP(void) {
+	__asm volatile ("ldr.w r0, =0xE000ED88"); // The FPU enable bits are in the CPACR.
+	__asm volatile ("ldr r1, [r0]");
+	__asm volatile ("orr r1, r1, #( 0xf << 20 )"); // Enable CP10 and CP11 co-processors, then save back.
+	__asm volatile ("str r1, [r0]");
+	__asm volatile ("bx r14");
 }
 
 TickType_t lastUserPress;
@@ -83,8 +76,33 @@ void userPressed(void* data) {
 }
 
 /* void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
-	PulseLED::tickInterruptHandler();
-}*/
+ PulseLED::tickInterruptHandler();
+ }*/
+
+void cdeecoSetup(const uint32_t uniqId) {
+	//// System setup
+	CDEECO::System *system = new CDEECO::System(uniqId);
+
+	// Test component
+	new TestComponent(*system);
+
+	///// Temperature monitoring system
+	// Components
+	Sensor::Component *sensor = new Sensor::Component(*system);
+	Alarm::Component* alarm = new Alarm::Component(*system);
+
+	// Caches
+	KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>* cache = new KnowledgeCache<Sensor::Component::Type,
+			Sensor::Knowledge, 10>();
+	KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>* alarmCache = new KnowledgeCache<
+			Alarm::Component::Type, Alarm::Knowledge, 10>();
+	system->registerCache(cache);
+	system->registerCache(alarmCache);
+
+	// Ensembles
+	new TempExchange::Ensamble(*alarm, *cache);
+	new TempExchange::Ensamble(*sensor, *alarmCache);
+}
 
 /** System startup function */
 int main(void) {
@@ -109,26 +127,15 @@ int main(void) {
 	Console::log(">>> Starting system\n");
 
 	// Get unique device id
-	const uint32_t uniqId = *((uint32_t*)0x1FFF7A10);
+	const uint32_t uniqId = *((uint32_t*) 0x1FFF7A10);
 	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
-	CDEECO::System *system = new CDEECO::System(uniqId);
+	cdeecoSetup(uniqId);
 
-	// Test component
-	new TestComponent(*system);
-
-	// Temperature monitoring system
-	new Sensor::Component(*system);
-	Alarm::Component* alarm = new Alarm::Component(*system);
-	KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>* cache = new KnowledgeCache<
-			Sensor::Component::Type, Sensor::Knowledge, 10>();
-	system->registerCache(cache);
-	new TempExchange::Ensamble(*alarm, *cache);
-
-/*	// TODO: This is not nice
-	Console::log(">>> Setting timer to make pulse leds work");
-	TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
-	xTimerStart(pulseLedTimerhandle, 10);*/
+	/*	// TODO: This is not nice
+	 Console::log(">>> Setting timer to make pulse leds work");
+	 TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
+	 xTimerStart(pulseLedTimerhandle, 10);*/
 
 	// Start the scheduler.
 	Console::log(">>> Running scheduler\n");
