@@ -18,7 +18,7 @@
 #include "drivers/LED.h"
 
 #include "test/TestComponent.h"
-#include "test/Thermometer.h"
+#include "test/PortableSensor.h"
 #include "test/Alarm.h"
 #include "test/TempExchange.h"
 
@@ -118,10 +118,10 @@ int main(void) {
 	new TestComponent(*system);
 
 	// Temperature monitoring system
-	new Thermometer::Component(*system);
+	new Sensor::Component(*system);
 	Alarm::Component* alarm = new Alarm::Component(*system);
-	KnowledgeCache<Thermometer::Component::Type, Thermometer::Knowledge, 10>* cache = new KnowledgeCache<
-			Thermometer::Component::Type, Thermometer::Knowledge, 10>();
+	KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>* cache = new KnowledgeCache<
+			Sensor::Component::Type, Sensor::Knowledge, 10>();
 	system->registerCache(cache);
 	new TempExchange::Ensamble(*alarm, *cache);
 
@@ -170,11 +170,8 @@ extern "C" {
  * @retval None
  */
 void assert_failed(uint8_t* file, uint32_t line) {
-	/* User can add his own implementation to report the file name and line number,
-	 ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-	Console::log("Assert failed");
-	//Console::log("Assert: %s:%d", file, line);
+	// User can add his own implementation to report the file name and line number,
+	Console::print(Error, "\n\n\n#### Assert failed ####\nFile: %s:%d\n\n\n", file, line);
 
 	/* Infinite loop */
 	while(1) {
