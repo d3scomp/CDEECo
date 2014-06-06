@@ -102,8 +102,8 @@ namespace Alarm {
 		Check check = Check(*this, this->knowledge.tempCritical);
 		Critical critical = Critical(*this, this->knowledge.tempCritical);
 
-		Component(CDEECO::System &system) :
-				CDEECO::Component<Knowledge>(Type, system) {
+		Component(CDEECO::System &system, const KnowledgeFragment::Id id) :
+				CDEECO::Component<Knowledge>(id, Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });

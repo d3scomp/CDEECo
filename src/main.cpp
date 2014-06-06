@@ -83,15 +83,15 @@ void userPressed(void* data) {
 
 void cdeecoSetup(const uint32_t uniqId) {
 	//// System setup
-	auto system = new CDEECO::System(uniqId);
+	auto system = new CDEECO::System();
 
 	// Test component
-	new TestComponent(*system);
+	new TestComponent(*system, uniqId);
 
 	///// Temperature monitoring system
 	// Components
-	auto sensor = new Sensor::Component(*system);
-	auto alarm = new Alarm::Component(*system);
+	auto sensor = new Sensor::Component(*system, uniqId);
+	auto alarm = new Alarm::Component(*system, uniqId);
 
 	// Caches
 	auto sensorCache = new KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>();

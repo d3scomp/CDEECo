@@ -28,8 +28,8 @@ namespace CDEECO {
 
 	class System: Broadcaster, Receiver {
 	public:
-		System(KnowledgeFragment::Id id) :
-				id(id), rebroadcast(*this), radio(*this) {
+		System() :
+				rebroadcast(*this), radio(*this) {
 			// Erase caches
 			memset(&caches, 0, sizeof(caches));
 
@@ -41,9 +41,7 @@ namespace CDEECO {
 
 		/** Receive listener */
 		void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			// If fragment is not local process it
-			if(fragment.id != id)
-				processFragment(fragment, lqi);
+			processFragment(fragment, lqi);
 		}
 
 		/** Broadcast knowledge fragment */
@@ -85,14 +83,7 @@ namespace CDEECO {
 			assert_param(false);
 		}
 
-		KnowledgeFragment::Id getId() {
-			return id;
-		}
-
 	private:
-		// Used as Id of all system components
-		const KnowledgeFragment::Id id;
-
 		static const size_t CACHES = 3;
 		static const size_t REBROADCAST_SIZE = 32;
 

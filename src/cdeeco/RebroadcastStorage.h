@@ -5,6 +5,7 @@
 #include "task.h"
 
 #include <array>
+#include <random>
 
 #include "Console.h"
 #include "KnowledgeFragment.h"
@@ -33,7 +34,11 @@ public:
 	}
 
 	void storeFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-		// TODO: Implement some smarter rebroadcast mechanism
+		// Time to live implementation with probability
+		if(gen() % 2)
+			return;
+
+		// Max rebroadcast interval
 		const Timestamp RebroadcastInterval = 5000;
 
 		// Calculate rebroadcast delay
@@ -89,6 +94,7 @@ public:
 
 private:
 	Broadcaster &broadcaster;
+	std::default_random_engine gen;
 
 	FreeRTOSMutex recordsMutex;
 	std::array<RebroadcastStorage::ReboadcastRecord, SIZE> records;

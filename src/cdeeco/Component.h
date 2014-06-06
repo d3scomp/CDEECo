@@ -21,13 +21,12 @@
 #include "FreeRTOSMutex.h"
 
 namespace CDEECO {
-
 	/** System component template */
 	template<typename KNOWLEDGE>
 	class Component {
 	public:
-		Component(const KnowledgeFragment::Type type, System &system) :
-				type(type), system(system), rootTriggerTask(NULL) {
+		Component(const KnowledgeFragment::Id id, const KnowledgeFragment::Type type, System &system) :
+				id(id), type(type), system(system), rootTriggerTask(NULL) {
 		}
 
 		KNOWLEDGE lockReadKnowledge() {
@@ -75,8 +74,10 @@ namespace CDEECO {
 		KNOWLEDGE knowledge;
 
 	protected:
+		/// Component Id
+		const KnowledgeFragment::Id id;
 		/// Component type
-		const uint32_t type;
+		const KnowledgeFragment::Type type;
 
 	private:
 		System &system;
@@ -136,7 +137,7 @@ namespace CDEECO {
 		 */
 		size_t broadcastFragment(size_t start) {
 			KnowledgeFragment fragment;
-			fragment.id = system.getId();
+			fragment.id = id;
 			fragment.type = type;
 			fragment.offset = start;
 			fragment.size = std::min(sizeof(KNOWLEDGE) - start, sizeof(fragment.data));
@@ -144,14 +145,13 @@ namespace CDEECO {
 
 			system.broadcastFragment(fragment);
 
-			/* TODO: This is local loopback for registreing fragment from local components. Doing this makes no
+			/* TODO: This is local loop-back for registering fragment from local components. Doing this makes no
 			 *  sense in real application. */
 			system.storeFragment(fragment);
 
 			return fragment.size;
 		}
 	};
-
 }
 
 #endif /* COMPONENT_H_ */

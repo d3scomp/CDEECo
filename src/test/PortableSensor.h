@@ -72,8 +72,8 @@ namespace Sensor {
 		static const KnowledgeFragment::Type Type = 0x00000001;
 		Sense sense = Sense(*this, this->knowledge.value);
 
-		Component(CDEECO::System &system) :
-				CDEECO::Component<Knowledge>(Type, system) {
+		Component(CDEECO::System &system, const KnowledgeFragment::Id id) :
+				CDEECO::Component<Knowledge>(id, Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));
 		}
