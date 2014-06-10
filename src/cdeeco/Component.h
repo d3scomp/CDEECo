@@ -23,10 +23,10 @@
 namespace CDEECO {
 	/** System component template */
 	template<typename KNOWLEDGE>
-	class Component {
+	class Component: FreeRTOSTask {
 	public:
-		Component(const KnowledgeFragment::Id id, const KnowledgeFragment::Type type, System &system) :
-				id(id), type(type), system(system), rootTriggerTask(NULL) {
+		Component(const KnowledgeFragment::Id id, const KnowledgeFragment::Type type, System &system, const uint32_t broadcastPeriodMs = 3000) :
+				id(id), type(type), system(system), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
 		}
 
 		KNOWLEDGE lockReadKnowledge() {
@@ -83,6 +83,7 @@ namespace CDEECO {
 		System &system;
 		FreeRTOSMutex knowledgeMutex;
 		ListedTriggerTask *rootTriggerTask;
+		const uint32_t broadcastPeriodMs;
 
 		template<typename T>
 		void checkAndRunTriggeredTasks(T &changed) {
@@ -98,7 +99,7 @@ namespace CDEECO {
 		 * @param size Change size
 		 */
 		void broadcastChange(size_t start, size_t size) {
-			Console::log("Broadcasting change\n");
+			Console::log("Broadcasting local knowledge\n");
 
 			size_t end = start + size;
 			assert_param(end <= sizeof(KNOWLEDGE));
@@ -150,6 +151,17 @@ namespace CDEECO {
 			system.storeFragment(fragment);
 
 			return fragment.size;
+		}
+
+		/**
+		 * Periodic full knowledge broadcast
+		 */
+		void run() {
+			while(true) {
+				// Wait for next execution time
+				vTaskDelay(this->broadcastPeriodMs / portTICK_PERIOD_MS);
+				broadcastChange(0, sizeof(KNOWLEDGE));
+			}
 		}
 	};
 }

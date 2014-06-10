@@ -18,7 +18,7 @@
  */
 class FreeRTOSTask {
 public:
-	FreeRTOSTask(size_t stackSize = 2048, unsigned long priority = 1UL) {
+	FreeRTOSTask(size_t stackSize = 1024, unsigned long priority = 1UL) {
 		xTaskCreate(taskBody, "Task", stackSize, this, tskIDLE_PRIORITY + priority, &handle);
 	}
 	virtual ~FreeRTOSTask() {
