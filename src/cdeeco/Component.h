@@ -46,11 +46,15 @@ namespace CDEECO {
 									<= (size_t )&knowledge + sizeof(KNOWLEDGE));
 
 			knowledgeMutex.lock();
-			// Update knowledge
-			outKnowledge = knowledgeData;
 
-			// Broadcast updated knowledge fragments
-			broadcastChange(((size_t) &outKnowledge) - ((size_t) &knowledge), sizeof(OUT_KNOWLEDGE));
+			// Check and update knowledge
+			if(memcmp(&outKnowledge, &knowledgeData, sizeof(OUT_KNOWLEDGE))) {
+				// Update knowledge
+				outKnowledge = knowledgeData;
+
+				// Broadcast updated knowledge fragments
+				broadcastChange(((size_t) &outKnowledge) - ((size_t) &knowledge), sizeof(OUT_KNOWLEDGE));
+			}
 
 			knowledgeMutex.unlock();
 
