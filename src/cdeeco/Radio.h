@@ -23,7 +23,6 @@
 #include "drivers/MRF24J40.h"
 
 namespace CDEECO {
-
 	class Radio: Broadcaster {
 	public:
 		template<typename T, size_t SIZE>

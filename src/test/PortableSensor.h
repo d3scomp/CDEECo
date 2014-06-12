@@ -27,7 +27,7 @@ namespace Sensor {
 		} position;
 
 		// Coordinator identification
-		typedef KnowledgeFragment::Id CoordId;
+		typedef CDEECO::Id CoordId;
 		static const CoordId NO_COORD = ULONG_MAX;
 		CoordId coordId;
 
@@ -69,10 +69,10 @@ namespace Sensor {
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
-		static const KnowledgeFragment::Type Type = 0x00000001;
+		static const CDEECO::Type Type = 0x00000001;
 		Sense sense = Sense(*this, this->knowledge.value);
 
-		Component(CDEECO::System &system, const KnowledgeFragment::Id id) :
+		Component(CDEECO::System &system, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));

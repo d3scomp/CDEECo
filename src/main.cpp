@@ -94,8 +94,8 @@ void cdeecoSetup(const uint32_t uniqId) {
 	auto alarm = new Alarm::Component(*system, uniqId);
 
 	// Caches
-	auto sensorCache = new KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>();
-	auto alarmCache = new KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>();
+	auto sensorCache = new CDEECO::KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>();
+	auto alarmCache = new CDEECO::KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>();
 	system->registerCache(sensorCache);
 	system->registerCache(alarmCache);
 

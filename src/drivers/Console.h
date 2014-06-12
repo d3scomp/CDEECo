@@ -23,7 +23,7 @@ class Console {
 public:
 	static const size_t MAX_LENGTH = 500;
 	static void init();
-	static void logFragment(const KnowledgeFragment fragment);
+	static void logFragment(const CDEECO::KnowledgeFragment fragment);
 	static void setFragmentReceiver(CDEECO::Receiver *receiver);
 	static void interrupt();
 	static void log(const char * format, ...);

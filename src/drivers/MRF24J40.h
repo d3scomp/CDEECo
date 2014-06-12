@@ -56,7 +56,7 @@ public:
 	void rfInterruptHandler();
 
 	inline void spiInterruptHandler() {
-		if (props.spi->SR & SPI_I2S_FLAG_RXNE) {
+		if(props.spi->SR & SPI_I2S_FLAG_RXNE) {
 			lastReadValue = props.spi->DR;
 		}
 	}
@@ -77,8 +77,8 @@ public:
 	uint16_t readSAddr();
 
 	void broadcastPacket(uint8_t *data, uint8_t dataLength);
-	bool recvPacket(uint8_t (&data)[KnowledgeFragment::MAX_PACKET_SIZE], uint8_t& dataLength, uint8_t (&srcPanId)[2], uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi);
-
+	bool recvPacket(uint8_t (&data)[CDEECO::KnowledgeFragment::MAX_PACKET_SIZE], uint8_t& dataLength, uint8_t (&srcPanId)[2],
+			uint8_t (&srcSAddr)[2], uint8_t (&fcs)[2], uint8_t& lqi, uint8_t& rssi);
 
 	uint8_t getChannel() const {
 		return channel;

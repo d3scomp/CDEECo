@@ -19,12 +19,12 @@
 namespace TempExchange {
 	class Ensamble: CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge, Sensor::Knowledge::CoordId> {
 	public:
-		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, KnowledgeLibrary<Sensor::Knowledge> &library) :
+		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, CDEECO::KnowledgeLibrary<Sensor::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge, Sensor::Knowledge::CoordId>(&coordinator,
 						&coordinator.knowledge.nearbySensors, &library, 5000) {
 		}
 
-		Ensamble(CDEECO::Component<Sensor::Knowledge> &coordinator, KnowledgeLibrary<Alarm::Knowledge> &library) :
+		Ensamble(CDEECO::Component<Sensor::Knowledge> &coordinator, CDEECO::KnowledgeLibrary<Alarm::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge, Sensor::Knowledge::CoordId>(&coordinator,
 						&coordinator.knowledge.coordId, &library, 5000) {
 		}
@@ -36,7 +36,7 @@ namespace TempExchange {
 		}
 
 		// Map temperatures from Thermometers to Alarm
-		Alarm::Knowledge::SensorData memberToCoordMap(const Alarm::Knowledge coord, const KnowledgeFragment::Id memberId,
+		Alarm::Knowledge::SensorData memberToCoordMap(const Alarm::Knowledge coord, const CDEECO::Id memberId,
 				const Sensor::Knowledge memberKnowledge) {
 			auto values = coord.nearbySensors;
 
@@ -55,7 +55,7 @@ namespace TempExchange {
 		}
 
 		// Map data from Alarm to Thermometer
-		Sensor::Knowledge::CoordId coordToMemberMap(const Sensor::Knowledge member, const KnowledgeFragment::Id coordId, const Alarm::Knowledge coordKnowledge) {
+		Sensor::Knowledge::CoordId coordToMemberMap(const Sensor::Knowledge member, const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge) {
 			return coordId;
 		}
 

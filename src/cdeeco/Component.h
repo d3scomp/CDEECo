@@ -25,7 +25,8 @@ namespace CDEECO {
 	template<typename KNOWLEDGE>
 	class Component: FreeRTOSTask {
 	public:
-		Component(const KnowledgeFragment::Id id, const KnowledgeFragment::Type type, System &system, const uint32_t broadcastPeriodMs = 3000) :
+		Component(const CDEECO::Id id, const CDEECO::Type type, System &system,
+				const uint32_t broadcastPeriodMs = 3000) :
 				id(id), type(type), system(system), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
 		}
 
@@ -75,9 +76,9 @@ namespace CDEECO {
 
 	protected:
 		/// Component Id
-		const KnowledgeFragment::Id id;
+		const CDEECO::Id id;
 		/// Component type
-		const KnowledgeFragment::Type type;
+		const CDEECO::Type type;
 
 	private:
 		System &system;

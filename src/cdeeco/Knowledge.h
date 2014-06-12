@@ -1,29 +1,27 @@
-#ifndef COMPONENT_KNOWLEDGE_H_
-#define COMPONENT_KNOWLEDGE_H_
-
-#include "Console.h"
+#ifndef KNOWLEDGE_H
+#define KNOWLEDGE_H
 
 namespace CDEECO {
+	/// Component/knowledge type
+	typedef uint32_t Type;
+	/// Component/knowledge id
+	typedef uint32_t Id;
 
-/**
- * Knowledge interface
- */
-struct Knowledge {
-};
+	/**
+	 * Knowledge interface
+	 */
+	struct Knowledge {
+	};
 
-/**
- * Knowledge trait
- *
- * Used for allowed fragment offset definition
- */
-template<class KNOWLEDGE>
-struct KnowledgeTrait {
-	static constexpr void* offsets[] = { };
-	static void humanPrint() {
-		Console::log("No human printing defined for this knowledge\n");
-	}
-};
-
+	/**
+	 * Knowledge trait
+	 *
+	 * Used for allowed fragment offset definition
+	 */
+	template<class KNOWLEDGE>
+	struct KnowledgeTrait {
+		static constexpr void* offsets[] = { };
+	};
 }
 
-#endif // COMPONENT_KNOWLEDGE_H
+#endif // KNOWLEDGE_H

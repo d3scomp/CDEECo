@@ -106,7 +106,7 @@ void Console::setFragmentReceiver(CDEECO::Receiver *receiver) {
 void Console::receiveListener(void* data) {
 	char c = serial.recv();
 	if(c == 'X') {
-		KnowledgeFragment fragment;
+		CDEECO::KnowledgeFragment fragment;
 
 		// Receive header
 		fragment.type = recv<decltype(fragment.type)>();
@@ -181,7 +181,7 @@ uint8_t Console::recvHexVal() {
 	return 0;
 }
 
-void Console::logFragment(const KnowledgeFragment fragment) {
+void Console::logFragment(const CDEECO::KnowledgeFragment fragment) {
 	// Print knowledge fragment
 	const size_t bufLen = 512;
 	char buffer[bufLen];

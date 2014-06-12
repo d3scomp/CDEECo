@@ -28,9 +28,9 @@ namespace Alarm {
 			int y;
 		} position;
 
-		static const KnowledgeFragment::Id NO_MEMBER = ULONG_MAX;
+		static const CDEECO::Id NO_MEMBER = ULONG_MAX;
 		struct SensorInfo {
-			KnowledgeFragment::Id id;
+			CDEECO::Id id;
 			Sensor::Knowledge::Value value;
 		};
 
@@ -98,11 +98,11 @@ namespace Alarm {
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
-		static const KnowledgeFragment::Type Type = 0x00000002;
+		static const CDEECO::Type Type = 0x00000002;
 		Check check = Check(*this, this->knowledge.tempCritical);
 		Critical critical = Critical(*this, this->knowledge.tempCritical);
 
-		Component(CDEECO::System &system, const KnowledgeFragment::Id id) :
+		Component(CDEECO::System &system, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));

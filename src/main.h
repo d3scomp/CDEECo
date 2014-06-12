@@ -14,7 +14,6 @@
 #include "LED.h"
 #include "gmd1602.h"
 #include "Button.h"
-#include "MRF24J40.h"
 #include "Timer.h"
 #include "GPS.h"
 
