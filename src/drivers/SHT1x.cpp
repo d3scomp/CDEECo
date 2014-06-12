@@ -182,8 +182,7 @@ uint16_t SHT1x::readCommand(uint8_t command) {
 
 	result.bytes[1] = receiveByte();
 	result.bytes[0] = receiveByte();
-	uint8_t checkSum = receiveByte();
-	// TODO: Check crc8
+	receiveByte();
 
 	return result.value;
 }
