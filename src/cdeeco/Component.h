@@ -71,14 +71,23 @@ namespace CDEECO {
 			root->next = &task;
 		}
 
+		Id getId() {
+			return id;
+		}
+
+		Type getType() {
+			return type;
+		}
+
+
 		/// Knowledge of the component
 		KNOWLEDGE knowledge;
 
 	protected:
 		/// Component Id
-		const CDEECO::Id id;
+		const Id id;
 		/// Component type
-		const CDEECO::Type type;
+		const Type type;
 
 	private:
 		System &system;

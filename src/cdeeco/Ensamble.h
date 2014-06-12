@@ -17,7 +17,7 @@
 namespace CDEECO {
 
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
-	typename MEMBER_OUT_KNOWLEDGE>
+			typename MEMBER_OUT_KNOWLEDGE>
 	class Ensamble: FreeRTOSTask {
 	public:
 		Ensamble(Component<COORD_KNOWLEDGE> *coordinator, COORD_OUT_KNOWLEDGE *coordOutKnowledge,
@@ -43,7 +43,8 @@ namespace CDEECO {
 		 * @param member Member knowledge
 		 * @return Whenever the member is part of Ensemble
 		 */
-		virtual bool isMember(const COORD_KNOWLEDGE coord, const MEMBER_KNOWLEDGE member) = 0;
+		virtual bool isMember(const Id coordId, const COORD_KNOWLEDGE coordKnowledge, const Id memeberId,
+				const MEMBER_KNOWLEDGE member) = 0;
 
 		/**
 		 * Member to Coordinator knowledge map function to be implemented
@@ -62,8 +63,8 @@ namespace CDEECO {
 		 * @param coord Coordinator knowledge
 		 * @return Output knowledge for coordinator
 		 */
-		virtual MEMBER_OUT_KNOWLEDGE coordToMemberMap(const MEMBER_KNOWLEDGE member,
-				const Id coordId, const COORD_KNOWLEDGE coordKnowledge) = 0;
+		virtual MEMBER_OUT_KNOWLEDGE coordToMemberMap(const MEMBER_KNOWLEDGE member, const Id coordId,
+				const COORD_KNOWLEDGE coordKnowledge) = 0;
 
 	private:
 		long period;
@@ -105,15 +106,16 @@ namespace CDEECO {
 		}
 
 		// Map member -> coord
-		template <typename T>
+		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runMemberToCoordExchange() {
 			Console::print(Debug, ">>>> Trying member->coord exchange\n");
 			COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : *memberLibrary) {
 				if(record.complete) {
 					Console::log(">>>> Found complete record, trying membership <<<<\n");
-					if(isMember(coordKnowledge, record.knowledge)) {
-						Console::log(">>>> Record's knowledge is member of this Ensable, running member->coord exchange\n");
+					if(isMember(coordinator->getId(), coordKnowledge, record.id, record.knowledge)) {
+						Console::log(
+								">>>> Record's knowledge is member of this Ensable, running member->coord exchange\n");
 						COORD_OUT_KNOWLEDGE out = memberToCoordMap(coordKnowledge, record.id, record.knowledge);
 						coordinator->lockWriteKnowledge(*coordOutKnowledge, out);
 					} else {
@@ -122,21 +124,22 @@ namespace CDEECO {
 				}
 			}
 		}
-		template <typename T>
+		template<typename T>
 		typename std::enable_if<std::is_void<T>::value, void>::type runMemberToCoordExchange() {
 			// COORD_OUT_KNOWLEDGE is void
 		}
 
 		// Map coord -> member
-		template <typename T>
+		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runCoordToMemberExchange() {
 			Console::print(Debug, ">>>> Trying coord->member exchange\n");
 			MEMBER_KNOWLEDGE memberKnowledge = member->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<COORD_KNOWLEDGE>::CacheRecord &record : *coordLibrary) {
 				if(record.complete) {
 					Console::log(">>>> Found complete record, trying membership <<<<\n");
-					if(isMember(record.knowledge, memberKnowledge)) {
-						Console::log(">>>> Record's knowledge is member of this Ensable, running coord->member exchange");
+					if(isMember(record.id, record.knowledge, member->getId(), memberKnowledge)) {
+						Console::log(
+								">>>> Record's knowledge is member of this Ensable, running coord->member exchange");
 
 						MEMBER_OUT_KNOWLEDGE out = coordToMemberMap(memberKnowledge, record.id, record.knowledge);
 						member->lockWriteKnowledge(*memberOutKnowledge, out);
@@ -147,7 +150,7 @@ namespace CDEECO {
 				}
 			}
 		}
-		template <typename T>
+		template<typename T>
 		typename std::enable_if<std::is_void<T>::value, void>::type runCoordToMemberExchange() {
 			// MEMBER_OUT_KNOWLEDGE is void
 		}
