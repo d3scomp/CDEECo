@@ -18,7 +18,6 @@
 #include "cdeeco/Component.h"
 
 namespace Alarm {
-
 	/**
 	 * Portable thermometer knowledge
 	 */
@@ -49,7 +48,7 @@ namespace Alarm {
 				PeriodicTask(3000, component, out) {
 		}
 
-	protected:
+	private:
 		bool run(const Knowledge in) {
 			Console::print(TaskInfo, "\n\n\n>>>> Running alarm temp check\n");
 			Console::print(TaskInfo, ">>>> Registered sensor and values:\n");
@@ -109,11 +108,9 @@ namespace Alarm {
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
 		}
 	};
-
 }
 
 namespace CDEECO {
-
 	/**
 	 * Allowed offsets to guarantee knowledge consistency
 	 */
@@ -128,7 +125,6 @@ namespace CDEECO {
 	 * constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
 	 */
 	constexpr std::array<size_t, 3> KnowledgeTrait<Alarm::Knowledge>::offsets;
-
 }
 
 #endif // PORTABLE_THERMOMETER_H_

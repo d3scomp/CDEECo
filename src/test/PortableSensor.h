@@ -42,14 +42,14 @@ namespace Sensor {
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
 		Sense(CDEECO::Component<Knowledge> &component, Knowledge::Value &out) :
-				PeriodicTask(1800, component, out), sensor(sensorProps) {
+				PeriodicTask(1800, component, out)  {
 			sensor.init();
 		}
 
-	protected:
+	private:
 		SHT1x::Properties sensorProps {
 		GPIOB, RCC_AHB1Periph_GPIOB, GPIO_Pin_8, GPIO_Pin_7 };
-		SHT1x sensor;
+		SHT1x sensor = SHT1x(sensorProps);
 
 		Knowledge::Value run(const Knowledge in) {
 			float temp = sensor.readTemperature();
@@ -78,7 +78,6 @@ namespace Sensor {
 			memset(&knowledge, 0, sizeof(Knowledge));
 		}
 	};
-
 }
 
 namespace CDEECO {

@@ -25,9 +25,9 @@ namespace TempExchange {
 						Sensor::Knowledge::CoordId>(&coordinator, &coordinator.knowledge.nearbySensors, &library, 5000) {
 		}
 
-		Ensamble(CDEECO::Component<Sensor::Knowledge> &coordinator, CDEECO::KnowledgeLibrary<Alarm::Knowledge> &library) :
+		Ensamble(CDEECO::Component<Sensor::Knowledge> &memeber, CDEECO::KnowledgeLibrary<Alarm::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge,
-						Sensor::Knowledge::CoordId>(&coordinator, &coordinator.knowledge.coordId, &library, 5000) {
+						Sensor::Knowledge::CoordId>(&memeber, &memeber.knowledge.coordId, &library, 5000) {
 		}
 
 	protected:
