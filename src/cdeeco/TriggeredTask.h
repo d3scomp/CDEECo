@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #include "Task.h"
 #include "ListedTriggerTask.h"
@@ -26,7 +27,7 @@ namespace CDEECO {
 	class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask, FreeRTOSTask {
 	public:
 		// Create the triggered task
-		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
+		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, auto &outKnowledge) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), trigger(trigger), triggerSem(MAX_WAITING) {
 			Console::log(">> TrigerredTask constructor\n");
 
@@ -34,57 +35,14 @@ namespace CDEECO {
 			component.addTriggeredTask(*this);
 		}
 
-		virtual ~TriggeredTask() {
-		}
-
-	protected:
-		// Check trigger condition
-		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
-			// Check for trigger knowledge update
-			if(updateStart >= &trigger && updateStart < &trigger + sizeof(trigger)) {
-				// TODO check knowledge for real change if required
-
-				// Trigger task execution
-				triggerSem.give();
-			}
-		}
-	private:
-		TRIGGER_KNOWLEDGE &trigger;
-		const unsigned MAX_WAITING = 100;
-		FreeRTOSSemaphore triggerSem;
-
-		/** Periodic task body implementation, responsible for periodic scheduling */
-		void run() {
-			// Schedule the task periodically
-			while(1) {
-				// Wait for trigger event
-				triggerSem.take();
-
-				// Run the task
-				this->execute();
-			}
-		}
-	};
-
-
-	/**
-	 * Triggered task implementation without output knowledge
-	 */
-	template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE>
-	class TriggeredTask<KNOWLEDGE, TRIGGER_KNOWLEDGE, void>: Task<KNOWLEDGE, void>, ListedTriggerTask, FreeRTOSTask {
-	public:
 		// Create the triggered task
-		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, Component<KNOWLEDGE> &component) :
-				Task<KNOWLEDGE, void>(component), trigger(trigger), triggerSem(MAX_WAITING) {
+		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component) :
+				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), trigger(trigger), triggerSem(MAX_WAITING) {
 			Console::log(">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);
 		}
-
-		virtual ~TriggeredTask() {
-		}
-
 	protected:
 		// Check trigger condition
 		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
@@ -113,7 +71,6 @@ namespace CDEECO {
 			}
 		}
 	};
-
 }
 
 #endif /* TRIGERREDTASK_H_ */

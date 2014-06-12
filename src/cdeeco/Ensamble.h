@@ -15,7 +15,6 @@
 #include "cdeeco/FreeRTOSTask.h"
 
 namespace CDEECO {
-
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
 			typename MEMBER_OUT_KNOWLEDGE>
 	class Ensamble: FreeRTOSTask {
@@ -30,9 +29,6 @@ namespace CDEECO {
 				KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary, long period) :
 				period(period), coordinator(NULL), member(member), coordOutKnowledge(NULL), memberOutKnowledge(
 						memberOutKnowledge), memberLibrary(NULL), coordLibrary(coordLibrary) {
-		}
-
-		virtual ~Ensamble() {
 		}
 
 	protected:

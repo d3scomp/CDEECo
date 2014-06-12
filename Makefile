@@ -69,7 +69,7 @@ CFLAGS += -I$(PERIPH_DIR)/inc
 CFLAGS += -I$(FREERTOS_DIR)/Source/include
 CFLAGS += -I$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 
-CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++11
+CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++1y
 
 LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/cdeeco++.map $(CFLAGS)  
 
