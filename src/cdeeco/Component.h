@@ -120,17 +120,25 @@ namespace CDEECO {
 			do {
 				// Find start offset
 				size_t brdStart = 0;
-				bool found = false;
-				for(size_t i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
-					if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
-						assert_param(last != i);
-						last = i;
-						found = true;
-						brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
-						break;
+
+				// If allowed offsets are defined then use only them
+				if(!KnowledgeTrait<KNOWLEDGE>::offsets.empty()) {
+					bool found = false;
+					for(size_t i = KnowledgeTrait<KNOWLEDGE>::offsets.size() - 1; i >= 0; --i) {
+						if(KnowledgeTrait<KNOWLEDGE>::offsets[i] <= start) {
+							assert_param(last != i);
+							last = i;
+							found = true;
+							brdStart = KnowledgeTrait<KNOWLEDGE>::offsets[i];
+							break;
+						}
 					}
+					assert_param(found);
+
+				// If allowed offsets are not defined then broadcast at will
+				} else {
+					brdStart = start;
 				}
-				assert_param(found);
 
 				// Check and notify
 				Console::print(Debug, ">>>> Created fragment %d of the changed knowledge\n", cnt++);

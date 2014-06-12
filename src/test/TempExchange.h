@@ -22,12 +22,12 @@ namespace TempExchange {
 	public:
 		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, CDEECO::KnowledgeLibrary<Sensor::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge,
-						Sensor::Knowledge::CoordId>(&coordinator, &coordinator.knowledge.nearbySensors, &library, 5000) {
+						Sensor::Knowledge::CoordId>(&coordinator, &coordinator.knowledge.nearbySensors, &library, 2000) {
 		}
 
 		Ensamble(CDEECO::Component<Sensor::Knowledge> &memeber, CDEECO::KnowledgeLibrary<Alarm::Knowledge> &library) :
 				CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge,
-						Sensor::Knowledge::CoordId>(&memeber, &memeber.knowledge.coordId, &library, 5000) {
+						Sensor::Knowledge::CoordId>(&memeber, &memeber.knowledge.coordId, &library, 2000) {
 		}
 
 	protected:

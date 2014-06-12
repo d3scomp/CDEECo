@@ -1,6 +1,8 @@
 #ifndef KNOWLEDGE_H
 #define KNOWLEDGE_H
 
+#include <array>
+
 namespace CDEECO {
 	/// Component/knowledge type
 	typedef uint32_t Type;
@@ -20,8 +22,10 @@ namespace CDEECO {
 	 */
 	template<class KNOWLEDGE>
 	struct KnowledgeTrait {
-		static constexpr void* offsets[] = { };
+		static constexpr std::array<size_t, 0> offsets = {};
 	};
+	template<class KNOWLEDGE>
+	constexpr std::array<size_t, 0> KnowledgeTrait<KNOWLEDGE>::offsets;
 }
 
 #endif // KNOWLEDGE_H

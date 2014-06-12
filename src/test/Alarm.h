@@ -110,21 +110,4 @@ namespace Alarm {
 	};
 }
 
-namespace CDEECO {
-	/**
-	 * Allowed offsets to guarantee knowledge consistency
-	 */
-	template<>
-	struct KnowledgeTrait<Alarm::Knowledge> {
-		static constexpr std::array<size_t, 3> offsets = { offsetof(Alarm::Knowledge, position), offsetof(
-				Alarm::Knowledge, nearbySensors),
-		offsetof(Alarm::Knowledge, nearbySensors) + 100 };
-	};
-	/**
-	 * This declaration do not require array size to be specified twice, but drives eclipse crazy.
-	 * constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-	 */
-	constexpr std::array<size_t, 3> KnowledgeTrait<Alarm::Knowledge>::offsets;
-}
-
 #endif // PORTABLE_THERMOMETER_H_
