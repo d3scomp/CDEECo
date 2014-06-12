@@ -15,13 +15,12 @@
 
 #include "Component.h"
 
-
 namespace CDEECO {
 	/** Prototype for component tasks */
 	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class TaskBase {
 	public:
-		TaskBase(Component<KNOWLEDGE> &component) :
+		TaskBase(auto &component) :
 				component(component) {
 		}
 
@@ -41,7 +40,7 @@ namespace CDEECO {
 	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class Task: TaskBase<KNOWLEDGE, OUT_KNOWLEDGE> {
 	public:
-		Task(Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
+		Task(auto &component, auto &outKnowledge) :
 				TaskBase<KNOWLEDGE, OUT_KNOWLEDGE>(component), outKnowledge(outKnowledge) {
 		}
 
@@ -66,7 +65,7 @@ namespace CDEECO {
 	template<typename KNOWLEDGE>
 	class Task<KNOWLEDGE, void> : TaskBase<KNOWLEDGE, void> {
 	public:
-		Task(Component<KNOWLEDGE> &component) :
+		Task(auto &component) :
 				TaskBase<KNOWLEDGE, void>(component) {
 		}
 

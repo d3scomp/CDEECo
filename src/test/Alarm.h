@@ -44,7 +44,7 @@ namespace Alarm {
 	 */
 	class Check: public CDEECO::PeriodicTask<Knowledge, bool> {
 	public:
-		Check(CDEECO::Component<Knowledge> &component, bool &out) :
+		Check(auto &component, auto &out) :
 				PeriodicTask(3000, component, out) {
 		}
 
@@ -79,7 +79,7 @@ namespace Alarm {
 	 */
 	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, void> {
 	public:
-		Critical(CDEECO::Component<Knowledge> &component, bool &trigger):
+		Critical(auto &component, auto &trigger):
 			TriggeredTask(trigger, component) {
 		}
 	protected:
@@ -101,7 +101,7 @@ namespace Alarm {
 		Check check = Check(*this, this->knowledge.tempCritical);
 		Critical critical = Critical(*this, this->knowledge.tempCritical);
 
-		Component(CDEECO::System &system, const CDEECO::Id id) :
+		Component(auto &system, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, system) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));

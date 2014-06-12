@@ -108,14 +108,13 @@ namespace CDEECO {
 			COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : *memberLibrary) {
 				if(record.complete) {
-					Console::log(">>>> Found complete record, trying membership <<<<\n");
+					Console::print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(coordinator->getId(), coordKnowledge, record.id, record.knowledge)) {
-						Console::log(
-								">>>> Record's knowledge is member of this Ensable, running member->coord exchange\n");
+						Console::print(Debug, ">>>> Record is member of this Ensable, running member->coord exchange\n");
 						COORD_OUT_KNOWLEDGE out = memberToCoordMap(coordKnowledge, record.id, record.knowledge);
 						coordinator->lockWriteKnowledge(*coordOutKnowledge, out);
 					} else {
-						Console::log(">>>> Record's knowledge is not member <<<<\n");
+						Console::print(Debug, ">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}
@@ -132,16 +131,15 @@ namespace CDEECO {
 			MEMBER_KNOWLEDGE memberKnowledge = member->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<COORD_KNOWLEDGE>::CacheRecord &record : *coordLibrary) {
 				if(record.complete) {
-					Console::log(">>>> Found complete record, trying membership <<<<\n");
+					Console::print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(record.id, record.knowledge, member->getId(), memberKnowledge)) {
-						Console::log(
-								">>>> Record's knowledge is member of this Ensable, running coord->member exchange");
+						Console::print(Debug, ">>>> Record is member of this Ensable, running coord->member exchange");
 
 						MEMBER_OUT_KNOWLEDGE out = coordToMemberMap(memberKnowledge, record.id, record.knowledge);
 						member->lockWriteKnowledge(*memberOutKnowledge, out);
 
 					} else {
-						Console::log(">>>> Record's knowledge is not member <<<<\n");
+						Console::print(Debug, ">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}

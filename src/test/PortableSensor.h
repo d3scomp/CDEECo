@@ -41,7 +41,7 @@ namespace Sensor {
 	/// Sensor task
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
-		Sense(CDEECO::Component<Knowledge> &component, Knowledge::Value &out) :
+		Sense(auto &component, auto &out) :
 				PeriodicTask(1800, component, out)  {
 			sensor.init();
 		}
