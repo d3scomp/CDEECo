@@ -15,7 +15,6 @@
 
 #include "System.h"
 #include "Knowledge.h"
-#include "PeriodicTask.h"
 #include "ListedTriggerTask.h"
 #include "KnowledgeFragment.h"
 #include "FreeRTOSMutex.h"

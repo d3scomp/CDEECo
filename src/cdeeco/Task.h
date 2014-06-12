@@ -13,19 +13,16 @@
 
 #include <stdlib.h>
 
+#include "Component.h"
+
+
 namespace CDEECO {
-
-	template<typename KNOWLEDGE>
-	class Component;
-
 	/** Prototype for component tasks */
 	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class TaskBase {
 	public:
 		TaskBase(Component<KNOWLEDGE> &component) :
 				component(component) {
-		}
-		virtual ~TaskBase() {
 		}
 
 		/** Task user code */
@@ -46,8 +43,6 @@ namespace CDEECO {
 	public:
 		Task(Component<KNOWLEDGE> &component, OUT_KNOWLEDGE &outKnowledge) :
 				TaskBase<KNOWLEDGE, OUT_KNOWLEDGE>(component), outKnowledge(outKnowledge) {
-		}
-		virtual ~Task() {
 		}
 
 	private:
@@ -74,8 +69,7 @@ namespace CDEECO {
 		Task(Component<KNOWLEDGE> &component) :
 				TaskBase<KNOWLEDGE, void>(component) {
 		}
-		virtual ~Task() {
-		}
+
 	protected:
 		/** Task execution code, responsible for data passing */
 		void execute() {
