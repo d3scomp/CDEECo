@@ -1,5 +1,5 @@
 /*
- * PortableThermometer.h
+ * Alarm.h
  *
  *  Created on: 21. 5. 2014
  *      Author: Vladimír Matěna
@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef ALARM_H_
-#define ALARM_H_
+#ifndef ALARM_H
+#define ALARM_H
 
 #include <array>
 #include <algorithm>
@@ -110,4 +110,4 @@ namespace Alarm {
 	};
 }
 
-#endif // PORTABLE_THERMOMETER_H_
+#endif // ALARM_H
