@@ -129,7 +129,7 @@ void USART2_IRQHandler(void) {
  * @retval None
  */
 void USART6_IRQHandler(void) {
-//	uartGPS.txrxInterruptHandler();
+	uartGPS.txrxInterruptHandler();
 }
 
 /**

@@ -30,17 +30,34 @@
 // Initialize system console
 #include "Console.h"
 
-// Initialize delay timer
+// Delay timer settings
 Timer::Properties tim6Props {
 TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
+// Pulse led settings
 PulseLED::Properties pulseProps {
 RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 0 };
 
+// User button settings
 Button::Properties userButtonProps {
 GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn };
 Button toggleButton(userButtonProps);
+
+// GPS Settings
+UART::Properties uart6Props {
+	GPIOC, USART6,
+	GPIO_Pin_6, GPIO_Pin_7, GPIO_PinSource6, GPIO_PinSource7,
+	RCC_APB2PeriphClockCmd, RCC_AHB1Periph_GPIOC, RCC_APB2Periph_USART6, GPIO_AF_USART6, USART6_IRQn,
+	4800 // 9600 for L10, 4800 for L30
+};
+UART uartGPS(uart6Props);
+GPSL30::Properties gpsProps {
+	GPIOB, GPIOD, GPIOC,
+	GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_8,
+	RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC
+};
+GPSL30 gps(gpsProps, uartGPS); // This can be used for L10 as well. It has the three pins PWR, RST, WUP unconnected
 
 /**
  * Interrupt priority map

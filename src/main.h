@@ -19,6 +19,7 @@
 
 extern Timer delayTimer;
 extern Button toggleButton;
+extern UART uartGPS;
 
 
 #endif /* MAIN_H_ */
