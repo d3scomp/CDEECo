@@ -46,6 +46,8 @@ namespace TempExchange {
 			for(auto &info : values)
 				if(info.id == memberId) {
 					info.value = memberKnowledge.value;
+					info.position = memberKnowledge.position;
+
 					return values;
 				}
 

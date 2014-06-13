@@ -22,8 +22,8 @@ namespace PortableSensor {
 	/// Sensor knowledge
 	struct Knowledge: CDEECO::Knowledge {
 		struct Position {
-			float lon;
 			float lat;
+			float lon;
 		} position;
 
 		// Coordinator identification

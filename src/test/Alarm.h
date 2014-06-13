@@ -23,14 +23,15 @@ namespace Alarm {
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		struct Position {
-			int x;
-			int y;
+			int lat;
+			int lon;
 		} position;
 
 		static const CDEECO::Id NO_MEMBER = ULONG_MAX;
 		struct SensorInfo {
 			CDEECO::Id id;
 			PortableSensor::Knowledge::Value value;
+			PortableSensor::Knowledge::Position position;
 		};
 
 		typedef std::array<SensorInfo, 10> SensorData;
@@ -55,10 +56,21 @@ namespace Alarm {
 			for(auto info : in.nearbySensors) {
 				if(info.id != Knowledge::NO_MEMBER) {
 					Console::print(TaskInfo, ">>>>>> Id: %x ", info.id);
-					float t = info.value.temperature;
-					float h = info.value.humidity;
-					Console::print(TaskInfo, "Temp: %d.%d°C ", (int16_t) t, ((int16_t) (t * 100) % 100));
-					Console::print(TaskInfo, "Humi: %d.%d%%\n", (int16_t) h, ((int16_t) (h * 100) % 100));
+
+					Console::print(TaskInfo, "Temp: ");
+					Console::printFloat(TaskInfo, info.value.temperature, 2);
+					Console::print(TaskInfo, "°C ");
+
+					Console::print(TaskInfo, "Humi: ");
+					Console::printFloat(TaskInfo, info.value.humidity, 2);
+					Console::print(TaskInfo, "%% ");
+
+					Console::print(TaskInfo, "Posi: ");
+					Console::printFloat(TaskInfo, info.position.lat, 6);
+					Console::print(TaskInfo, " ");
+					Console::printFloat(TaskInfo, info.position.lon, 6);
+
+					Console::print(TaskInfo, "\n");
 				}
 			}
 			Console::print(TaskInfo, "\n\n\n");
@@ -79,8 +91,8 @@ namespace Alarm {
 	 */
 	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, void> {
 	public:
-		Critical(auto &component, auto &trigger):
-			TriggeredTask(trigger, component) {
+		Critical(auto &component, auto &trigger) :
+				TriggeredTask(trigger, component) {
 		}
 	protected:
 		void run(const Knowledge in) {
