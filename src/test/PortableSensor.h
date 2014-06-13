@@ -84,7 +84,10 @@ namespace PortableSensor {
 			Console::printFloat(TaskInfo, fix.longitude, 6);
 			Console::print(TaskInfo, "\n\n\n\n");
 
-			return {fix.latitude, fix.longitude};
+			if(fix.valid)
+				return {fix.latitude, fix.longitude};
+			else
+				return in.position;
 		}
 	};
 
