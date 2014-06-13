@@ -30,7 +30,7 @@ namespace Alarm {
 		static const CDEECO::Id NO_MEMBER = ULONG_MAX;
 		struct SensorInfo {
 			CDEECO::Id id;
-			Sensor::Knowledge::Value value;
+			PortableSensor::Knowledge::Value value;
 		};
 
 		typedef std::array<SensorInfo, 10> SensorData;

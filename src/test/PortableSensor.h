@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef PORTABLE_THERMOMETER_H_
-#define PORTABLE_THERMOMETER_H_
+#ifndef PORTABLE_SENSOR
+#define PORTABLE_SENSOR
 
 #include <array>
 #include <random>
@@ -18,12 +18,12 @@
 #include "cdeeco/Component.h"
 #include "drivers/SHT1x.h"
 
-namespace Sensor {
+namespace PortableSensor {
 	/// Sensor knowledge
 	struct Knowledge: CDEECO::Knowledge {
 		struct Position {
-			int x;
-			int y;
+			float lon;
+			float lat;
 		} position;
 
 		// Coordinator identification
@@ -54,23 +54,37 @@ namespace Sensor {
 		Knowledge::Value run(const Knowledge in) {
 			float temp = sensor.readTemperature();
 			float humid = sensor.readHumidity();
-
 			Console::print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
 			Console::print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
 			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
-			Console::print(TaskInfo, ">>>>>> AlarmId: %d\n\n\n\n", in.coordId);
+			Console::print(TaskInfo, ">>>>>> AlarmId: %x\n\n\n\n", in.coordId);
 
+			return {temp, humid};
+		}
+	};
+
+	/**
+	 * Position task
+	 */
+	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
+	public:
+		Position(auto &component, auto &out) :
+				PeriodicTask(1500, component, out) {
+		}
+
+	private:
+		Knowledge::Position run(const Knowledge in) {
 			GPSL10::GPSFix fix = gps.getGPSFix();
-			Console::print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d\n", fix.valid, fix.day, fix.month, fix.year,
-					fix.hour, fix.minute, fix.second);
 
-			Console::print(TaskInfo, "GPS: ");
+			Console::print(TaskInfo, "\n\n\n>>>> Position task:\n");
+			Console::print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d pos: ", fix.valid, fix.day, fix.month,
+					fix.year, fix.hour, fix.minute, fix.second);
 			Console::printFloat(TaskInfo, fix.latitude, 6);
 			Console::print(TaskInfo, " ");
 			Console::printFloat(TaskInfo, fix.longitude, 6);
-			Console::print(TaskInfo, "\n");
+			Console::print(TaskInfo, "\n\n\n\n");
 
-			return {temp, humid};
+			return {fix.latitude, fix.longitude};
 		}
 	};
 
@@ -80,7 +94,9 @@ namespace Sensor {
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
 		static const CDEECO::Type Type = 0x00000001;
+
 		Sense sense = Sense(*this, this->knowledge.value);
+		Position position = Position(*this, this->knowledge.position);
 
 		Component(CDEECO::System &system, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, system) {
@@ -93,12 +109,12 @@ namespace Sensor {
 namespace CDEECO {
 	/// Allowed offsets to guarantee knowledge consistency
 	template<>
-	struct KnowledgeTrait<Sensor::Knowledge> {
-		static constexpr std::array<size_t, 1> offsets = { { offsetof(Sensor::Knowledge, position) } };
+	struct KnowledgeTrait<PortableSensor::Knowledge> {
+		static constexpr std::array<size_t, 1> offsets = { { offsetof(PortableSensor::Knowledge, position) } };
 	};
 	// This declaration do not require array size to be specified twice, but drives eclipse crazy.
 	//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-	constexpr std::array<size_t, 1> KnowledgeTrait<Sensor::Knowledge>::offsets;
+	constexpr std::array<size_t, 1> KnowledgeTrait<PortableSensor::Knowledge>::offsets;
 }
 
-#endif // PORTABLE_THERMOMETER_H_
+#endif // PORTABLE_SENSOR_H

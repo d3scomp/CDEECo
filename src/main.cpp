@@ -107,11 +107,11 @@ void cdeecoSetup(const uint32_t uniqId) {
 
 	///// Temperature monitoring system
 	// Components
-	auto sensor = new Sensor::Component(*system, uniqId);
+	auto sensor = new PortableSensor::Component(*system, uniqId);
 	auto alarm = new Alarm::Component(*system, uniqId);
 
 	// Caches
-	auto sensorCache = new CDEECO::KnowledgeCache<Sensor::Component::Type, Sensor::Knowledge, 10>();
+	auto sensorCache = new CDEECO::KnowledgeCache<PortableSensor::Component::Type, PortableSensor::Knowledge, 10>();
 	auto alarmCache = new CDEECO::KnowledgeCache<Alarm::Component::Type, Alarm::Knowledge, 10>();
 	system->registerCache(sensorCache);
 	system->registerCache(alarmCache);

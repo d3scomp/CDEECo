@@ -17,8 +17,8 @@
 #include "PortableSensor.h"
 
 namespace TempExchange {
-	typedef CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, Sensor::Knowledge,
-			Sensor::Knowledge::CoordId> EnsambleType;
+	typedef CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, PortableSensor::Knowledge,
+			PortableSensor::Knowledge::CoordId> EnsambleType;
 
 	class Ensamble: EnsambleType {
 	public:
@@ -26,20 +26,20 @@ namespace TempExchange {
 			EnsambleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, 2000) {
 		}
 
-		Ensamble(CDEECO::Component<Sensor::Knowledge> &memeber, auto &library) :
+		Ensamble(CDEECO::Component<PortableSensor::Knowledge> &memeber, auto &library) :
 			EnsambleType(&memeber, &memeber.knowledge.coordId, &library, 2000) {
 		}
 
 	protected:
 		bool isMember(const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge, const CDEECO::Id memeberId,
-				const Sensor::Knowledge memberKnowledge) {
+				const PortableSensor::Knowledge memberKnowledge) {
 			// TODO: Implement membership method. For now we assume all temperatures are members.
 			return true;
 		}
 
 		// Map temperatures from Thermometers to Alarm
 		Alarm::Knowledge::SensorData memberToCoordMap(const Alarm::Knowledge coord, const CDEECO::Id memberId,
-				const Sensor::Knowledge memberKnowledge) {
+				const PortableSensor::Knowledge memberKnowledge) {
 			auto values = coord.nearbySensors;
 
 			// Try to update record
@@ -57,7 +57,7 @@ namespace TempExchange {
 		}
 
 		// Map data from Alarm to Thermometer
-		Sensor::Knowledge::CoordId coordToMemberMap(const Sensor::Knowledge member, const CDEECO::Id coordId,
+		PortableSensor::Knowledge::CoordId coordToMemberMap(const PortableSensor::Knowledge member, const CDEECO::Id coordId,
 				const Alarm::Knowledge coordKnowledge) {
 			return coordId;
 		}
