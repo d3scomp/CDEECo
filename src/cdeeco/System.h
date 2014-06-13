@@ -33,10 +33,10 @@ namespace CDEECO {
 			// Erase caches
 			memset(&caches, 0, sizeof(caches));
 
-			Console::log(">>> System constructor\n");
+			console.log(">>> System constructor\n");
 
 			// Init console input
-			Console::setFragmentReceiver(this);
+			console.setFragmentReceiver(this);
 		}
 
 		/** Receive listener */
@@ -46,15 +46,15 @@ namespace CDEECO {
 
 		/** Broadcast knowledge fragment */
 		void broadcastFragment(KnowledgeFragment fragment) {
-			Console::print(Info, ">>>>>>>>> Sending knowledge fragment:\n");
-			Console::logFragment(fragment);
+			console.print(Info, ">>>>>>>>> Sending knowledge fragment:\n");
+			console.logFragment(fragment);
 			radio.broadcastFragment(fragment);
 		}
 
 		/** Process process received fragment */
 		void processFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			Console::print(Info, ">>>>>>>>> Processing knowledge fragment:\n");
-			Console::logFragment(fragment);
+			console.print(Info, ">>>>>>>>> Processing knowledge fragment:\n");
+			console.logFragment(fragment);
 
 			// Store fragment in rebroadcast storage
 			rebroadcast.storeFragment(fragment, lqi);
@@ -79,7 +79,7 @@ namespace CDEECO {
 					return;
 				}
 
-			Console::print(Error, ">>>> OUT OF CACHE STORAGE <<<<\n");
+			console.print(Error, ">>>> OUT OF CACHE STORAGE <<<<\n");
 			assert_param(false);
 		}
 

@@ -54,10 +54,10 @@ namespace PortableSensor {
 		Knowledge::Value run(const Knowledge in) {
 			float temp = sensor.readTemperature();
 			float humid = sensor.readHumidity();
-			Console::print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
-			Console::print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
-			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
-			Console::print(TaskInfo, ">>>>>> AlarmId: %x\n\n\n\n", in.coordId);
+			console.print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
+			console.print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
+			console.print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
+			console.print(TaskInfo, ">>>>>> AlarmId: %x\n\n\n\n", in.coordId);
 
 			return {temp, humid};
 		}
@@ -76,13 +76,13 @@ namespace PortableSensor {
 		Knowledge::Position run(const Knowledge in) {
 			GPSL10::GPSFix fix = gps.getGPSFix();
 
-			Console::print(TaskInfo, "\n\n\n>>>> Position task:\n");
-			Console::print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d pos: ", fix.valid, fix.day, fix.month,
+			console.print(TaskInfo, "\n\n\n>>>> Position task:\n");
+			console.print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d pos: ", fix.valid, fix.day, fix.month,
 					fix.year, fix.hour, fix.minute, fix.second);
-			Console::printFloat(TaskInfo, fix.latitude, 6);
-			Console::print(TaskInfo, " ");
-			Console::printFloat(TaskInfo, fix.longitude, 6);
-			Console::print(TaskInfo, "\n\n\n\n");
+			console.printFloat(TaskInfo, fix.latitude, 6);
+			console.print(TaskInfo, " ");
+			console.printFloat(TaskInfo, fix.longitude, 6);
+			console.print(TaskInfo, "\n\n\n\n");
 
 			if(fix.valid)
 				return {fix.latitude, fix.longitude};

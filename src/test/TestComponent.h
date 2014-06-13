@@ -71,7 +71,7 @@ protected:
 	// Task code
 	TestKnowledge::Position run(const TestKnowledge in) {
 		// Visualize knowledge position x
-		Console::print(TaskInfo, "> Periodic task %d\n", in.position.x);
+		console.print(TaskInfo, "> Periodic task %d\n", in.position.x);
 
 		if(in.position.x % 2)
 			blueLED.off();
@@ -105,7 +105,7 @@ private:
 protected:
 	// Task code
 	TestKnowledge::Value run(const TestKnowledge in) {
-		Console::print(TaskInfo, "> Triggered task running now\n");
+		console.print(TaskInfo, "> Triggered task running now\n");
 
 		if(in.position.x % 2)
 			orangeLED.off();

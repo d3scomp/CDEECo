@@ -9,20 +9,11 @@
 
 #include "Console.h"
 
-UART::Properties serialProps {
-GPIOA, USART2,
-GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3, RCC_APB1PeriphClockCmd, RCC_AHB1Periph_GPIOA,
-RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
-UART Console::serial(serialProps);
 
-CDEECO::Receiver* Console::receiver = NULL;
-char Console::buffer[MAX_LENGTH];
-constexpr const char* ConsoleStream::forms[2];
-Level Console::level = All;
+Console::Console(UART &serial): serial(serial) {
+}
 
 void Console::init() {
-	serial.setPriority(15, 15);
-	serial.init();
 }
 
 void Console::toggleLevel() {
@@ -96,14 +87,18 @@ void Console::setFragmentReceiver(CDEECO::Receiver *receiver) {
 	assert(receiver);
 
 	// Enable event listening
-	serial.setRecvListener(receiveListener, NULL);
+	serial.setRecvListener(staticReceiveListener, this);
 	print(Info, "Disabling receive events, disabling send events\n");
 	// TODO: enable receive events for debug input. Make sure ISR do no collide with MRF ISR
 	serial.disableRecvEvents();
 	serial.disableSendEvents();
 }
 
-void Console::receiveListener(void* data) {
+void Console::staticReceiveListener(void *data) {
+	static_cast<Console*>(data)->receiveListener();
+}
+
+void Console::receiveListener() {
 	char c = serial.recv();
 	if(c == 'X') {
 		CDEECO::KnowledgeFragment fragment;
@@ -121,10 +116,6 @@ void Console::receiveListener(void* data) {
 		if(receiver)
 			receiver->receiveFragment(fragment, 128);
 	}
-}
-
-void Console::interrupt() {
-	serial.txrxInterruptHandler();
 }
 
 template<>
@@ -216,8 +207,6 @@ void Console::logFragment(const CDEECO::KnowledgeFragment fragment) {
 
 	Console::print(Level::Debug, buffer);
 }
-
-Hex hex;
 
 void Console::printFloat(const Level level, const float value, const int decimals) {
 	if(decimals > 0) {

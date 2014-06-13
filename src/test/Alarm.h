@@ -51,29 +51,29 @@ namespace Alarm {
 
 	private:
 		bool run(const Knowledge in) {
-			Console::print(TaskInfo, "\n\n\n>>>> Running alarm temp check\n");
-			Console::print(TaskInfo, ">>>> Registered sensor and values:\n");
+			console.print(TaskInfo, "\n\n\n>>>> Running alarm temp check\n");
+			console.print(TaskInfo, ">>>> Registered sensor and values:\n");
 			for(auto info : in.nearbySensors) {
 				if(info.id != Knowledge::NO_MEMBER) {
-					Console::print(TaskInfo, ">>>>>> Id: %x ", info.id);
+					console.print(TaskInfo, ">>>>>> Id: %x ", info.id);
 
-					Console::print(TaskInfo, "Temp: ");
-					Console::printFloat(TaskInfo, info.value.temperature, 2);
-					Console::print(TaskInfo, "°C ");
+					console.print(TaskInfo, "Temp: ");
+					console.printFloat(TaskInfo, info.value.temperature, 2);
+					console.print(TaskInfo, "°C ");
 
-					Console::print(TaskInfo, "Humi: ");
-					Console::printFloat(TaskInfo, info.value.humidity, 2);
-					Console::print(TaskInfo, "%% ");
+					console.print(TaskInfo, "Humi: ");
+					console.printFloat(TaskInfo, info.value.humidity, 2);
+					console.print(TaskInfo, "%% ");
 
-					Console::print(TaskInfo, "Posi: ");
-					Console::printFloat(TaskInfo, info.position.lat, 6);
-					Console::print(TaskInfo, " ");
-					Console::printFloat(TaskInfo, info.position.lon, 6);
+					console.print(TaskInfo, "Posi: ");
+					console.printFloat(TaskInfo, info.position.lat, 6);
+					console.print(TaskInfo, " ");
+					console.printFloat(TaskInfo, info.position.lon, 6);
 
-					Console::print(TaskInfo, "\n");
+					console.print(TaskInfo, "\n");
 				}
 			}
-			Console::print(TaskInfo, "\n\n\n");
+			console.print(TaskInfo, "\n\n\n");
 
 			// Check temperatures for dangerous conditions
 			const float threshold = 26.0f;
@@ -97,9 +97,9 @@ namespace Alarm {
 	protected:
 		void run(const Knowledge in) {
 			if(in.tempCritical) {
-				Console::print(TaskInfo, "##############################################################\n");
-				Console::print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
-				Console::print(TaskInfo, "##############################################################\n");
+				console.print(TaskInfo, "##############################################################\n");
+				console.print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
+				console.print(TaskInfo, "##############################################################\n");
 			}
 		}
 	};

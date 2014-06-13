@@ -29,7 +29,7 @@ namespace CDEECO {
 		// Create the triggered task
 		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, auto &outKnowledge) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), trigger(trigger), triggerSem(MAX_WAITING) {
-			Console::log(">> TrigerredTask constructor\n");
+			console.log(">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);
@@ -38,7 +38,7 @@ namespace CDEECO {
 		// Create the triggered task
 		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), trigger(trigger), triggerSem(MAX_WAITING) {
-			Console::log(">> TrigerredTask constructor\n");
+			console.log(">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);

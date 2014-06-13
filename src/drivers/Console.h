@@ -22,63 +22,37 @@ enum Level {
 class Console {
 public:
 	static const size_t MAX_LENGTH = 500;
-	static void init();
-	static void logFragment(const CDEECO::KnowledgeFragment fragment);
-	static void setFragmentReceiver(CDEECO::Receiver *receiver);
-	static void interrupt();
-	static void log(const char * format, ...);
-	static void print(const Level level, const char * format, ...);
-	static void printFloat(const Level level, const float value, const int decimals = 2);
-	static void setLevel(const Level level);
-	static void toggleLevel();
+
+	Console(UART &serial);
+
+	void init();
+	void logFragment(const CDEECO::KnowledgeFragment fragment);
+	void setFragmentReceiver(CDEECO::Receiver *receiver);
+	void log(const char * format, ...);
+	void print(const Level level, const char * format, ...);
+	void printFloat(const Level level, const float value, const int decimals = 2);
+	void setLevel(const Level level);
+	void toggleLevel();
 
 private:
-	static UART serial;
-	static char buffer[MAX_LENGTH];
-	static CDEECO::Receiver *receiver;
-	static void receiveListener(void* data);
-	static Level level;
+	UART &serial;
+	char buffer[MAX_LENGTH];
+	CDEECO::Receiver *receiver = NULL;
+	static void staticReceiveListener(void* data);
+	void receiveListener();
+	Level level = All;
 
 	template<typename T>
-	static T recv() {
+	T recv() {
 		T data;
 		for(size_t i = 0; i < sizeof(T); ++i)
 			((uint8_t*) &data)[i] = recv<uint8_t>();
 		return data;
 	}
 
-	static void putString(const char *text);
+	void putString(const char *text);
 
-	static uint8_t recvHexVal();
-};
-
-struct Hex {
-};
-
-extern Hex hex;
-
-
-class ConsoleStream {
-public:
-	ConsoleStream& operator<<(const char* text) {
-		Console::log(text);
-		return *this;
-	}
-
-	ConsoleStream& operator<<(const uint32_t num) {
-		Console::log(forms[nextForm], num);
-		nextForm = 0;
-		return *this;
-	}
-
-	ConsoleStream& operator<<(const Hex) {
-		nextForm = 1;
-		return *this;
-	}
-
-private:
-	static constexpr const char* forms[] = {"%d", "%x"};
-	int nextForm = 0;
+	uint8_t recvHexVal();
 };
 
 #endif // CONSOLE_H_

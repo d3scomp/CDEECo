@@ -171,7 +171,7 @@ uint16_t SHT1x::readCommand(uint8_t command) {
 	startCommand();
 	bool ok = sendByte(command);
 	if(!ok)
-		Console::log("Error writing byte to sensor !!!");
+		console.print(Error, "Error writing byte to sensor !!!");
 
 	delayTimer.mDelay(320);
 

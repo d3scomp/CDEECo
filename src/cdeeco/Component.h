@@ -112,7 +112,7 @@ namespace CDEECO {
 		 * @param size Change size
 		 */
 		void broadcastChange(size_t start, size_t size) {
-			Console::log("Broadcasting local knowledge\n");
+			console.log("Broadcasting local knowledge\n");
 
 			size_t end = start + size;
 			assert_param(end <= sizeof(KNOWLEDGE));
@@ -144,7 +144,7 @@ namespace CDEECO {
 				}
 
 				// Check and notify
-				Console::print(Debug, ">>>> Created fragment %d of the changed knowledge\n", cnt++);
+				console.print(Debug, ">>>> Created fragment %d of the changed knowledge\n", cnt++);
 
 				// Broadcast fragment
 				start = brdStart + broadcastFragment(brdStart);

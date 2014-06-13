@@ -46,17 +46,15 @@ Button toggleButton(userButtonProps);
 
 // GPS
 UART::Properties uart6Props {
-	GPIOC, USART6,
-	GPIO_Pin_6, GPIO_Pin_7, GPIO_PinSource6, GPIO_PinSource7,
-	RCC_APB2PeriphClockCmd, RCC_AHB1Periph_GPIOC, RCC_APB2Periph_USART6, GPIO_AF_USART6, USART6_IRQn,
-	4800 // 9600 for L10, 4800 for L30
+GPIOC, USART6,
+GPIO_Pin_6, GPIO_Pin_7, GPIO_PinSource6, GPIO_PinSource7, RCC_APB2PeriphClockCmd, RCC_AHB1Periph_GPIOC,
+RCC_APB2Periph_USART6, GPIO_AF_USART6, USART6_IRQn, 4800 // 9600 for L10, 4800 for L30
 };
 UART uartGPS(uart6Props);
 GPSL30::Properties gpsProps {
-	GPIOB, GPIOD, GPIOC,
-	GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_8,
-	RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC
-};
+GPIOB, GPIOD, GPIOC,
+GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_8,
+RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC };
 GPSL30 gps(gpsProps, uartGPS); // This can be used for L10 as well. It has the three pins PWR, RST, WUP unconnected
 
 // LEDs
@@ -75,18 +73,22 @@ PulseLED redPulseLED = PulseLED(redLED, 1);
 
 // ZigBee
 MRF24J40::Properties mrfProps {
-	GPIOE, GPIOE, GPIOB, GPIOD,
-	SPI3,
-	GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_2,
-	GPIO_PinSource4, GPIO_PinSource5, GPIO_PinSource3, GPIO_PinSource4, GPIO_PinSource5,
-	RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD,
-	RCC_APB1PeriphClockCmd, RCC_APB1Periph_SPI3,
-	GPIO_AF_SPI3,
-	EXTI_Line2, EXTI_PortSourceGPIOD, EXTI_PinSource2, EXTI2_IRQn,
-	SPI3_IRQn
-};
+GPIOE, GPIOE, GPIOB, GPIOD,
+SPI3,
+GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_2,
+GPIO_PinSource4, GPIO_PinSource5, GPIO_PinSource3, GPIO_PinSource4, GPIO_PinSource5,
+RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD, RCC_APB1PeriphClockCmd, RCC_APB1Periph_SPI3,
+GPIO_AF_SPI3,
+EXTI_Line2, EXTI_PortSourceGPIOD, EXTI_PinSource2, EXTI2_IRQn, SPI3_IRQn };
 MRF24J40 mrf = MRF24J40(mrfProps, greenPulseLED, redPulseLED);
 
+// Serial console
+UART::Properties uart2Props {
+GPIOA, USART2,
+GPIO_Pin_2, GPIO_Pin_3, GPIO_PinSource2, GPIO_PinSource3, RCC_APB1PeriphClockCmd, RCC_AHB1Periph_GPIOA,
+RCC_APB1Periph_USART2, GPIO_AF_USART2, USART2_IRQn, 921600 };
+UART uartSerial(uart2Props);
+Console console(uartSerial);
 
 /**
  * Interrupt priority map
@@ -119,7 +121,7 @@ TickType_t lastUserPress;
 void userPressed(void* data) {
 	TickType_t now = xTaskGetTickCount();
 	if((now - lastUserPress) > portTICK_PERIOD_MS * 10)
-		Console::toggleLevel();
+		console.toggleLevel();
 	lastUserPress = now;
 }
 
@@ -156,7 +158,6 @@ int main(void) {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 	enableVFP();
 	delayTimer.init();
-	Console::init();
 
 	// Initialize pulse led timer
 	PulseLED::initTimer(pulseProps);
@@ -186,46 +187,50 @@ int main(void) {
 	mrf.setRFPriority(1, 0);
 	mrf.init();
 
+	// Console initialization
+	uartSerial.setPriority(15, 15);
+	uartSerial.init();
+	console.init();
 
-	Console::log("\n\n\n\n\n\n\n\n\n\n\n");
-	Console::log("# # # # # # # # # # # # # # # # # # # #\n");
-	Console::log(" # # # # # # # # # # # # # # # # # # #\n");
-	Console::log("# # # # # # # # # # # # # # # # # # # #\n");
-	Console::log("\n>>> SYSTEM INIT <<<\n");
+	console.log("\n\n\n\n\n\n\n\n\n\n\n");
+	console.log("# # # # # # # # # # # # # # # # # # # #\n");
+	console.log(" # # # # # # # # # # # # # # # # # # #\n");
+	console.log("# # # # # # # # # # # # # # # # # # # #\n");
+	console.log("\n>>> SYSTEM INIT <<<\n");
 
-	Console::log(">>> Waiting 3s for debugger to stop me...\n");
+	console.log(">>> Waiting 3s for debugger to stop me...\n");
 	delayTimer.mDelay(3000);
-	Console::log(">>> Starting system\n");
+	console.log(">>> Starting system\n");
 
 	// Get unique device id
 	const uint32_t uniqId = *((uint32_t*) 0x1FFF7A10);
-	Console::log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
+	console.log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
 	cdeecoSetup(uniqId);
 
 	/*	// TODO: This is not nice
-	 Console::log(">>> Setting timer to make pulse leds work");
+	 console.log(">>> Setting timer to make pulse leds work");
 	 TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
 	 xTimerStart(pulseLedTimerhandle, 10);*/
 
 	// Start the scheduler.
-	Console::log(">>> Running scheduler\n");
+	console.log(">>> Running scheduler\n");
 	vTaskStartScheduler();
 
 	// This should not be reached
-	Console::log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!\n");
+	console.log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!\n");
 	assert_param(false);
 }
 
 // FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName) {
-		Console::log("STACK OVERFLOW!!\n");
+		console.log("STACK OVERFLOW!!\n");
 		assert_param(false);
 	}
 
 	void vApplicationMallocFailedHook(void) {
-		Console::log("MALLOC FAILED!!!\n");
+		console.log("MALLOC FAILED!!!\n");
 		assert_param(false);
 	}
 }
@@ -249,7 +254,7 @@ extern "C" {
  */
 void assert_failed(uint8_t* file, uint32_t line) {
 	// User can add his own implementation to report the file name and line number,
-	Console::print(Error, "\n\n\n#### Assert failed ####\nFile: %s:%d\n\n\n", file, line);
+	console.print(Error, "\n\n\n#### Assert failed ####\nFile: %s:%d\n\n\n", file, line);
 
 	/* Infinite loop */
 	while(1) {

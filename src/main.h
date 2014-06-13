@@ -17,6 +17,7 @@
 #include "Timer.h"
 #include "GPS.h"
 #include "MRF24J40.h"
+#include "Console.h"
 
 // Hardware
 extern Timer delayTimer;
@@ -26,6 +27,8 @@ extern GPSL30 gps;
 extern LED blueLED;
 extern LED orangeLED;
 extern MRF24J40 mrf;
+extern UART uartSerial;
+extern Console console;
 
 
 #endif /* MAIN_H_ */

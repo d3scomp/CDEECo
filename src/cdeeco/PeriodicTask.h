@@ -34,13 +34,13 @@ namespace CDEECO {
 		// Create the periodic task
 		PeriodicTask(long period, auto &component, auto &outKnowledge) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), period(period) {
-			Console::print(Debug, ">> PeriodicTask constructor\n");
+			console.print(Debug, ">> PeriodicTask constructor\n");
 		}
 
 		// Create the periodic task
 		PeriodicTask(long period, auto &component) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), period(period) {
-			Console::print(Debug, ">> PeriodicTask constructor\n");
+			console.print(Debug, ">> PeriodicTask constructor\n");
 		}
 
 	private:

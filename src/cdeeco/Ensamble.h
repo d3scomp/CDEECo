@@ -76,7 +76,7 @@ namespace CDEECO {
 			// Schedule the task periodically
 			while(1) {
 				// For all knowledge from the cache check member and execute map
-				Console::log(">>>> Ensamble task running now\n");
+				console.log(">>>> Ensamble task running now\n");
 
 				runExchange();
 
@@ -97,24 +97,24 @@ namespace CDEECO {
 			}
 
 			// Error mixed setup
-			Console::log("Error mixed ensamble setup");
+			console.log("Error mixed ensamble setup");
 			assert_param(false);
 		}
 
 		// Map member -> coord
 		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runMemberToCoordExchange() {
-			Console::print(Debug, ">>>> Trying member->coord exchange\n");
+			console.print(Debug, ">>>> Trying member->coord exchange\n");
 			COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : *memberLibrary) {
 				if(record.complete) {
-					Console::print(Debug, ">>>> Found complete record, trying membership <<<<\n");
+					console.print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(coordinator->getId(), coordKnowledge, record.id, record.knowledge)) {
-						Console::print(Debug, ">>>> Record is member of this Ensable, running member->coord exchange\n");
+						console.print(Debug, ">>>> Record is member of this Ensable, running member->coord exchange\n");
 						COORD_OUT_KNOWLEDGE out = memberToCoordMap(coordKnowledge, record.id, record.knowledge);
 						coordinator->lockWriteKnowledge(*coordOutKnowledge, out);
 					} else {
-						Console::print(Debug, ">>>> Record's knowledge is not member <<<<\n");
+						console.print(Debug, ">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}
@@ -127,19 +127,19 @@ namespace CDEECO {
 		// Map coord -> member
 		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runCoordToMemberExchange() {
-			Console::print(Debug, ">>>> Trying coord->member exchange\n");
+			console.print(Debug, ">>>> Trying coord->member exchange\n");
 			MEMBER_KNOWLEDGE memberKnowledge = member->lockReadKnowledge();
 			for(const typename KnowledgeLibrary<COORD_KNOWLEDGE>::CacheRecord &record : *coordLibrary) {
 				if(record.complete) {
-					Console::print(Debug, ">>>> Found complete record, trying membership <<<<\n");
+					console.print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(record.id, record.knowledge, member->getId(), memberKnowledge)) {
-						Console::print(Debug, ">>>> Record is member of this Ensable, running coord->member exchange");
+						console.print(Debug, ">>>> Record is member of this Ensable, running coord->member exchange");
 
 						MEMBER_OUT_KNOWLEDGE out = coordToMemberMap(memberKnowledge, record.id, record.knowledge);
 						member->lockWriteKnowledge(*memberOutKnowledge, out);
 
 					} else {
-						Console::print(Debug, ">>>> Record's knowledge is not member <<<<\n");
+						console.print(Debug, ">>>> Record's knowledge is not member <<<<\n");
 					}
 				}
 			}
