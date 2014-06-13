@@ -43,6 +43,7 @@ namespace CDEECO {
 			// List task in component check list
 			component.addTriggeredTask(*this);
 		}
+
 	protected:
 		// Check trigger condition
 		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
@@ -51,6 +52,7 @@ namespace CDEECO {
 				triggerSem.give();
 			}
 		}
+
 	private:
 		TRIGGER_KNOWLEDGE &trigger;
 		const unsigned MAX_WAITING = 100;
