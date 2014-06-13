@@ -42,7 +42,7 @@ namespace Sensor {
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
 		Sense(auto &component, auto &out) :
-				PeriodicTask(1800, component, out)  {
+				PeriodicTask(1800, component, out) {
 			sensor.init();
 		}
 
@@ -60,7 +60,15 @@ namespace Sensor {
 			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
 			Console::print(TaskInfo, ">>>>>> AlarmId: %d\n\n\n\n", in.coordId);
 
-			Console::print(TaskInfo, "GPS:%s\n", gps.getSentence());
+			GPSL10::GPSFix fix = gps.getGPSFix();
+			Console::print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d\n", fix.valid, fix.day, fix.month, fix.year,
+					fix.hour, fix.minute, fix.second);
+
+			Console::print(TaskInfo, "GPS: ");
+			Console::printFloat(TaskInfo, fix.latitude, 6);
+			Console::print(TaskInfo, " ");
+			Console::printFloat(TaskInfo, fix.longitude, 6);
+			Console::print(TaskInfo, "\n");
 
 			return {temp, humid};
 		}

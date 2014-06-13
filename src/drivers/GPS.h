@@ -13,6 +13,21 @@
 
 class GPSL10 {
 public:
+	struct GPSFix {
+		bool valid;
+		uint8_t hour;
+		uint8_t minute;
+		uint8_t second;
+		uint8_t month;
+		uint8_t day;
+		uint16_t year;
+		float latitude;
+		float longitude;
+		float speed;
+		float course;
+		float variation;
+	};
+
 	static constexpr auto MAX_GPS_SENTENCE_LENGTH = 255;
 
 	GPSL10(UART& uart);
@@ -23,6 +38,8 @@ public:
 	inline char *getSentence() {
 		return gpsSentence[validGPSSentenceIdx];
 	}
+
+	GPSFix getGPSFix();
 
 	typedef void (*SentenceListener)(void *);
 

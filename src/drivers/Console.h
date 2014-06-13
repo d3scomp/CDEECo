@@ -28,6 +28,7 @@ public:
 	static void interrupt();
 	static void log(const char * format, ...);
 	static void print(const Level level, const char * format, ...);
+	static void printFloat(const Level level, const float value, const int decimals = 2);
 	static void setLevel(const Level level);
 	static void toggleLevel();
 

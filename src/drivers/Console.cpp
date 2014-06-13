@@ -218,3 +218,15 @@ void Console::logFragment(const CDEECO::KnowledgeFragment fragment) {
 }
 
 Hex hex;
+
+void Console::printFloat(const Level level, const float value, const int decimals) {
+	if(decimals > 0) {
+		uint32_t den = 1;
+		for(int i = 0; i < decimals; ++i)
+			den *= 10;
+
+		print(level, "%d.%d", (uint32_t)value, (uint32_t)(value * den) % den);
+	} else {
+		print(level, "%d", (uint32_t) value);
+	}
+}
