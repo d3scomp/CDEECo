@@ -5,9 +5,11 @@
  *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
+#include <cstring>
+
 #include "GPS.h"
 #include "main.h"
-#include <cstring>
+#include "Console.h"
 
 GPSL10::GPSL10(UART& uart) : uart(uart) {
 }
@@ -34,12 +36,11 @@ void GPSL10::uartRecvListener() {
 	} else if (data == 13) {
 		workBuf[workGPSSentenceBufPos] = 0;
 		workGPSSentenceBufPos = 0;
-
 		if (!std::strncmp(workBuf, "$GPRMC", 6)) {
 			validGPSSentenceIdx = workGPSSentenceIdx;
 			workGPSSentenceIdx = (workGPSSentenceIdx == 0 ? 1 : 0);
-
-			sentenceListener(sentenceListenerObj);
+			if(sentenceListener)
+				sentenceListener(sentenceListenerObj);
 		}
 	} else {
 		if (workGPSSentenceBufPos < MAX_GPS_SENTENCE_LENGTH - 1) {

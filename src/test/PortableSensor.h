@@ -60,6 +60,8 @@ namespace Sensor {
 			Console::print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
 			Console::print(TaskInfo, ">>>>>> AlarmId: %d\n\n\n\n", in.coordId);
 
+			Console::print(TaskInfo, "GPS:%s\n", gps.getSentence());
+
 			return {temp, humid};
 		}
 	};

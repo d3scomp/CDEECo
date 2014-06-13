@@ -132,6 +132,9 @@ int main(void) {
 	toggleButton.setPriority(8, 0);
 	toggleButton.setPressedListener(userPressed, NULL);
 	toggleButton.init();
+	uartGPS.setPriority(5, 0);
+	uartGPS.init();
+	gps.init();
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #\n");

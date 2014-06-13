@@ -34,8 +34,8 @@ private:
 	static void uartRecvListenerStatic(void *obj);
 	void uartRecvListener();
 
-	SentenceListener sentenceListener;
-	void* sentenceListenerObj;
+	SentenceListener sentenceListener = NULL;
+	void* sentenceListenerObj = NULL;
 
 	char gpsSentence[2][256];
 	int validGPSSentenceIdx = 1;
