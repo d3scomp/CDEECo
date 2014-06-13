@@ -24,8 +24,7 @@ namespace CDEECO {
 	template<typename KNOWLEDGE>
 	class Component: FreeRTOSTask {
 	public:
-		Component(const CDEECO::Id id, const CDEECO::Type type, System &system,
-				const uint32_t broadcastPeriodMs = 3000) :
+		Component(const CDEECO::Id id, const CDEECO::Type type, System &system, const uint32_t broadcastPeriodMs = 3000) :
 				id(id), type(type), system(system), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
 		}
 
@@ -47,7 +46,8 @@ namespace CDEECO {
 			knowledgeMutex.lock();
 
 			// Check and update knowledge
-			if(memcmp(&outKnowledge, &knowledgeData, sizeof(OUT_KNOWLEDGE))) {
+			bool changed = memcmp(&outKnowledge, &knowledgeData, sizeof(OUT_KNOWLEDGE)) != 0;
+			if(changed) {
 				// Update knowledge
 				outKnowledge = knowledgeData;
 
@@ -57,7 +57,8 @@ namespace CDEECO {
 
 			knowledgeMutex.unlock();
 
-			checkAndRunTriggeredTasks(outKnowledge);
+			if(changed)
+				checkAndRunTriggeredTasks(outKnowledge);
 		}
 
 		void addTriggeredTask(ListedTriggerTask &task) {
@@ -81,7 +82,6 @@ namespace CDEECO {
 		Type getType() {
 			return type;
 		}
-
 
 		/// Knowledge of the component
 		KNOWLEDGE knowledge;
@@ -138,7 +138,7 @@ namespace CDEECO {
 					}
 					assert_param(found);
 
-				// If allowed offsets are not defined then broadcast at will
+					// If allowed offsets are not defined then broadcast at will
 				} else {
 					brdStart = start;
 				}

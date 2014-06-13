@@ -48,9 +48,6 @@ namespace CDEECO {
 		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
 			// Check for trigger knowledge update
 			if(updateStart >= &trigger && updateStart < &trigger + sizeof(trigger)) {
-				// TODO check knowledge for real change if required
-
-				// Trigger task execution
 				triggerSem.give();
 			}
 		}
