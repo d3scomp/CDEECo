@@ -62,13 +62,10 @@ class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge
 public:
 	// Task initialization
 	TestPeriodicTask(CDEECO::Component<TestKnowledge> &component, TestKnowledge::Position &out) :
-			PeriodicTask(1500, component, out), led(blue) {
-		led.init();
+			PeriodicTask(1500, component, out) {
 	}
 
 private:
-	LED::Properties blue { GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD };
-	LED led;
 
 protected:
 	// Task code
@@ -77,9 +74,9 @@ protected:
 		Console::print(TaskInfo, "> Periodic task %d\n", in.position.x);
 
 		if(in.position.x % 2)
-			led.off();
+			blueLED.off();
 		else
-			led.on();
+			blueLED.on();
 
 		// TODO: Do something with the "in" knowledge return the "out" knowledge
 		TestKnowledge::Position out;
@@ -100,13 +97,10 @@ public:
 	// Task initialization
 	TestTriggeredTask(TestKnowledge::Position &trigger, CDEECO::Component<TestKnowledge> &component,
 			TestKnowledge::Value &outKnowledge) :
-			TriggeredTask(trigger, component, outKnowledge), led(red) {
-		led.init();
+			TriggeredTask(trigger, component, outKnowledge) {
 	}
 
 private:
-	LED::Properties red { GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD };
-	LED led;
 
 protected:
 	// Task code
@@ -114,9 +108,9 @@ protected:
 		Console::print(TaskInfo, "> Triggered task running now\n");
 
 		if(in.position.x % 2)
-			led.off();
+			orangeLED.off();
 		else
-			led.on();
+			orangeLED.on();
 
 		return 42;
 	}

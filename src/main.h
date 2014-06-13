@@ -16,11 +16,16 @@
 #include "Button.h"
 #include "Timer.h"
 #include "GPS.h"
+#include "MRF24J40.h"
 
+// Hardware
 extern Timer delayTimer;
 extern Button toggleButton;
 extern UART uartGPS;
 extern GPSL30 gps;
+extern LED blueLED;
+extern LED orangeLED;
+extern MRF24J40 mrf;
 
 
 #endif /* MAIN_H_ */

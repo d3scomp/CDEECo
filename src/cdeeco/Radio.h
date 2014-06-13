@@ -62,18 +62,9 @@ namespace CDEECO {
 
 		Radio(Receiver &receiver) :
 				receiver(receiver) {
-			greenLed.init();
-			redLed.init();
-			greenPulseLed.init();
-			redPulseLed.init();
-
-			mrf.setSPIPriority(0, 0);
-			mrf.setRFPriority(1, 0);
 
 			mrf.setRecvListener(receiverListenerStatic, this);
 			mrf.setBroadcastCompleteListener(broadcastCompleteListenerStatic, this);
-
-			mrf.init();
 
 			mrf.setChannel(0);
 
@@ -152,16 +143,6 @@ namespace CDEECO {
 			RingBuffer<KnowledgeFragment, 5> &txBuffer;
 			FreeRTOSSemaphore &txSem;
 		} txThread = TxThread(txBuffer, txSem);
-
-	public:
-	//TODO: Should be private<
-	// Receiver and transmit LEDs
-		static LED greenLed;
-		static LED redLed;
-		static PulseLED greenPulseLed;
-		static PulseLED redPulseLed;
-
-		static MRF24J40 mrf;
 	};
 }
 

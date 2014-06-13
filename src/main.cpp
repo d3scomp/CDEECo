@@ -30,21 +30,21 @@
 // Initialize system console
 #include "Console.h"
 
-// Delay timer settings
+// Delay timer
 Timer::Properties tim6Props {
 TIM6, RCC_APB1PeriphClockCmd, RCC_APB1Periph_TIM6, TIM6_DAC_IRQn };
 Timer delayTimer(tim6Props);
 
-// Pulse led settings
+// Pulse led
 PulseLED::Properties pulseProps {
 RCC_APB1Periph_TIM7, TIM7, TIM7_IRQn, 6, 0 };
 
-// User button settings
+// User button
 Button::Properties userButtonProps {
 GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, EXTI_Line0, EXTI_PortSourceGPIOA, EXTI_PinSource0, EXTI0_IRQn };
 Button toggleButton(userButtonProps);
 
-// GPS Settings
+// GPS
 UART::Properties uart6Props {
 	GPIOC, USART6,
 	GPIO_Pin_6, GPIO_Pin_7, GPIO_PinSource6, GPIO_PinSource7,
@@ -58,6 +58,35 @@ GPSL30::Properties gpsProps {
 	RCC_AHB1Periph_GPIOB, RCC_AHB1Periph_GPIOD, RCC_AHB1Periph_GPIOC
 };
 GPSL30 gps(gpsProps, uartGPS); // This can be used for L10 as well. It has the three pins PWR, RST, WUP unconnected
+
+// LEDs
+LED::Properties greenLedProperties { GPIOD, GPIO_Pin_12, RCC_AHB1Periph_GPIOD };
+LED greenLED(greenLedProperties);
+LED::Properties orangeLEDProperties { GPIOD, GPIO_Pin_13, RCC_AHB1Periph_GPIOD };
+LED orangeLED(orangeLEDProperties);
+LED::Properties redLEDProperties { GPIOD, GPIO_Pin_14, RCC_AHB1Periph_GPIOD };
+LED redLED(redLEDProperties);
+LED::Properties blueLEDProperties { GPIOD, GPIO_Pin_15, RCC_AHB1Periph_GPIOD };
+LED blueLED(blueLEDProperties);
+
+// Pulse LEDs
+PulseLED greenPulseLED = PulseLED(greenLED, 1);
+PulseLED redPulseLED = PulseLED(redLED, 1);
+
+// ZigBee
+MRF24J40::Properties mrfProps {
+	GPIOE, GPIOE, GPIOB, GPIOD,
+	SPI3,
+	GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5, GPIO_Pin_2,
+	GPIO_PinSource4, GPIO_PinSource5, GPIO_PinSource3, GPIO_PinSource4, GPIO_PinSource5,
+	RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD,
+	RCC_APB1PeriphClockCmd, RCC_APB1Periph_SPI3,
+	GPIO_AF_SPI3,
+	EXTI_Line2, EXTI_PortSourceGPIOD, EXTI_PinSource2, EXTI2_IRQn,
+	SPI3_IRQn
+};
+MRF24J40 mrf = MRF24J40(mrfProps, greenPulseLED, redPulseLED);
+
 
 /**
  * Interrupt priority map
@@ -128,13 +157,35 @@ int main(void) {
 	enableVFP();
 	delayTimer.init();
 	Console::init();
+
+	// Initialize pulse led timer
 	PulseLED::initTimer(pulseProps);
+
+	// Initialize user button
 	toggleButton.setPriority(8, 0);
 	toggleButton.setPressedListener(userPressed, NULL);
 	toggleButton.init();
+
+	// Initialize GPS
 	uartGPS.setPriority(5, 0);
 	uartGPS.init();
 	gps.init();
+
+	// Initialize LEDs
+	redLED.init();
+	blueLED.init();
+	greenLED.init();
+	orangeLED.init();
+
+	// Initialize pulse LEDs
+	redPulseLED.init();
+	greenPulseLED.init();
+
+	// Initialize ZigBee
+	mrf.setSPIPriority(0, 0);
+	mrf.setRFPriority(1, 0);
+	mrf.init();
+
 
 	Console::log("\n\n\n\n\n\n\n\n\n\n\n");
 	Console::log("# # # # # # # # # # # # # # # # # # # #\n");
