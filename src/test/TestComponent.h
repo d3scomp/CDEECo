@@ -61,17 +61,14 @@ namespace CDEECO {
 class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge::Position> {
 public:
 	// Task initialization
-	TestPeriodicTask(CDEECO::Component<TestKnowledge> &component, TestKnowledge::Position &out) :
-			PeriodicTask(1500, component, out) {
+	TestPeriodicTask(auto &component, auto &out) :
+			PeriodicTask(1429, component, out) {
 	}
 
 private:
-
-protected:
-	// Task code
 	TestKnowledge::Position run(const TestKnowledge in) {
 		// Visualize knowledge position x
-		console.print(TaskInfo, "> Periodic task %d\n", in.position.x);
+		console.print(TaskInfo, "Test periodic task\n> %d\n\n", in.position.x);
 
 		if(in.position.x % 2)
 			blueLED.off();
@@ -95,17 +92,13 @@ protected:
 class TestTriggeredTask: public CDEECO::TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(TestKnowledge::Position &trigger, CDEECO::Component<TestKnowledge> &component,
-			TestKnowledge::Value &outKnowledge) :
+	TestTriggeredTask(auto &trigger, auto &component, auto &outKnowledge) :
 			TriggeredTask(trigger, component, outKnowledge) {
 	}
 
 private:
-
-protected:
-	// Task code
 	TestKnowledge::Value run(const TestKnowledge in) {
-		console.print(TaskInfo, "> Triggered task running now\n");
+		console.print(TaskInfo, "Test triggered task\n\n");
 
 		if(in.position.x % 2)
 			orangeLED.off();

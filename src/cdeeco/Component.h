@@ -112,7 +112,7 @@ namespace CDEECO {
 		 * @param size Change size
 		 */
 		void broadcastChange(size_t start, size_t size) {
-			console.log("Broadcasting local knowledge\n");
+			console.print(Debug, "Broadcasting local knowledge\n");
 
 			size_t end = start + size;
 			assert_param(end <= sizeof(KNOWLEDGE));

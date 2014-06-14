@@ -60,7 +60,6 @@ namespace CDEECO {
 
 		Radio(Receiver &receiver) :
 				receiver(receiver) {
-
 			mrf.setRecvListener(receiverListenerStatic, this);
 			mrf.setBroadcastCompleteListener(broadcastCompleteListenerStatic, this);
 
@@ -112,7 +111,7 @@ namespace CDEECO {
 					receiver(receiver), rxBuffer(rxBuffer) {
 			}
 			void run() {
-				console.log(">>>> Radio RX thread started\n");
+				console.print(Info, ">>>> Radio RX thread started\n");
 				while(true) {
 					Packet packet = rxBuffer.get();
 					if(packet.valid && packet.data.fragment.length() == packet.size)
@@ -129,7 +128,7 @@ namespace CDEECO {
 					FreeRTOSTask(1024, 2), txBuffer(txBuffer), txSem(txSem) {
 			}
 			void run() {
-				console.log(">>>> Radio TX thread started\n");
+				console.print(Info, ">>>> Radio TX thread started\n");
 				while(true) {
 					KnowledgeFragment fragment = txBuffer.get();
 					txSem.take();

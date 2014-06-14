@@ -46,14 +46,14 @@ namespace CDEECO {
 
 		/** Broadcast knowledge fragment */
 		void broadcastFragment(KnowledgeFragment fragment) {
-			console.print(Info, ">>>>>>>>> Sending knowledge fragment:\n");
+			console.print(Debug, ">>>>>>>>> Sending knowledge fragment:\n");
 			console.logFragment(fragment);
 			radio.broadcastFragment(fragment);
 		}
 
 		/** Process process received fragment */
 		void processFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			console.print(Info, ">>>>>>>>> Processing knowledge fragment:\n");
+			console.print(Debug, ">>>>>>>>> Processing knowledge fragment:\n");
 			console.logFragment(fragment);
 
 			// Store fragment in rebroadcast storage

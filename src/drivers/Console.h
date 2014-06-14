@@ -1,5 +1,5 @@
-#ifndef CONSOLE_H_
-#define CONSOLE_H_
+#ifndef CONSOLE_H
+#define CONSOLE_H
 
 #include <cstdio>
 #include <stdio.h>
@@ -40,7 +40,7 @@ private:
 	CDEECO::Receiver *receiver = NULL;
 	static void staticReceiveListener(void* data);
 	void receiveListener();
-	Level level = All;
+	Level level = Info;
 
 	template<typename T>
 	T recv() {
@@ -55,4 +55,4 @@ private:
 	uint8_t recvHexVal();
 };
 
-#endif // CONSOLE_H_
+#endif // CONSOLE_H

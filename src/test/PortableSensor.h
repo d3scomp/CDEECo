@@ -53,13 +53,17 @@ namespace PortableSensor {
 
 		Knowledge::Value run(const Knowledge in) {
 			float temp = sensor.readTemperature();
-			float humid = sensor.readHumidity();
-			console.print(TaskInfo, "\n\n\n>>>> Sensor task:\n");
-			console.print(TaskInfo, ">>>>>> Temperature: %d.%d°C\n", (int16_t) temp, ((int16_t) (temp * 100) % 100));
-			console.print(TaskInfo, ">>>>>> Rela. humid: %d.%d%%\n", (int16_t) humid, ((int16_t) (humid * 100) % 100));
-			console.print(TaskInfo, ">>>>>> AlarmId: %x\n\n\n\n", in.coordId);
+			float humi = sensor.readHumidity();
+			console.print(TaskInfo, "Sensor task:\n");
+			console.print(TaskInfo, "> Temp: ");
+			console.printFloat(TaskInfo, temp, 2);
+			console.print(TaskInfo, "°C\n");
+			console.print(TaskInfo, "> Humi: ");
+			console.printFloat(TaskInfo, humi, 2);
+			console.print(TaskInfo, "%%\n");
+			console.print(TaskInfo, "> AlarmId: %x\n\n", in.coordId);
 
-			return {temp, humid};
+			return {temp, humi};
 		}
 	};
 
@@ -69,20 +73,20 @@ namespace PortableSensor {
 	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
 	public:
 		Position(auto &component, auto &out) :
-				PeriodicTask(1500, component, out) {
+				PeriodicTask(1259, component, out) {
 		}
 
 	private:
 		Knowledge::Position run(const Knowledge in) {
 			GPSL10::GPSFix fix = gps.getGPSFix();
 
-			console.print(TaskInfo, "\n\n\n>>>> Position task:\n");
-			console.print(TaskInfo, "GPS: valid:%d, date:%d.%d.%d %d:%d:%d pos: ", fix.valid, fix.day, fix.month,
-					fix.year, fix.hour, fix.minute, fix.second);
+			console.print(TaskInfo, "Position task:\n");
+			console.print(TaskInfo, "> valid:%d\n> date:%d.%d.%d\n> time:%d:%d:%d\n> pos: ", fix.valid, fix.day,
+					fix.month, fix.year, fix.hour, fix.minute, fix.second);
 			console.printFloat(TaskInfo, fix.latitude, 6);
 			console.print(TaskInfo, " ");
 			console.printFloat(TaskInfo, fix.longitude, 6);
-			console.print(TaskInfo, "\n\n\n\n");
+			console.print(TaskInfo, "\n\n");
 
 			if(fix.valid)
 				return {fix.latitude, fix.longitude};

@@ -72,7 +72,7 @@ namespace CDEECO {
 		}
 
 		void rebroadcast(Index index) {
-			console.print(Info, ">>> Rebroadcasting fragment\n");
+			console.print(Debug, ">>> Rebroadcasting fragment\n");
 			broadcaster.broadcastFragment(records[index].fragment);
 			records[index].used = false;
 		}

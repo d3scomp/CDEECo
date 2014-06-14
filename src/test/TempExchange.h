@@ -22,12 +22,14 @@ namespace TempExchange {
 
 	class Ensamble: EnsambleType {
 	public:
+		static const auto PERIOD_MS = 2027;
+
 		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, auto &library) :
-			EnsambleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, 2000) {
+			EnsambleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
 		}
 
 		Ensamble(CDEECO::Component<PortableSensor::Knowledge> &memeber, auto &library) :
-			EnsambleType(&memeber, &memeber.knowledge.coordId, &library, 2000) {
+			EnsambleType(&memeber, &memeber.knowledge.coordId, &library, PERIOD_MS) {
 		}
 
 	protected:

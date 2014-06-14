@@ -51,21 +51,20 @@ namespace Alarm {
 
 	private:
 		bool run(const Knowledge in) {
-			console.print(TaskInfo, "\n\n\n>>>> Running alarm temp check\n");
-			console.print(TaskInfo, ">>>> Registered sensor and values:\n");
+			console.print(TaskInfo, "Alarm check task\n");
 			for(auto info : in.nearbySensors) {
 				if(info.id != Knowledge::NO_MEMBER) {
-					console.print(TaskInfo, ">>>>>> Id: %x ", info.id);
+					console.print(TaskInfo, "> Id: %x", info.id);
 
-					console.print(TaskInfo, "Temp: ");
+					console.print(TaskInfo, "\tTemp: ");
 					console.printFloat(TaskInfo, info.value.temperature, 2);
-					console.print(TaskInfo, "°C ");
+					console.print(TaskInfo, "°C");
 
-					console.print(TaskInfo, "Humi: ");
+					console.print(TaskInfo, "\tHumi: ");
 					console.printFloat(TaskInfo, info.value.humidity, 2);
-					console.print(TaskInfo, "%% ");
+					console.print(TaskInfo, "%%");
 
-					console.print(TaskInfo, "Posi: ");
+					console.print(TaskInfo, "\tPos: ");
 					console.printFloat(TaskInfo, info.position.lat, 6);
 					console.print(TaskInfo, " ");
 					console.printFloat(TaskInfo, info.position.lon, 6);
@@ -73,7 +72,7 @@ namespace Alarm {
 					console.print(TaskInfo, "\n");
 				}
 			}
-			console.print(TaskInfo, "\n\n\n");
+			console.print(TaskInfo, "\n");
 
 			// Check temperatures for dangerous conditions
 			const float threshold = 26.0f;
@@ -81,7 +80,6 @@ namespace Alarm {
 			for(auto info : in.nearbySensors)
 				if(info.value.temperature > threshold)
 					return true;
-
 			return false;
 		}
 	};

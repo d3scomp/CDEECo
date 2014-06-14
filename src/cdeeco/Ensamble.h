@@ -76,7 +76,7 @@ namespace CDEECO {
 			// Schedule the task periodically
 			while(1) {
 				// For all knowledge from the cache check member and execute map
-				console.log(">>>> Ensamble task running now\n");
+				console.print(Debug, ">>>> Ensamble task running now\n");
 
 				runExchange();
 
@@ -97,7 +97,7 @@ namespace CDEECO {
 			}
 
 			// Error mixed setup
-			console.log("Error mixed ensamble setup");
+			console.print(Error, "Error mixed ensamble setup");
 			assert_param(false);
 		}
 

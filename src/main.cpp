@@ -16,6 +16,7 @@
 #include "drivers/SHT1x.h"
 #include "cdeeco/KnowledgeCache.h"
 #include "drivers/LED.h"
+#include "drivers/Console.h"
 
 #include "test/TestComponent.h"
 #include "test/PortableSensor.h"
@@ -26,9 +27,6 @@
 #include <sstream>
 #include <string>
 #include <signal.h>
-
-// Initialize system console
-#include "Console.h"
 
 // Delay timer
 Timer::Properties tim6Props {
@@ -98,7 +96,8 @@ Console console(uartSerial);
  * 1 ------------------- FreeRTOS critical section
  * 1 - MRF RF
  * 2 - System scheduler
- * 3 - UART - Console
+ * 3 - UART - Serial console
+ * 5 - UART - GPS
  * 7 - TIM7 - Pulse LED tick
  * 8 - user button
  *

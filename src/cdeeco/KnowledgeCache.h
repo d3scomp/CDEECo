@@ -104,7 +104,7 @@ namespace CDEECO {
 			if(fragment.type != TYPE)
 				return; // Not our knowledge type
 
-			console.log(">>> Storing fragment in cache\n");
+			console.print(Debug, ">>> Storing fragment in cache\n");
 
 			this->cacheAccess.lock();
 
