@@ -62,7 +62,7 @@ OBJCOPY=armv7m-hardfloat-eabi-objcopy
 SIZE=armv7m-hardfloat-eabi-size
 
 # For some reason -O2 generates wrong code for interrupts. At least the USER_BUTTON interrupt handler get called twice
-CFLAGS  = -mcpu=cortex-m4 -g -O0 -Wall -pipe
+CFLAGS  = -mcpu=cortex-m4 -g -Og -Wall -pipe
 CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP -fsingle-precision-constant
 CFLAGS += -I$(SRC_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
