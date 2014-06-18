@@ -3,8 +3,10 @@ PROJ_NAME=cdeeco++
 
 BUILD_DIR=build
 SRC_DIR=src
-CMSIS_DIR=stm32f40xx/CMSIS
-PERIPH_DIR=stm32f40xx/STM32F4xx_StdPeriph_Driver
+#CMSIS_DIR=stm32f40xx/CMSIS
+CMSIS_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/CMSIS
+#PERIPH_DIR=stm32f40xx/STM32F4xx_StdPeriph_Driver
+PERIPH_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/STM32F4xx_StdPeriph_Driver
 DISCOVERY_DIR=stm32f4discovery
 FREERTOS_DIR=FreeRTOS
 DRIVERS_DIR=${SRC_DIR}/drivers
@@ -69,6 +71,8 @@ CFLAGS += -I$(CMSIS_DIR)/Include
 CFLAGS += -I$(PERIPH_DIR)/inc
 CFLAGS += -I$(FREERTOS_DIR)/Source/include
 CFLAGS += -I$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
+
+CFLAGS += -D STM32F40_41xxx -D HSI_VALUE=16000000ul -D HSE_VALUE=25000000ul
 
 CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++1y
 
