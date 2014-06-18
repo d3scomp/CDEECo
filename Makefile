@@ -3,9 +3,8 @@ PROJ_NAME=cdeeco++
 
 BUILD_DIR=build
 SRC_DIR=src
-#CMSIS_DIR=stm32f40xx/CMSIS
 CMSIS_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/CMSIS
-#PERIPH_DIR=stm32f40xx/STM32F4xx_StdPeriph_Driver
+CMSIS_DEVICE_DIR=${CMSIS_DIR}/Device/ST/STM32F4xx
 PERIPH_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/STM32F4xx_StdPeriph_Driver
 DISCOVERY_DIR=stm32f4discovery
 FREERTOS_DIR=FreeRTOS
@@ -34,8 +33,9 @@ SRCS += ${SRC_DIR}/drivers/GPS.cpp
 
 
 # STM32F4 code
+#SRCS += ${CMSIS_DEVICE_DIR}/Source/Templates/system_stm32f4xx.c
 SRCS +=	${DISCOVERY_DIR}/system_stm32f4xx.c
-SRCS +=	${DISCOVERY_DIR}/startup_stm32f40xx.s
+SRCS += ${CMSIS_DEVICE_DIR}/Source/Templates/TrueSTUDIO/startup_stm32f40xx.s
 SRCS +=	${PERIPH_DIR}/src/stm32f4xx_rcc.c
 SRCS +=	${PERIPH_DIR}/src/stm32f4xx_exti.c
 SRCS +=	${PERIPH_DIR}/src/stm32f4xx_gpio.c
@@ -67,12 +67,14 @@ CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-
 CFLAGS += -I$(SRC_DIR)
 CFLAGS += -I$(DRIVERS_DIR)
 CFLAGS += -I$(DISCOVERY_DIR)
+CFLAGS += -I${CMSIS_DEVICE_DIR}/Include
 CFLAGS += -I$(CMSIS_DIR)/Include
 CFLAGS += -I$(PERIPH_DIR)/inc
 CFLAGS += -I$(FREERTOS_DIR)/Source/include
 CFLAGS += -I$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 
-CFLAGS += -D STM32F40_41xxx -D HSI_VALUE=16000000ul -D HSE_VALUE=25000000ul
+# Setup hardware using defines
+CFLAGS += -D USE_STDPERIPH_DRIVER -D STM32F40_41xxx -D HSI_VALUE=16000000ul -D HSE_VALUE=8000000ul
 
 CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++1y
 
@@ -114,6 +116,7 @@ init:
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/MemMang
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
+	mkdir -p ${BUILD_DIR}/$(CMSIS_DEVICE_DIR)/Source/Templates/TrueSTUDIO
 
 $(BUILD_DIR)/$(PROJ_NAME).elf: $(OBJS)
 	${CXX} $(LDFLAGS) -o "$@" $(OBJS)
