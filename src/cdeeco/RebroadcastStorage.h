@@ -35,7 +35,7 @@ namespace CDEECO {
 		}
 
 		void storeFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			// Time to live implementation with probability
+			// Stochastic Time to live implementation
 			if(gen() % 2)
 				return;
 
