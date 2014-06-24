@@ -23,6 +23,27 @@
 namespace CDEECO {
 	class Radio: Broadcaster {
 	public:
+		Radio(uint8_t channel, uint16_t panId, uint16_t sourceAddress) {
+			mrf.setRecvListener(receiverListenerStatic, this);
+			mrf.setBroadcastCompleteListener(broadcastCompleteListenerStatic, this);
+
+			mrf.setChannel(channel);
+
+			mrf.setPANId((uint8_t*) &panId);
+			mrf.setSAddr((uint8_t*) &sourceAddress);
+
+			mrf.reset();
+		}
+
+		void setReceiver(Receiver *receiver) {
+			this->receiver = receiver;
+		}
+
+		void broadcastFragment(const KnowledgeFragment fragment) {
+			txBuffer.put(fragment);
+		}
+
+	private:
 		template<typename T, size_t SIZE>
 		class RingBuffer {
 		public:
@@ -58,25 +79,45 @@ namespace CDEECO {
 			bool valid;
 		};
 
-		Radio(Receiver &receiver) :
-				receiver(receiver) {
-			mrf.setRecvListener(receiverListenerStatic, this);
-			mrf.setBroadcastCompleteListener(broadcastCompleteListenerStatic, this);
+		Receiver *receiver = NULL;
+		bool txInProgress = false;
+		RingBuffer<KnowledgeFragment, 5> txBuffer;
+		RingBuffer<Packet, 5> rxBuffer;
+		FreeRTOSSemaphore txSem = FreeRTOSSemaphore(1000, 1);
 
-			mrf.setChannel(0);
+		class RxThread: FreeRTOSTask {
+			friend Radio;
+			RxThread(Radio &radio) :
+					radio(radio) {
+			}
+			void run() {
+				console.print(Info, ">>>> Radio RX thread started\n");
+				while(true) {
+					Packet packet = radio.rxBuffer.get();
+					if(packet.valid && packet.data.fragment.length() == packet.size && radio.receiver)
+						radio.receiver->receiveFragment(packet.data.fragment, packet.lqi);
+				}
+			}
+			Radio &radio;
+		} rxThread = RxThread(*this);
 
-			uint8_t panId[] { 43, 44 };
-			uint8_t sAddr[] { 45, 46 };
-
-			mrf.setPANId(panId);
-			mrf.setSAddr(sAddr);
-
-			mrf.reset();
-		}
-
-		void broadcastFragment(const KnowledgeFragment fragment) {
-			txBuffer.put(fragment);
-		}
+		class TxThread: FreeRTOSTask {
+			friend Radio;
+			TxThread(Radio &radio) :
+					FreeRTOSTask(1024, 2), radio(radio) {
+			}
+			void run() {
+				console.print(Info, ">>>> Radio TX thread started\n");
+				while(true) {
+					KnowledgeFragment fragment = radio.txBuffer.get();
+					radio.txSem.take();
+					taskDISABLE_INTERRUPTS();
+					mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
+					taskENABLE_INTERRUPTS();
+				}
+			}
+			Radio &radio;
+		} txThread = TxThread(*this);
 
 		static void broadcastCompleteListenerStatic(void *data, const bool success) {
 			static_cast<Radio*>(data)->broadcastCompleteListener(success);
@@ -98,48 +139,6 @@ namespace CDEECO {
 				rxBuffer.put(packet);
 		}
 
-	private:
-		Receiver &receiver;
-		bool txInProgress = false;
-		RingBuffer<KnowledgeFragment, 5> txBuffer;
-		RingBuffer<Packet, 5> rxBuffer;
-		FreeRTOSSemaphore txSem = FreeRTOSSemaphore(1000, 1);
-
-		class RxThread: FreeRTOSTask {
-			friend Radio;
-			RxThread(Receiver &receiver, RingBuffer<Packet, 5> &rxBuffer) :
-					receiver(receiver), rxBuffer(rxBuffer) {
-			}
-			void run() {
-				console.print(Info, ">>>> Radio RX thread started\n");
-				while(true) {
-					Packet packet = rxBuffer.get();
-					if(packet.valid && packet.data.fragment.length() == packet.size)
-						receiver.receiveFragment(packet.data.fragment, packet.lqi);
-				}
-			}
-			Receiver &receiver;
-			RingBuffer<Packet, 5> &rxBuffer;
-		} rxThread = RxThread(receiver, rxBuffer);
-
-		class TxThread: FreeRTOSTask {
-			friend Radio;
-			TxThread(RingBuffer<KnowledgeFragment, 5> &txBuffer, FreeRTOSSemaphore &txSem) :
-					FreeRTOSTask(1024, 2), txBuffer(txBuffer), txSem(txSem) {
-			}
-			void run() {
-				console.print(Info, ">>>> Radio TX thread started\n");
-				while(true) {
-					KnowledgeFragment fragment = txBuffer.get();
-					txSem.take();
-					taskDISABLE_INTERRUPTS();
-					mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-					taskENABLE_INTERRUPTS();
-				}
-			}
-			RingBuffer<KnowledgeFragment, 5> &txBuffer;
-			FreeRTOSSemaphore &txSem;
-		} txThread = TxThread(txBuffer, txSem);
 	};
 }
 

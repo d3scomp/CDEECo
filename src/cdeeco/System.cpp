@@ -9,13 +9,15 @@
 
 namespace CDEECO {
 	System::System() :
-			rebroadcast(*this), radio(*this) {
+			rebroadcast(*this), radio(0, 42, 43) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 
 		console.log(">>> System constructor\n");
 
-		// Init console input
+		radio.setReceiver(this);
+
+		// Initialize console input
 		console.setFragmentReceiver(this);
 	}
 
