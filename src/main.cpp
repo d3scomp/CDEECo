@@ -17,7 +17,7 @@
 #include "drivers/LED.h"
 #include "drivers/Console.h"
 
-#include "cdeeco/Radio.h"
+#include "MrfRadio.h"
 #include "cdeeco/System.h"
 #include "cdeeco/KnowledgeCache.h"
 
@@ -129,7 +129,7 @@ void userPressed(void* data) {
 
 void cdeecoSetup(const uint32_t uniqId) {
 	//// System setup
-	auto radio = new CDEECO::Radio(0, uniqId, uniqId);
+	auto radio = new MrfRadio(0, uniqId, uniqId);
 	auto system = new CDEECO::System(*radio);
 
 	// Test component

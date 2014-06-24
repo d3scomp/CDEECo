@@ -6,3 +6,9 @@
  */
 
 #include "Radio.h"
+
+namespace CDEECO {
+	void Radio::setReceiver(Receiver *receiver) {
+		this->receiver = receiver;
+	}
+}
