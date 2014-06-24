@@ -5,23 +5,28 @@
  *      Author: Vladimir Matěna
  */
 
-#ifndef LISTEDTRIGGERTASK_H_
-#define LISTEDTRIGGERTASK_H_
+#ifndef LISTEDTRIGGERTASK_H
+#define LISTEDTRIGGERTASK_H
 
-class ListedTriggerTask {
-public:
-	ListedTriggerTask *next;
+namespace CDEECO {
+	class ListedTriggerTask {
+	public:
+		ListedTriggerTask *next;
 
-	ListedTriggerTask(): next(NULL) {};
-	virtual ~ListedTriggerTask() {};
+		ListedTriggerTask() :
+				next(NULL) {
+		}
+		virtual ~ListedTriggerTask() {
+		}
 
-	template <typename UPDATED_KNOWLEDGE>
-	void checkTriggerCondition(UPDATED_KNOWLEDGE &updated) {
-		checkTriggerConditionData(&updated, &updated + sizeof(updated));
+		template<typename UPDATED_KNOWLEDGE>
+		void checkTriggerCondition(UPDATED_KNOWLEDGE &updated) {
+			checkTriggerConditionData(&updated, &updated + sizeof(updated));
+		}
+
+	protected:
+		virtual void checkTriggerConditionData(void *updateStart, void* updateEnd) = 0;
 	};
+}
 
-protected:
-	virtual void checkTriggerConditionData(void *updateStart, void* updateEnd) = 0;
-};
-
-#endif // LISTEDTRIGGERTASK_H_
+#endif // LISTEDTRIGGERTASK_H
