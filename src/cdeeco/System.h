@@ -18,9 +18,6 @@
 #include "Receiver.h"
 #include "Radio.h"
 
-template<size_t SIZE>
-class RebroadcastStorage;
-
 namespace CDEECO {
 	class System: public Broadcaster, Receiver {
 	public:
