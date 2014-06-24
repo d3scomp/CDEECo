@@ -8,8 +8,8 @@
 #include "System.h"
 
 namespace CDEECO {
-	System::System() :
-			rebroadcast(*this), radio(0, 42, 43) {
+	System::System(Radio &radio) :
+			rebroadcast(*this), radio(radio) {
 		// Erase caches
 		memset(&caches, 0, sizeof(caches));
 

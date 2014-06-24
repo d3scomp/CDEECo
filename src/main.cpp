@@ -14,9 +14,12 @@
 #include "main.h"
 #include "drivers/UART.h"
 #include "drivers/SHT1x.h"
-#include "cdeeco/KnowledgeCache.h"
 #include "drivers/LED.h"
 #include "drivers/Console.h"
+
+#include "cdeeco/Radio.h"
+#include "cdeeco/System.h"
+#include "cdeeco/KnowledgeCache.h"
 
 #include "test/TestComponent.h"
 #include "test/PortableSensor.h"
@@ -124,13 +127,10 @@ void userPressed(void* data) {
 	lastUserPress = now;
 }
 
-/* void pulseLedTimerCallbackFunction( TimerHandle_t xTimer ) {
- PulseLED::tickInterruptHandler();
- }*/
-
 void cdeecoSetup(const uint32_t uniqId) {
 	//// System setup
-	auto system = new CDEECO::System();
+	auto radio = new CDEECO::Radio(0, uniqId, uniqId);
+	auto system = new CDEECO::System(*radio);
 
 	// Test component
 	new TestComponent(*system, uniqId);
@@ -206,11 +206,6 @@ int main(void) {
 	console.log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
 	cdeecoSetup(uniqId);
-
-	/*	// TODO: This is not nice
-	 console.log(">>> Setting timer to make pulse leds work");
-	 TimerHandle_t pulseLedTimerhandle = xTimerCreate("PulseLedTimer", 100 / portTICK_PERIOD_MS, pdTRUE, 0, pulseLedTimerCallbackFunction);
-	 xTimerStart(pulseLedTimerhandle, 10);*/
 
 	// Start the scheduler.
 	console.log(">>> Running scheduler\n");

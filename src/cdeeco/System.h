@@ -21,7 +21,7 @@
 namespace CDEECO {
 	class System: public Broadcaster, Receiver {
 	public:
-		System();
+		System(Radio &radio);
 
 		/** Receive listener */
 		void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi);
@@ -45,7 +45,7 @@ namespace CDEECO {
 		std::array<KnowledgeStorage*, CACHES> caches;
 		RebroadcastStorage<REBROADCAST_SIZE> rebroadcast;
 
-		Radio radio;
+		Radio &radio;
 	};
 }
 
