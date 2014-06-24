@@ -24,8 +24,8 @@ namespace CDEECO {
 	template<typename KNOWLEDGE>
 	class Component: FreeRTOSTask {
 	public:
-		Component(const CDEECO::Id id, const CDEECO::Type type, System &system, const uint32_t broadcastPeriodMs = 3000) :
-				id(id), type(type), system(system), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
+		Component(const CDEECO::Id id, const CDEECO::Type type, Broadcaster &broadcaster, const uint32_t broadcastPeriodMs = 3000) :
+				id(id), type(type), broadcaster(broadcaster), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
 		}
 
 		KNOWLEDGE lockReadKnowledge() {
@@ -93,7 +93,7 @@ namespace CDEECO {
 		const Type type;
 
 	private:
-		System &system;
+		Broadcaster &broadcaster;
 		FreeRTOSMutex knowledgeMutex;
 		ListedTriggerTask *rootTriggerTask;
 		const uint32_t broadcastPeriodMs;
@@ -165,11 +165,7 @@ namespace CDEECO {
 			fragment.size = std::min(sizeof(KNOWLEDGE) - start, sizeof(fragment.data));
 			memcpy(fragment.data, &((char*) &knowledge)[start], fragment.size);
 
-			system.broadcastFragment(fragment);
-
-			/* TODO: This is local loop-back for registering fragment from local components. Doing this makes no
-			 *  sense in real application. */
-			system.storeFragment(fragment);
+			broadcaster.broadcastFragment(fragment);
 
 			return fragment.size;
 		}

@@ -22,8 +22,7 @@ template<size_t SIZE>
 class RebroadcastStorage;
 
 namespace CDEECO {
-
-	class System: Broadcaster, Receiver {
+	class System: public Broadcaster, Receiver {
 	public:
 		System();
 
@@ -33,18 +32,15 @@ namespace CDEECO {
 		/** Broadcast knowledge fragment */
 		void broadcastFragment(KnowledgeFragment fragment);
 
-		/** Store fragment in knowledge cache
-		 *
-		 * TODO: This should be private, but is used for local loop-back in order to demonstrate functionality.
-		 */
-		void storeFragment(const KnowledgeFragment fragment);
-
 		/** Register knowledge cache */
 		void registerCache(KnowledgeStorage *cache);
 
 	private:
 		/** Process process received fragment */
 		void processFragment(const KnowledgeFragment fragment, uint8_t lqi);
+
+		/** Store fragment in knowledge cache */
+		void storeFragment(const KnowledgeFragment fragment);
 
 		static const size_t CACHES = 3;
 		static const size_t REBROADCAST_SIZE = 32;

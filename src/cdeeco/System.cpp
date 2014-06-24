@@ -27,6 +27,10 @@ namespace CDEECO {
 		console.print(Debug, ">>>>>>>>> Sending knowledge fragment:\n");
 		console.logFragment(fragment);
 		radio.broadcastFragment(fragment);
+
+		/* TODO: This is local loop-back for registering fragment from local components. Doing this makes no
+		 *  sense in real application. */
+		storeFragment(fragment);
 	}
 
 	void System::processFragment(const KnowledgeFragment fragment, uint8_t lqi) {

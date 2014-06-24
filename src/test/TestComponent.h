@@ -119,8 +119,8 @@ public:
 	TestPeriodicTask periodicTask = TestPeriodicTask(*this, this->knowledge.position);
 	TestTriggeredTask triggeredTask = TestTriggeredTask(this->knowledge.position, *this, this->knowledge.value);
 
-	TestComponent(CDEECO::System &system, const CDEECO::Id id) :
-			CDEECO::Component<TestKnowledge>(id, 0x42, system) {
+	TestComponent(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
+			CDEECO::Component<TestKnowledge>(id, 0x42, broadcaster) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(TestKnowledge));
 	}

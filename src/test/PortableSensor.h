@@ -105,8 +105,8 @@ namespace PortableSensor {
 		Sense sense = Sense(*this, this->knowledge.value);
 		Position position = Position(*this, this->knowledge.position);
 
-		Component(CDEECO::System &system, const CDEECO::Id id) :
-				CDEECO::Component<Knowledge>(id, Type, system) {
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
+				CDEECO::Component<Knowledge>(id, Type, broadcaster) {
 			// Initialize knowledge
 			memset(&knowledge, 0, sizeof(Knowledge));
 		}
