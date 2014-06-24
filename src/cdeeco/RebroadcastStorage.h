@@ -7,7 +7,7 @@
 #include <array>
 #include <random>
 
-#include "Console.h"
+#include "main.h"
 #include "KnowledgeFragment.h"
 #include "Broadcaster.h"
 #include "FreeRTOSTask.h"

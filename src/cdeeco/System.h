@@ -5,21 +5,18 @@
  *      Author: Vladimír Matěna
  */
 
-#ifndef SYSTEM_H_
-#define SYSTEM_H_
+#ifndef SYSTEM_H
+#define SYSTEM_H
 
 #include <stdio.h>
 #include <array>
 #include <algorithm>
 
 #include "RebroadcastStorage.h"
-#include "Console.h"
 #include "KnowledgeCache.h"
 #include "Broadcaster.h"
 #include "Receiver.h"
 #include "Radio.h"
-#include "FreeRTOSTask.h"
-#include "FreeRTOSSemaphore.h"
 
 template<size_t SIZE>
 class RebroadcastStorage;
@@ -28,60 +25,22 @@ namespace CDEECO {
 
 	class System: Broadcaster, Receiver {
 	public:
-		System() :
-				rebroadcast(*this), radio(*this) {
-			// Erase caches
-			memset(&caches, 0, sizeof(caches));
-
-			console.log(">>> System constructor\n");
-
-			// Init console input
-			console.setFragmentReceiver(this);
-		}
+		System();
 
 		/** Receive listener */
-		void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			processFragment(fragment, lqi);
-		}
+		void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi);
 
 		/** Broadcast knowledge fragment */
-		void broadcastFragment(KnowledgeFragment fragment) {
-			console.print(Debug, ">>>>>>>>> Sending knowledge fragment:\n");
-			console.logFragment(fragment);
-			radio.broadcastFragment(fragment);
-		}
+		void broadcastFragment(KnowledgeFragment fragment);
 
 		/** Process process received fragment */
-		void processFragment(const KnowledgeFragment fragment, uint8_t lqi) {
-			console.print(Debug, ">>>>>>>>> Processing knowledge fragment:\n");
-			console.logFragment(fragment);
-
-			// Store fragment in rebroadcast storage
-			rebroadcast.storeFragment(fragment, lqi);
-
-			storeFragment(fragment);
-		}
+		void processFragment(const KnowledgeFragment fragment, uint8_t lqi);
 
 		/** Store fragment in knowledge cache */
-		void storeFragment(const KnowledgeFragment fragment) {
-			// Try to store fragment in one of the caches
-			for(size_t i = 0; i < caches.size() && caches[i]; ++i)
-				caches[i]->storeFragment(fragment);
-		}
+		void storeFragment(const KnowledgeFragment fragment);
 
 		/** Register knowledge cache */
-		void registerCache(KnowledgeStorage *cache) {
-			assert_param(caches[caches.size() - 1] == NULL);
-
-			for(size_t i = 0; i < CACHES; ++i)
-				if(caches[i] == NULL) {
-					caches[i] = cache;
-					return;
-				}
-
-			console.print(Error, ">>>> OUT OF CACHE STORAGE <<<<\n");
-			assert_param(false);
-		}
+		void registerCache(KnowledgeStorage *cache);
 
 	private:
 		static const size_t CACHES = 3;
@@ -94,4 +53,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* SYSTEM_H_ */
+#endif /* SYSTEM_H */
