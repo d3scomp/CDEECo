@@ -1,12 +1,12 @@
 /*
- * Ensamble.h
+ * Ensemble.h
  *
  *  Created on: 21. 5. 2014
  *      Author: Vladimír Matěna
  */
 
-#ifndef ENSAMBLE_H_
-#define ENSAMBLE_H_
+#ifndef ENSEMBLE_H
+#define ENSEMBLE_H
 
 #include <type_traits>
 
@@ -17,15 +17,15 @@
 namespace CDEECO {
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
 			typename MEMBER_OUT_KNOWLEDGE>
-	class Ensamble: FreeRTOSTask {
+	class Ensemble: FreeRTOSTask {
 	public:
-		Ensamble(Component<COORD_KNOWLEDGE> *coordinator, COORD_OUT_KNOWLEDGE *coordOutKnowledge,
+		Ensemble(Component<COORD_KNOWLEDGE> *coordinator, COORD_OUT_KNOWLEDGE *coordOutKnowledge,
 				KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary, long period) :
 				period(period), coordinator(coordinator), member(NULL), coordOutKnowledge(coordOutKnowledge), memberOutKnowledge(
 				NULL), memberLibrary(memberLibrary), coordLibrary(NULL) {
 		}
 
-		Ensamble(Component<MEMBER_KNOWLEDGE> *member, MEMBER_OUT_KNOWLEDGE *memberOutKnowledge,
+		Ensemble(Component<MEMBER_KNOWLEDGE> *member, MEMBER_OUT_KNOWLEDGE *memberOutKnowledge,
 				KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary, long period) :
 				period(period), coordinator(NULL), member(member), coordOutKnowledge(NULL), memberOutKnowledge(
 						memberOutKnowledge), memberLibrary(NULL), coordLibrary(coordLibrary) {
@@ -71,12 +71,12 @@ namespace CDEECO {
 		KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary;
 		KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary;
 
-		/** Ensamble periodic task */
+		/** Ensemble periodic task */
 		void run() {
 			// Schedule the task periodically
 			while(1) {
 				// For all knowledge from the cache check member and execute map
-				console.print(Debug, ">>>> Ensamble task running now\n");
+				console.print(Debug, ">>>> Ensemble task running now\n");
 
 				runExchange();
 
@@ -97,7 +97,7 @@ namespace CDEECO {
 			}
 
 			// Error mixed setup
-			console.print(Error, "Error mixed ensamble setup");
+			console.print(Error, "Error mixed ensemble setup");
 			assert_param(false);
 		}
 
@@ -151,4 +151,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* ENSAMBLE_H_ */
+#endif /* ENSEMBLE_H */

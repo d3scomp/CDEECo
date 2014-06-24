@@ -147,8 +147,8 @@ void cdeecoSetup(const uint32_t uniqId) {
 	system->registerCache(alarmCache);
 
 	// Ensembles
-	new TempExchange::Ensamble(*alarm, *sensorCache);
-	new TempExchange::Ensamble(*sensor, *alarmCache);
+	new TempExchange::Ensemble(*alarm, *sensorCache);
+	new TempExchange::Ensemble(*sensor, *alarmCache);
 }
 
 /** System startup function */

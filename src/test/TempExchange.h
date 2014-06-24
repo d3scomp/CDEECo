@@ -11,25 +11,25 @@
 #include <random>
 
 #include "cdeeco/Component.h"
-#include "cdeeco/Ensamble.h"
+#include "cdeeco/Ensemble.h"
 #include "cdeeco/KnowledgeCache.h"
 #include "Alarm.h"
 #include "PortableSensor.h"
 
 namespace TempExchange {
-	typedef CDEECO::Ensamble<Alarm::Knowledge, Alarm::Knowledge::SensorData, PortableSensor::Knowledge,
-			PortableSensor::Knowledge::CoordId> EnsambleType;
+	typedef CDEECO::Ensemble<Alarm::Knowledge, Alarm::Knowledge::SensorData, PortableSensor::Knowledge,
+			PortableSensor::Knowledge::CoordId> EnsembleType;
 
-	class Ensamble: EnsambleType {
+	class Ensemble: EnsembleType {
 	public:
 		static const auto PERIOD_MS = 2027;
 
-		Ensamble(CDEECO::Component<Alarm::Knowledge> &coordinator, auto &library) :
-			EnsambleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
+		Ensemble(CDEECO::Component<Alarm::Knowledge> &coordinator, auto &library) :
+			EnsembleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
 		}
 
-		Ensamble(CDEECO::Component<PortableSensor::Knowledge> &memeber, auto &library) :
-			EnsambleType(&memeber, &memeber.knowledge.coordId, &library, PERIOD_MS) {
+		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &memeber, auto &library) :
+			EnsembleType(&memeber, &memeber.knowledge.coordId, &library, PERIOD_MS) {
 		}
 
 	protected:

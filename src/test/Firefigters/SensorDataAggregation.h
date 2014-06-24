@@ -1,4 +1,4 @@
-class SensorDataAggregation: Ensamble<GroupLeaderKnowedge, GroupMemberKnowledge> {
+class SensorDataAggregation: Ensemble<GroupLeaderKnowedge, GroupMemberKnowledge> {
 public:
 	SensorDataAggregation() {
 		PERIODIC_MEMBER_TASK(membership, 1000ms);
