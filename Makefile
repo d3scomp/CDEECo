@@ -9,15 +9,18 @@ PERIPH_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/STM32F4xx_StdPeriph_Driver
 FREERTOS_DIR=FreeRTOS
 DRIVERS_DIR=${SRC_DIR}/drivers
 CDEECO_DIR=${SRC_DIR}/cdeeco
+WRAPPERS_DIR=${SRC_DIR}/wrappers
 
 OPENOCD_DIR=C:/Apps/openocd-0.7.0
 
 # System
 SRCS +=	${SRC_DIR}/main.cpp
 SRCS += $(CDEECO_DIR)/System.cpp
-SRCS += $(CDEECO_DIR)/FreeRTOSMutex.cpp
-SRCS += $(CDEECO_DIR)/FreeRTOSSemaphore.cpp
 SRCS += $(CDEECO_DIR)/Radio.cpp
+
+# FreeRTOS wrappers
+SRCS += $(WRAPPERS_DIR)/FreeRTOSMutex.cpp
+SRCS += $(WRAPPERS_DIR)/FreeRTOSSemaphore.cpp
 
 # Drivers
 SRCS +=	${SRC_DIR}/drivers/LED.cpp
@@ -109,7 +112,7 @@ init:
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/drivers
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/cdeeco
-	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/core
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/wrappers
 	mkdir -p $(BUILD_DIR)/$(PERIPH_DIR)/src
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/MemMang

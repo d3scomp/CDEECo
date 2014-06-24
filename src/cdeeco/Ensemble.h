@@ -12,7 +12,7 @@
 
 #include "Component.h"
 #include "KnowledgeCache.h"
-#include "cdeeco/FreeRTOSTask.h"
+#include "wrappers/FreeRTOSTask.h"
 
 namespace CDEECO {
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,

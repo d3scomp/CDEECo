@@ -17,7 +17,7 @@
 #include "Knowledge.h"
 #include "ListedTriggerTask.h"
 #include "KnowledgeFragment.h"
-#include "FreeRTOSMutex.h"
+#include "wrappers/FreeRTOSMutex.h"
 
 namespace CDEECO {
 	/** System component template */

@@ -18,7 +18,7 @@
 #include "Task.h"
 
 #include "Console.h"
-#include "FreeRTOSTask.h"
+#include "wrappers/FreeRTOSTask.h"
 
 #include <stdio.h>
 #include <sstream>

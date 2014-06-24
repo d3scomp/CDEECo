@@ -17,8 +17,8 @@
 #include "Receiver.h"
 #include "Broadcaster.h"
 #include "Console.h"
-#include "FreeRTOSSemaphore.h"
-#include "FreeRTOSTask.h"
+#include "wrappers/FreeRTOSSemaphore.h"
+#include "wrappers/FreeRTOSTask.h"
 
 namespace CDEECO {
 	class Radio: Broadcaster {

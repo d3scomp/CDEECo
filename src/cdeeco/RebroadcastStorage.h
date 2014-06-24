@@ -10,8 +10,8 @@
 #include "main.h"
 #include "KnowledgeFragment.h"
 #include "Broadcaster.h"
-#include "FreeRTOSTask.h"
-#include "FreeRTOSMutex.h"
+#include "wrappers/FreeRTOSTask.h"
+#include "wrappers/FreeRTOSMutex.h"
 
 namespace CDEECO {
 	template<size_t SIZE>

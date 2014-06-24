@@ -12,7 +12,7 @@
 #include <array>
 
 #include "main.h"
-#include "FreeRTOSMutex.h"
+#include "wrappers/FreeRTOSMutex.h"
 #include "KnowledgeFragment.h"
 
 namespace CDEECO {

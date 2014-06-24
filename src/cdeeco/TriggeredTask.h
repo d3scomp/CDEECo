@@ -17,7 +17,7 @@
 #include "ListedTriggerTask.h"
 #include "Console.h"
 #include "LED.h"
-#include "FreeRTOSSemaphore.h"
+#include "wrappers/FreeRTOSSemaphore.h"
 
 namespace CDEECO {
 	/**
