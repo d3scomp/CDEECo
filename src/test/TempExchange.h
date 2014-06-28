@@ -28,8 +28,8 @@ namespace TempExchange {
 			EnsembleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
 		}
 
-		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &memeber, auto &library) :
-			EnsembleType(&memeber, &memeber.knowledge.coordId, &library, PERIOD_MS) {
+		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &member, auto &library) :
+			EnsembleType(&member, &member.knowledge.coordId, &library, PERIOD_MS) {
 		}
 
 	protected:
