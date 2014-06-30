@@ -11,7 +11,7 @@ DRIVERS_DIR=${SRC_DIR}/drivers
 CDEECO_DIR=${SRC_DIR}/cdeeco
 WRAPPERS_DIR=${SRC_DIR}/wrappers
 
-OPENOCD_DIR=C:/Apps/openocd-0.7.0
+OPENOCD=openocd
 
 # System
 SRCS +=	${SRC_DIR}/main.cpp
@@ -129,9 +129,9 @@ clean:
 	rm -rf build
 	
 openocd:
-	openocd -f interface/stlink-v2.cfg -f target/stm32f4x_stlink.cfg
+	${OPENOCD} -f interface/stlink-v2.cfg -f target/stm32f4x_stlink.cfg
 
 flash: all
-	openocd -f board/stm32f4discovery.cfg -c "program $(BUILD_DIR)/$(PROJ_NAME).elf verify reset"
+	${OPENOCD} -f board/stm32f4discovery.cfg -c "program $(BUILD_DIR)/$(PROJ_NAME).elf verify reset"
 
 -include $(DEPS)
