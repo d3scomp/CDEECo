@@ -16,7 +16,6 @@ OPENOCD=openocd
 # System
 SRCS +=	${SRC_DIR}/main.cpp
 SRCS +=	${SRC_DIR}/test/MrfRadio.cpp
-SRCS += $(CDEECO_DIR)/System.cpp
 SRCS += $(CDEECO_DIR)/Radio.cpp
 
 # FreeRTOS wrappers
