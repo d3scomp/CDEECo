@@ -17,10 +17,10 @@
 #include "drivers/LED.h"
 #include "drivers/Console.h"
 
-#include "MrfRadio.h"
 #include "cdeeco/System.h"
 #include "cdeeco/KnowledgeCache.h"
 
+#include "test/MrfRadio.h"
 #include "test/TestComponent.h"
 #include "test/PortableSensor.h"
 #include "test/Alarm.h"

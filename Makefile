@@ -15,7 +15,7 @@ OPENOCD=openocd
 
 # System
 SRCS +=	${SRC_DIR}/main.cpp
-SRCS +=	${SRC_DIR}/MrfRadio.cpp
+SRCS +=	${SRC_DIR}/test/MrfRadio.cpp
 SRCS += $(CDEECO_DIR)/System.cpp
 SRCS += $(CDEECO_DIR)/Radio.cpp
 
@@ -111,6 +111,7 @@ all: init $(BUILD_DIR)/$(PROJ_NAME).elf
 
 init:
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
+	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/test
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/drivers
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/cdeeco
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/wrappers
