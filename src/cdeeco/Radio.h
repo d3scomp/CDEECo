@@ -27,6 +27,9 @@ namespace CDEECO {
 		virtual void broadcastFragment(const KnowledgeFragment fragment) = 0;
 
 	protected:
+		void receiveFragment(const KnowledgeFragment fragment, const uint8_t lqi);
+
+	private:
 		Receiver *receiver = NULL;
 	};
 }

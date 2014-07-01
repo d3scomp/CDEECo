@@ -42,3 +42,24 @@ void MrfRadio::receiveListener() {
 	if(packet.valid)
 		rxBuffer.put(packet);
 }
+
+void MrfRadio::RxThread::run() {
+	console.print(Info, ">>>> Radio RX thread started\n");
+	while(true) {
+		Packet packet = radio.rxBuffer.get();
+		if(packet.valid && packet.data.fragment.length() == packet.size)
+			radio.receiveFragment(packet.data.fragment, packet.lqi);
+	}
+}
+
+void MrfRadio::TxThread::run() {
+	console.print(Info, ">>>> Radio TX thread started\n");
+	while(true) {
+		CDEECO::KnowledgeFragment fragment = radio.txBuffer.get();
+		radio.txSem.take();
+		taskDISABLE_INTERRUPTS();
+		mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
+		taskENABLE_INTERRUPTS();
+	}
+}
+

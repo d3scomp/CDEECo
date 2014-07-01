@@ -63,14 +63,7 @@ private:
 		RxThread(MrfRadio &radio) :
 				radio(radio) {
 		}
-		void run() {
-			console.print(Info, ">>>> Radio RX thread started\n");
-			while(true) {
-				Packet packet = radio.rxBuffer.get();
-				if(packet.valid && packet.data.fragment.length() == packet.size && radio.receiver)
-					radio.receiver->receiveFragment(packet.data.fragment, packet.lqi);
-			}
-		}
+		void run();
 		MrfRadio &radio;
 	} rxThread = RxThread(*this);
 
@@ -79,16 +72,7 @@ private:
 		TxThread(MrfRadio &radio) :
 				FreeRTOSTask(1024, 2), radio(radio) {
 		}
-		void run() {
-			console.print(Info, ">>>> Radio TX thread started\n");
-			while(true) {
-				CDEECO::KnowledgeFragment fragment = radio.txBuffer.get();
-				radio.txSem.take();
-				taskDISABLE_INTERRUPTS();
-				mrf.broadcastPacket((uint8_t*) &fragment, (uint8_t) fragment.length());
-				taskENABLE_INTERRUPTS();
-			}
-		}
+		void run();
 		MrfRadio &radio;
 	} txThread = TxThread(*this);
 

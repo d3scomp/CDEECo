@@ -61,8 +61,8 @@ namespace CDEECO {
 class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge::Position> {
 public:
 	// Task initialization
-	TestPeriodicTask(auto &component, auto &out) :
-			PeriodicTask(1429, component, out) {
+	TestPeriodicTask(auto &component) :
+			PeriodicTask(1429, component, component.knowledge.position) {
 	}
 
 private:
@@ -92,8 +92,8 @@ private:
 class TestTriggeredTask: public CDEECO::TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
 public:
 	// Task initialization
-	TestTriggeredTask(auto &trigger, auto &component, auto &outKnowledge) :
-			TriggeredTask(trigger, component, outKnowledge) {
+	TestTriggeredTask(auto &component) :
+			TriggeredTask(component.knowledge.position, component, component.knowledge.value) {
 	}
 
 private:
@@ -116,8 +116,8 @@ private:
  */
 class TestComponent: public CDEECO::Component<TestKnowledge> {
 public:
-	TestPeriodicTask periodicTask = TestPeriodicTask(*this, this->knowledge.position);
-	TestTriggeredTask triggeredTask = TestTriggeredTask(this->knowledge.position, *this, this->knowledge.value);
+	TestPeriodicTask periodicTask = TestPeriodicTask(*this);
+	TestTriggeredTask triggeredTask = TestTriggeredTask(*this);
 
 	TestComponent(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
 			CDEECO::Component<TestKnowledge>(id, 0x42, broadcaster) {

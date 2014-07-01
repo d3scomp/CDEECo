@@ -41,8 +41,8 @@ namespace PortableSensor {
 	/// Sensor task
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
-		Sense(auto &component, auto &out) :
-				PeriodicTask(1800, component, out) {
+		Sense(auto &component) :
+				PeriodicTask(1800, component, component.knowledge.value) {
 			sensor.init();
 		}
 
@@ -72,8 +72,8 @@ namespace PortableSensor {
 	 */
 	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
 	public:
-		Position(auto &component, auto &out) :
-				PeriodicTask(1259, component, out) {
+		Position(auto &component) :
+				PeriodicTask(1259, component, component.knowledge.position) {
 		}
 
 	private:
@@ -102,8 +102,8 @@ namespace PortableSensor {
 	public:
 		static const CDEECO::Type Type = 0x00000001;
 
-		Sense sense = Sense(*this, this->knowledge.value);
-		Position position = Position(*this, this->knowledge.position);
+		Sense sense = Sense(*this);
+		Position position = Position(*this);
 
 		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, broadcaster) {

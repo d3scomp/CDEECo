@@ -11,4 +11,9 @@ namespace CDEECO {
 	void Radio::setReceiver(Receiver *receiver) {
 		this->receiver = receiver;
 	}
+
+	void Radio::receiveFragment(const KnowledgeFragment fragment, const uint8_t lqi) {
+		if(receiver)
+			receiver->receiveFragment(fragment, lqi);
+	}
 }
