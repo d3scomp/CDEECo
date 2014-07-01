@@ -25,11 +25,11 @@ namespace TempExchange {
 		static const auto PERIOD_MS = 2027;
 
 		Ensemble(CDEECO::Component<Alarm::Knowledge> &coordinator, auto &library) :
-			EnsembleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
+				EnsembleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
 		}
 
 		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &member, auto &library) :
-			EnsembleType(&member, &member.knowledge.coordId, &library, PERIOD_MS) {
+				EnsembleType(&member, &member.knowledge.coordId, &library, PERIOD_MS) {
 		}
 
 	protected:
@@ -45,13 +45,14 @@ namespace TempExchange {
 			auto values = coord.nearbySensors;
 
 			// Try to update record
-			for(auto &info : values)
+			for(auto &info : values) {
 				if(info.id == memberId) {
 					info.value = memberKnowledge.value;
 					info.position = memberKnowledge.position;
 
 					return values;
 				}
+			}
 
 			// Replace random record
 			size_t index = gen() % values.size();
@@ -61,8 +62,8 @@ namespace TempExchange {
 		}
 
 		// Map data from Alarm to Thermometer
-		PortableSensor::Knowledge::CoordId coordToMemberMap(const PortableSensor::Knowledge member, const CDEECO::Id coordId,
-				const Alarm::Knowledge coordKnowledge) {
+		PortableSensor::Knowledge::CoordId coordToMemberMap(const PortableSensor::Knowledge member,
+				const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge) {
 			return coordId;
 		}
 
