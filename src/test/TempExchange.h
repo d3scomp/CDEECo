@@ -35,8 +35,12 @@ namespace TempExchange {
 	protected:
 		bool isMember(const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge, const CDEECO::Id memeberId,
 				const PortableSensor::Knowledge memberKnowledge) {
-			// TODO: Implement membership method. For now we assume all temperatures are members.
+			// For debugging purposes we consider all sensors are members
 			return true;
+
+			// Components with the same rough position are considered members
+			// return (int) (coordKnowledge.position.lat) == (int) (memberKnowledge.position.lat)
+			//		&& (int) (coordKnowledge.position.lon) == (int) (memberKnowledge.position.lon);
 		}
 
 		// Map temperatures from Thermometers to Alarm
