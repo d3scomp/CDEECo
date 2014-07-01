@@ -27,8 +27,10 @@ namespace CDEECO {
 	class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask, FreeRTOSTask {
 	public:
 		// Create the triggered task
-		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, auto &outKnowledge) :
-				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), trigger(trigger), triggerSem(MAX_WAITING) {
+		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, auto &outKnowledge, size_t stack =
+				FreeRTOSTask::DEFAULT_STACK_SIZE, unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
+				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), FreeRTOSTask(stack, priority), trigger(
+						trigger), triggerSem(MAX_WAITING) {
 			console.log(">> TrigerredTask constructor\n");
 
 			// List task in component check list
@@ -36,8 +38,10 @@ namespace CDEECO {
 		}
 
 		// Create the triggered task
-		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component) :
-				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), trigger(trigger), triggerSem(MAX_WAITING) {
+		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, size_t stack = FreeRTOSTask::DEFAULT_STACK_SIZE,
+				unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
+				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), FreeRTOSTask(stack, priority), trigger(trigger), triggerSem(
+						MAX_WAITING) {
 			console.log(">> TrigerredTask constructor\n");
 
 			// List task in component check list

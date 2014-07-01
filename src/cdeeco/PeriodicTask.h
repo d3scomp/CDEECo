@@ -6,7 +6,7 @@
  */
 
 #ifndef PERIODICTASK_H_
-#define PERIODICTASK_H_
+#define PERIODICTASK_H
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -32,14 +32,16 @@ namespace CDEECO {
 	class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask {
 	public:
 		// Create the periodic task
-		PeriodicTask(long period, auto &component, auto &outKnowledge) :
-				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), period(period) {
+		PeriodicTask(long period, auto &component, auto &outKnowledge, size_t stack = FreeRTOSTask::DEFAULT_STACK_SIZE,
+				unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
+				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), FreeRTOSTask(stack, priority), period(period) {
 			console.print(Debug, ">> PeriodicTask constructor\n");
 		}
 
 		// Create the periodic task
-		PeriodicTask(long period, auto &component) :
-				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), period(period) {
+		PeriodicTask(long period, auto &component, size_t stack = FreeRTOSTask::DEFAULT_STACK_SIZE,
+				unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
+				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), FreeRTOSTask(stack, priority), period(period) {
 			console.print(Debug, ">> PeriodicTask constructor\n");
 		}
 
@@ -60,4 +62,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* PERIODICTASK_H_ */
+#endif // PERIODICTASK_H

@@ -18,7 +18,10 @@
  */
 class FreeRTOSTask {
 public:
-	FreeRTOSTask(size_t stackSize = 1024, unsigned long priority = 1UL) {
+	static const size_t DEFAULT_STACK_SIZE = 1024;
+	static const unsigned long DEFAULT_PRIORITY = 1UL;
+
+	FreeRTOSTask(size_t stackSize = DEFAULT_STACK_SIZE, unsigned long priority = DEFAULT_PRIORITY) {
 		xTaskCreate(taskBody, "Task", stackSize, this, tskIDLE_PRIORITY + priority, &handle);
 	}
 	virtual ~FreeRTOSTask() {
@@ -31,7 +34,7 @@ public:
 	virtual void run() = 0;
 
 	void mDelay(uint16_t ms) {
-		 vTaskDelay(ms / portTICK_PERIOD_MS);
+		vTaskDelay(ms / portTICK_PERIOD_MS);
 	}
 
 	void suspend() {
