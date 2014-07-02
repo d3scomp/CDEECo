@@ -5,8 +5,8 @@
  *      Author: Vladimír Matěna
  */
 
-#ifndef FREERTOSTASK_H_
-#define FREERTOSTASK_H_
+#ifndef FREERTOSTASK_H
+#define FREERTOSTASK_H
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -21,34 +21,24 @@ public:
 	static const size_t DEFAULT_STACK_SIZE = 1024;
 	static const unsigned long DEFAULT_PRIORITY = 1UL;
 
-	FreeRTOSTask(size_t stackSize = DEFAULT_STACK_SIZE, unsigned long priority = DEFAULT_PRIORITY) {
-		xTaskCreate(taskBody, "Task", stackSize, this, tskIDLE_PRIORITY + priority, &handle);
-	}
-	virtual ~FreeRTOSTask() {
-		vTaskDelete(handle);
-	}
+	FreeRTOSTask(size_t stackSize = DEFAULT_STACK_SIZE, unsigned long priority = DEFAULT_PRIORITY);
+	virtual ~FreeRTOSTask();
 
 	/**
 	 * Code to be executed by task
 	 */
 	virtual void run() = 0;
 
-	void mDelay(uint16_t ms) {
-		vTaskDelay(ms / portTICK_PERIOD_MS);
-	}
+	void mDelay(uint16_t ms);
 
-	void suspend() {
-		vTaskSuspend(handle);
-	}
+	void suspend();
 
 private:
 	/// Task handle used by FreeRTOS
 	TaskHandle_t handle;
 
 	/// FreeRTOS task entry point
-	static void taskBody(void *data) {
-		static_cast<FreeRTOSTask*>(data)->run();
-	}
+	static void taskBody(void *data);
 };
 
-#endif /* FREERTOSTASK_H_ */
+#endif /* FREERTOSTASK_H */

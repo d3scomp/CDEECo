@@ -21,6 +21,7 @@ SRCS += $(CDEECO_DIR)/Radio.cpp
 # FreeRTOS wrappers
 SRCS += $(WRAPPERS_DIR)/FreeRTOSMutex.cpp
 SRCS += $(WRAPPERS_DIR)/FreeRTOSSemaphore.cpp
+SRCS += $(WRAPPERS_DIR)/FreeRTOSTask.cpp
 
 # Drivers
 SRCS +=	${SRC_DIR}/drivers/LED.cpp
