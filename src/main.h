@@ -12,7 +12,6 @@
 
 #include "UART.h"
 #include "LED.h"
-#include "gmd1602.h"
 #include "Button.h"
 #include "Timer.h"
 #include "GPS.h"

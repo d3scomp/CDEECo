@@ -1,4 +1,4 @@
-#include "gmd1602.h"
+#include "GMD1602.h"
 
 #include "FreeRTOS.h"
 #include "semphr.h"
