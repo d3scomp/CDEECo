@@ -5,8 +5,8 @@
  *      Author: Vladimir Matěna
  */
 
-#ifndef TRIGERREDTASK_H_
-#define TRIGERREDTASK_H_
+#ifndef TRIGERREDTASK_H
+#define TRIGERREDTASK_H
 
 #include <stdio.h>
 #include <sstream>
@@ -21,12 +21,26 @@
 
 namespace CDEECO {
 	/**
-	 * Triggered task implementation with output knowledge
+	 * Triggered task implementation
+	 *
+	 * Thanks to C++1y "auto" this implementation compiles even when OUT_KNOWLEDGE = void.
+	 *
+	 * @tparam KNOWLEDGE Type of knowledge of the component this task belongs to
+	 * @tparam TRIGGER_KNOWLEDGE Type of knowledge that triggers this task's execution
+	 * @tparam OUT_KNOWLEDGE Type of knowledge this task outputs
 	 */
 	template<typename KNOWLEDGE, typename TRIGGER_KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class TriggeredTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, ListedTriggerTask, FreeRTOSTask {
 	public:
-		// Create the triggered task
+		/**
+		 * Triggered task constructor with output knowledge
+		 *
+		 * @param trigger Reference to trigger knowledge in the component's knowledge
+		 * @param component Reference to the component
+		 * @param outKnowledge Reference to output knowledge in the component's knowledge
+		 * @param stack Task stack size
+		 * @param priority Task priority
+		 */
 		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, auto &outKnowledge, size_t stack =
 				FreeRTOSTask::DEFAULT_STACK_SIZE, unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), FreeRTOSTask(stack, priority), trigger(
@@ -37,7 +51,14 @@ namespace CDEECO {
 			component.addTriggeredTask(*this);
 		}
 
-		// Create the triggered task
+		/**
+		 * Triggered task constructor without output knowledge
+		 *
+		 * @param trigger Reference to trigger knowledge in the component's knowledge
+		 * @param component Reference to the component
+		 * @param stack Task stack size
+		 * @param priority Task priority
+		 */
 		TriggeredTask(TRIGGER_KNOWLEDGE &trigger, auto &component, size_t stack = FreeRTOSTask::DEFAULT_STACK_SIZE,
 				unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), FreeRTOSTask(stack, priority), trigger(trigger), triggerSem(
@@ -49,7 +70,15 @@ namespace CDEECO {
 		}
 
 	protected:
-		// Check trigger condition
+		/**
+		 * Check whenever the trigger condition is met
+		 *
+		 * This automatically triggers task execution in another thread when the condition is met,
+		 * thus return is void.
+		 *
+		 * @param updateStart Pointer to start of changed area in the knowledge
+		 * @param updateEnd Pointer to the end of changed area in the knowledge
+		 */
 		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
 			// Check for trigger knowledge update
 			if(updateStart >= &trigger && updateStart < &trigger + sizeof(trigger)) {
@@ -58,11 +87,27 @@ namespace CDEECO {
 		}
 
 	private:
+		/// Reference to trigger knowledge in the component's knowledge
 		TRIGGER_KNOWLEDGE &trigger;
-		const unsigned MAX_WAITING = 100;
+		/**
+		 *  Max triggers waiting
+		 *
+		 *  This value should not be reached. Actually the triggerSem should not have higher value than 1.
+		 *  Higher values means that triggers come faster than task executes, which is bad.
+		 */
+		const unsigned MAX_WAITING = 10000;
+		/**
+		 * Trigger semaphore
+		 *
+		 * Lowered on task execution, rise on trigger event.
+		 */
 		FreeRTOSSemaphore triggerSem;
 
-		/** Periodic task body implementation, responsible for periodic scheduling */
+		/**
+		 * Periodic task body implementation
+		 *
+		 * Responsible for periodic scheduling.
+		 */
 		void run() {
 			// Schedule the task periodically
 			while(1) {
@@ -76,4 +121,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* TRIGERREDTASK_H_ */
+#endif /* TRIGERREDTASK_H */
