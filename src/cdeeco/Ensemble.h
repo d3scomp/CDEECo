@@ -106,7 +106,7 @@ namespace CDEECO {
 		typename std::enable_if<!std::is_void<T>::value, void>::type runMemberToCoordExchange() {
 			console.print(Debug, ">>>> Trying member->coord exchange\n");
 			COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
-			for(const typename KnowledgeLibrary<MEMBER_KNOWLEDGE>::CacheRecord &record : *memberLibrary) {
+			for(const auto &record : *memberLibrary) {
 				if(record.complete) {
 					console.print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(coordinator->getId(), coordKnowledge, record.id, record.knowledge)) {
@@ -129,7 +129,7 @@ namespace CDEECO {
 		typename std::enable_if<!std::is_void<T>::value, void>::type runCoordToMemberExchange() {
 			console.print(Debug, ">>>> Trying coord->member exchange\n");
 			MEMBER_KNOWLEDGE memberKnowledge = member->lockReadKnowledge();
-			for(const typename KnowledgeLibrary<COORD_KNOWLEDGE>::CacheRecord &record : *coordLibrary) {
+			for(const auto &record : *coordLibrary) {
 				if(record.complete) {
 					console.print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					if(isMember(record.id, record.knowledge, member->getId(), memberKnowledge)) {
