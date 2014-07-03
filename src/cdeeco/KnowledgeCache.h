@@ -70,6 +70,8 @@ namespace CDEECO {
 	 *
 	 * it is used to hide template arguments of the KnowledgeCache template, thus simplifies keeping references to
 	 * caches in the Ensemble related classes. It also provides provides iterator to iterate over records in cache.
+	 *
+	 * @tparam KNOWLEDGE Type of the knowledge for this library
 	 */
 	template<typename KNOWLEDGE>
 	class KnowledgeLibrary {
