@@ -24,12 +24,12 @@ public:
 	/**
 	 * Start measurement
 	 */
-	static inline void start();
+	static void start();
 
 	/**
 	 * End measurement
 	 */
-	static inline void stop();
+	static void stop();
 
 	/**
 	 * Print measured time difference

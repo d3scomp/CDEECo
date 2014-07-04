@@ -25,9 +25,9 @@ void StopWatch::stop() {
  */
 void StopWatch::print() {
 	if(!overrun)
-		console.print(None, "\n\n\n########## DIFF: %d us\n\n\n\n", diff);
+		console.print(None, "#DIFF:%d\n", diff);
 	else
-		console.print(None, "\n\n\n########## DIFF: -1 us\n\n\n\n");
+		console.print(None, "#DIFF:-1\n");
 }
 
 /**
