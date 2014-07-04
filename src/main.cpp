@@ -192,6 +192,9 @@ int main(void) {
 	uartSerial.init();
 	console.init();
 
+	// Initialize stop-watch
+	StopWatch::init(TIM1, RCC_APB2PeriphClockCmd, RCC_APB2Periph_TIM1, TIM1_UP_TIM10_IRQn);
+
 	console.log("\n\n\n\n\n\n\n\n\n\n\n");
 	console.log("# # # # # # # # # # # # # # # # # # # #\n");
 	console.log(" # # # # # # # # # # # # # # # # # # #\n");
