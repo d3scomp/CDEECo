@@ -12,6 +12,7 @@
 #include "semphr.h"
 
 #include "main.h"
+#include "drivers/StopWatch.h"
 #include "drivers/UART.h"
 #include "drivers/SHT1x.h"
 #include "drivers/LED.h"
@@ -205,6 +206,7 @@ int main(void) {
 	const uint32_t uniqId = *((uint32_t*) 0x1FFF7A10);
 	console.log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
+	// Initialize user defined CDEECO++ system
 	cdeecoSetup(uniqId);
 
 	// Start the scheduler.

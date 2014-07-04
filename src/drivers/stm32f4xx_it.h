@@ -30,6 +30,7 @@ void EXTI1_IRQHandler(void);
 void EXTI2_IRQHandler(void);
 void SPI3_IRQHandler(void);
 void TIM7_IRQHandler(void);
+void TIM1_UP_TIM10_IRQHandler(void);
 
 
 #ifdef __cplusplus

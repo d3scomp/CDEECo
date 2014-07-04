@@ -34,6 +34,8 @@ SRCS += ${SRC_DIR}/drivers/MRF24J40.cpp
 SRCS += ${SRC_DIR}/drivers/SHT1x.cpp
 SRCS += ${SRC_DIR}/drivers/Button.cpp
 SRCS += ${SRC_DIR}/drivers/GPS.cpp
+SRCS += ${SRC_DIR}/drivers/StopWatch.cpp
+
 
 
 # STM32F4 code

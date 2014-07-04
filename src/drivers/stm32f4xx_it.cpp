@@ -4,6 +4,7 @@
 #include "LED.h"
 
 #include "Console.h"
+#include "StopWatch.h"
 #include "cdeeco/Radio.h"
 
 /******************************************************************************/
@@ -161,6 +162,11 @@ void SPI3_IRQHandler(void) {
 void TIM7_IRQHandler() {
 	TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
 	PulseLED::tickInterruptHandler();
+}
+
+void TIM1_UP_TIM10_IRQHandler() {
+	TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
+	StopWatch::interrupt();
 }
 
 /**
