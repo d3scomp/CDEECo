@@ -29,6 +29,9 @@ namespace CDEECO {
 		};
 
 	public:
+		static const auto STOCHASTIC_DROP_EVERY = 2;
+		static const auto NO_REBROADCAST_LQI = 115;
+
 		RebroadcastStorage(Broadcaster &broadcaster) :
 				broadcaster(broadcaster) {
 			memset(&records, 0, sizeof(records));
@@ -36,7 +39,11 @@ namespace CDEECO {
 
 		void storeFragment(const KnowledgeFragment fragment, uint8_t lqi) {
 			// Stochastic Time to live implementation
-			if(gen() % 2)
+			if(gen() % STOCHASTIC_DROP_EVERY)
+				return;
+
+			// Do not rebroadcast strong signals at all
+			if(lqi > NO_REBROADCAST_LQI)
 				return;
 
 			// Max rebroadcast interval
