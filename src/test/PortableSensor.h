@@ -18,39 +18,61 @@
 #include "cdeeco/Component.h"
 #include "drivers/SHT1x.h"
 
+/**
+ * Portable sensor component
+ */
 namespace PortableSensor {
-	/// Sensor knowledge
+	/**
+	 * Portable sensor knowledge
+	 */
 	struct Knowledge: CDEECO::Knowledge {
+		/// Sensor position
 		struct Position {
 			float lat;
 			float lon;
 		} position;
 
-		// Coordinator identification
+		/// Coordinator identification
 		typedef CDEECO::Id CoordId;
+		/// Coordinator value meaning there is no coordinator
 		static const CoordId NO_COORD = ULONG_MAX;
+		/// Sensor's coordinator
 		CoordId coordId;
 
-		// Values
+		/// Local sensor values
 		struct Value {
 			float temperature;
 			float humidity;
 		} value;
 	};
 
-	/// Sensor task
+	/// Sensor value gather task
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
+		/**
+		 * Sensor task constructor
+		 *
+		 * @param component Task's component
+		 */
 		Sense(auto &component) :
 				PeriodicTask(1800, component, component.knowledge.value) {
 			sensor.init();
 		}
 
 	private:
+		/// SHT1x sensor properties
 		SHT1x::Properties sensorProps {
-		GPIOB, RCC_AHB1Periph_GPIOB, GPIO_Pin_8, GPIO_Pin_7 };
+			GPIOB, RCC_AHB1Periph_GPIOB, GPIO_Pin_8, GPIO_Pin_7
+		};
+		/// SHT1x sensor driver
 		SHT1x sensor = SHT1x(sensorProps);
 
+		/**
+		 * Sensor task code
+		 *
+		 * @param in Copy of component's knowledge
+		 * @return Sensor values (task output)
+		 */
 		Knowledge::Value run(const Knowledge in) {
 			float temp = sensor.readTemperature();
 			float humi = sensor.readHumidity();
@@ -72,11 +94,22 @@ namespace PortableSensor {
 	 */
 	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
 	public:
+		/**
+		 * Position task constructor
+		 *
+		 * @param component Task's component
+		 */
 		Position(auto &component) :
 				PeriodicTask(1259, component, component.knowledge.position) {
 		}
 
 	private:
+		/**
+		 * Position task code
+		 *
+		 * @param in Copy of component's knowledge
+		 * @return New position (task output)
+		 */
 		Knowledge::Position run(const Knowledge in) {
 			GPSL10::GPSFix fix = gps.getGPSFix();
 
@@ -96,15 +129,28 @@ namespace PortableSensor {
 	};
 
 	/**
-	 * PortableThermometer component class
+	 * PortableSensor component class
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
+		/**
+		 * PortabletSensor knowledge magic
+		 *
+		 * Identifies knowledge in knowledge fragments.
+		 */
 		static const CDEECO::Type Type = 0x00000001;
 
+		/// Sense task instance
 		Sense sense = Sense(*this);
+		/// Position task instance
 		Position position = Position(*this);
 
+		/**
+		 * PortableSensor constructor
+		 *
+		 * @param broadcaster Refernce to broadcaster to be used by base Component
+		 * @param id id of the component instance
+		 */
 		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, broadcaster) {
 			// Initialize knowledge
