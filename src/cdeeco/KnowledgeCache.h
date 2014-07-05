@@ -4,7 +4,7 @@
  *  Created on: 5. 5. 2014
  *      Author: Vladimír Matěna
  *
- * @file
+ * @file Knowledge cache
  * This file includes implementation of the knowledge caching system. It contains KnowledgeCache template which is
  * accompanioned by two interfaces. KnowledgeStorage for storing knowledge fragments and KnowledgeLibrary for
  * listing records.

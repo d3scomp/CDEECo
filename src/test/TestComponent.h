@@ -18,6 +18,9 @@
 #include "cdeeco/PeriodicTask.h"
 #include "cdeeco/TriggeredTask.h"
 
+/**
+ * Test component
+ */
 namespace TestComponent {
 	/**
 	 * Test component knowledge

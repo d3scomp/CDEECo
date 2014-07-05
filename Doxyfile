@@ -16,8 +16,7 @@ INPUT					=	src
 INPUT_ENCODING			=	UTF-8
 FILE_PATTERNS			=	*.c *.cpp *.h *.dox
 RECURSIVE				=	YES
-EXCLUDE					=	STM32F4xx_DSP_StdPeriph_Lib src/drivers/system_stm32f4xx.c
-
+EXCLUDE					=	STM32F4xx_DSP_StdPeriph_Lib src/drivers/system_stm32f4xx.c STM32F4xx_DSP_StdPeriph_Lib/Project/STM32F4xx_StdPeriph_Templates/main.c STM32F4xx_DSP_StdPeriph_Lib/Project/STM32F4xx_StdPeriph_Templates/stm32f4xx_it.c
 HAVE_DOT				=	YES
 UML_LOOK				=	YES
 COLLABORATION_GRAPH 	=	YES

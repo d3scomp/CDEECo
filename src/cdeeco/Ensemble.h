@@ -15,16 +15,40 @@
 #include "wrappers/FreeRTOSTask.h"
 
 namespace CDEECO {
+	/**
+	 * Ensemble base class template
+	 *
+	 * @tparam COORD_KNOWLEDGE Type of coordinator knowledge
+	 * @tparam COORD_OUT_KNOWLEDGE Type of coordinator output knowledge
+	 * @tparam MEMEBR_KNOWLEDGE Type of member knowledge
+	 * @tparam MEMBER_KNOWLEDGE Type of member output knowledge
+	 */
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
 			typename MEMBER_OUT_KNOWLEDGE>
 	class Ensemble: FreeRTOSTask {
 	public:
+		/**
+		 * Ensemble constructor to be used on the node hosting coordinator
+		 *
+		 * @param coordinator Pointer to coordinator component
+		 * @param coordOutKnowledge Pointer to coordinator output knowledge
+		 * @param memberLibrary Pointer to library of member knowledge
+		 * @param period Interval between knowledge mapping tries
+		 */
 		Ensemble(Component<COORD_KNOWLEDGE> *coordinator, COORD_OUT_KNOWLEDGE *coordOutKnowledge,
 				KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary, long period) :
 				period(period), coordinator(coordinator), member(NULL), coordOutKnowledge(coordOutKnowledge), memberOutKnowledge(
 				NULL), memberLibrary(memberLibrary), coordLibrary(NULL) {
 		}
 
+		/**
+		 * Ensemble constructor to be used on the node hosting member
+		 *
+		 * @param member Pointer to member component
+		 * @param memberOutKnowledge Pointer to member output knowledge
+		 * @param coordLibrary Library of coordinator knowledge
+		 * @param period Interval between knowledge mapping tries
+		 */
 		Ensemble(Component<MEMBER_KNOWLEDGE> *member, MEMBER_OUT_KNOWLEDGE *memberOutKnowledge,
 				KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary, long period) :
 				period(period), coordinator(NULL), member(member), coordOutKnowledge(NULL), memberOutKnowledge(
@@ -63,12 +87,19 @@ namespace CDEECO {
 				const COORD_KNOWLEDGE coordKnowledge) = 0;
 
 	private:
+		/// INterval between mapping tries
 		long period;
+		/// Pointer to coordinator component
 		Component<COORD_KNOWLEDGE> *coordinator;
+		/// Pointer to member component
 		Component<MEMBER_KNOWLEDGE> *member;
+		/// Pointer to coordinator output knowledge
 		COORD_OUT_KNOWLEDGE *coordOutKnowledge;
+		/// Pointer to member output knowledge
 		MEMBER_OUT_KNOWLEDGE *memberOutKnowledge;
+		/// Pointer to member library
 		KnowledgeLibrary<MEMBER_KNOWLEDGE> *memberLibrary;
+		/// Pointer to coordinator library
 		KnowledgeLibrary<COORD_KNOWLEDGE> *coordLibrary;
 
 		/** Ensemble periodic task */
@@ -85,6 +116,11 @@ namespace CDEECO {
 			}
 		}
 
+		/**
+		 * Try to run knowledge exchange
+		 *
+		 * Executed periodically.
+		 */
 		void runExchange() {
 			if(coordinator != NULL && memberLibrary != NULL && member == NULL && coordLibrary == NULL) {
 				runMemberToCoordExchange<COORD_OUT_KNOWLEDGE>();
@@ -101,7 +137,11 @@ namespace CDEECO {
 			assert_param(false);
 		}
 
-		// Map member -> coord
+		/**
+		 * Map from each member to coordinator
+		 *
+		 * Real version used when output is not void.
+		 */
 		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runMemberToCoordExchange() {
 			console.print(Debug, ">>>> Trying member->coord exchange\n");
@@ -121,12 +161,21 @@ namespace CDEECO {
 				}
 			}
 		}
+		/**
+		 * Map from member to coordinator
+		 *
+		 * Dummy version. Used when output is void.
+		 */
 		template<typename T>
 		typename std::enable_if<std::is_void<T>::value, void>::type runMemberToCoordExchange() {
 			// COORD_OUT_KNOWLEDGE is void
 		}
 
-		// Map coord -> member
+		/**
+		 * Map from coordinator to member
+		 *
+		 * Real version used when output is not void.
+		 */
 		template<typename T>
 		typename std::enable_if<!std::is_void<T>::value, void>::type runCoordToMemberExchange() {
 			console.print(Debug, ">>>> Trying coord->member exchange\n");
@@ -147,6 +196,11 @@ namespace CDEECO {
 				}
 			}
 		}
+		/**
+		 *  Map from coordinator to member
+		 *
+		 * Dummy version. Used when output is void.
+		 */
 		template<typename T>
 		typename std::enable_if<std::is_void<T>::value, void>::type runCoordToMemberExchange() {
 			// MEMBER_OUT_KNOWLEDGE is void
