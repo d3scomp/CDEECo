@@ -5,8 +5,8 @@
  *      Author: Vladimir Matěna
  */
 
-#ifndef COMPONENT_H_
-#define COMPONENT_H_
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -20,14 +20,33 @@
 #include "wrappers/FreeRTOSMutex.h"
 
 namespace CDEECO {
-	/** System component template */
+	/**
+	 * Component class template
+	 *
+	 * @tparam KNOWLEDGE Component's knowledge type
+	 */
 	template<typename KNOWLEDGE>
 	class Component: FreeRTOSTask {
 	public:
-		Component(const CDEECO::Id id, const CDEECO::Type type, Broadcaster &broadcaster, const uint32_t broadcastPeriodMs = 3000) :
-				id(id), type(type), broadcaster(broadcaster), rootTriggerTask(NULL), broadcastPeriodMs(broadcastPeriodMs) {
+		/**
+		 * Component constructor
+		 *
+		 * @param id Id of the component instance
+		 * @param type Component's magic (identifies knowledge in packets)
+		 * @param broadcaster Reference to broadcaster to broadcast component's knowledge
+		 * @param broadcastperiodMs Knowledge broadcast period in miliseconds
+		 */
+		Component(const CDEECO::Id id, const CDEECO::Type type, Broadcaster &broadcaster,
+				const uint32_t broadcastPeriodMs = 3000) :
+				id(id), type(type), broadcaster(broadcaster), rootTriggerTask(NULL), broadcastPeriodMs(
+						broadcastPeriodMs) {
 		}
 
+		/**
+		 * Lock knowledge and obtain copy of it
+		 *
+		 * @return Consistent copy of components knowledge
+		 */
 		KNOWLEDGE lockReadKnowledge() {
 			knowledgeMutex.lock();
 			KNOWLEDGE in = knowledge;
@@ -36,12 +55,19 @@ namespace CDEECO {
 			return in;
 		}
 
+		/**
+		 * Lock knowledge and update it
+		 *
+		 * @tparam OUT_KNOWLEDGE Type of knowledge being written
+		 * @param outKnowledge Reference to output knowledge to be written
+		 * @param knowledgeData KNowedlge data to consistently write into outKnowledge
+		 */
 		template<typename OUT_KNOWLEDGE>
-		void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, OUT_KNOWLEDGE knowledgeData) {
+		void lockWriteKnowledge(OUT_KNOWLEDGE &outKnowledge, const OUT_KNOWLEDGE knowledgeData) {
 			assert_param(
-					(size_t )&outKnowledge >= (size_t )&knowledge
-							&& (size_t )&outKnowledge + sizeof(OUT_KNOWLEDGE)
-									<= (size_t )&knowledge + sizeof(KNOWLEDGE));
+					(size_t) &outKnowledge >= (size_t) &knowledge
+							&& (size_t) &outKnowledge + sizeof(OUT_KNOWLEDGE)
+									<= (size_t) &knowledge + sizeof(KNOWLEDGE));
 
 			knowledgeMutex.lock();
 
@@ -61,6 +87,13 @@ namespace CDEECO {
 				checkAndRunTriggeredTasks(outKnowledge);
 		}
 
+		/**
+		 * Add triggerd task to this component
+		 *
+		 * Component will call checkTriggerCOndition on this task when knowledge changes
+		 *
+		 * @param task Task to add
+		 */
 		void addTriggeredTask(ListedTriggerTask &task) {
 			// Install new list head
 			if(rootTriggerTask == NULL) {
@@ -75,10 +108,20 @@ namespace CDEECO {
 			root->next = &task;
 		}
 
+		/**
+		 * Get component's id
+		 *
+		 * @return Id of the component
+		 */
 		Id getId() {
 			return id;
 		}
 
+		/**
+		 * Get component type
+		 *
+		 * @return Component's type
+		 */
 		Type getType() {
 			return type;
 		}
@@ -93,11 +136,27 @@ namespace CDEECO {
 		const Type type;
 
 	private:
+		/**
+		 * Reference to this component's broadcaster
+		 *
+		 * Used to broadcast component's knowledge.
+		 */
 		Broadcaster &broadcaster;
+		/// Knowledge access mutex
 		FreeRTOSMutex knowledgeMutex;
+		/// Root of linked list of triggered tasks
 		ListedTriggerTask *rootTriggerTask;
+		/// Interval between knowledge broadcasts
 		const uint32_t broadcastPeriodMs;
 
+		/**
+		 * Run triggered tasks
+		 *
+		 * Run tasks that are triggered by specified change in the knowledge.
+		 *
+		 * @tparam T Type of changed knowledge member
+		 * @param changed Reference to changed knowledge member
+		 */
 		template<typename T>
 		void checkAndRunTriggeredTasks(T &changed) {
 			for(ListedTriggerTask *task = rootTriggerTask; task != NULL; task = task->next) {
@@ -183,4 +242,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* COMPONENT_H_ */
+#endif /* COMPONENT_H */
