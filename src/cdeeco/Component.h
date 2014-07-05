@@ -34,7 +34,7 @@ namespace CDEECO {
 		 * @param id Id of the component instance
 		 * @param type Component's magic (identifies knowledge in packets)
 		 * @param broadcaster Reference to broadcaster to broadcast component's knowledge
-		 * @param broadcastperiodMs Knowledge broadcast period in miliseconds
+		 * @param broadcastperiodMs Knowledge broadcast period in milliseconds
 		 */
 		Component(const CDEECO::Id id, const CDEECO::Type type, Broadcaster &broadcaster,
 				const uint32_t broadcastPeriodMs = 3000) :
