@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef TESTCOMPONENT_H_
-#define TESTCOMPONENT_H_
+#ifndef TESTCOMPONENT_H
+#define TESTCOMPONENT_H
 
 #include <array>
 
@@ -18,112 +18,97 @@
 #include "cdeeco/PeriodicTask.h"
 #include "cdeeco/TriggeredTask.h"
 
-/**
- * Test component knowledge
- *
- * Holds integer and float values named "id" and "value".
- *
- */
-struct TestKnowledge: CDEECO::Knowledge {
-	struct Position {
-		int x;
-		int y;
+namespace TestComponent {
+	/**
+	 * Test component knowledge
+	 *
+	 * Holds integer and float values named "id" and "value".
+	 *
+	 */
+	struct Knowledge: CDEECO::Knowledge {
+		typedef int NormValue;
+		typedef int TrigValue;
+		NormValue normVal;
+		TrigValue trigVal;
 	};
 
-	typedef int Id;
-	typedef float Value;
+	/**
+	 * Test component periodic task
+	 *
+	 * Uses periodic scheduling.
+	 * It processes whole component knowledge and outputs whole component knowledge.
+	 *
+	 * The task blinks the green LED and changes position knowledge.
+	 */
+	class TestPeriodicTask: public CDEECO::PeriodicTask<Knowledge, Knowledge::NormValue> {
+	public:
+		// Task initialization
+		TestPeriodicTask(auto &component) :
+			PeriodicTask(429, component, component.knowledge.normVal) {
+		}
 
-	Id id;
-	Value value;
-	Position position;
-};
+	private:
+		Knowledge::NormValue run(const Knowledge in) {
+			// Blink blue led
+			if(in.normVal % 2)
+				blueLED.off();
+			else
+				blueLED.on();
+
+			return in.normVal + 1;
+		}
+	};
+
+	/**
+	 * Test component triggered task
+	 */
+	class TestTriggeredTask: public CDEECO::TriggeredTask<Knowledge, Knowledge::NormValue, Knowledge::TrigValue> {
+	public:
+		// Task initialization
+		TestTriggeredTask(auto &component) :
+				TriggeredTask(component.knowledge.normVal, component, component.knowledge.trigVal) {
+		}
+
+	private:
+		Knowledge::TrigValue run(const Knowledge in) {
+			console.print(TaskInfo, "Test triggered task\n\n");
+			return in.normVal * 2;
+		}
+	};
+
+	/**
+	 * Test component container
+	 *
+	 * Defines one periodic task.
+	 */
+	class Component: public CDEECO::Component<Knowledge> {
+	public:
+		TestPeriodicTask periodicTask = TestPeriodicTask(*this);
+		TestTriggeredTask triggeredTask = TestTriggeredTask(*this);
+
+		static const auto Type = 0xcdec0;
+
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
+				CDEECO::Component<Knowledge>(id, 0x42, broadcaster) {
+			// Initialize knowledge
+			memset(&knowledge, 0, sizeof(Knowledge));
+		}
+	};
+
+}
 
 namespace CDEECO {
 	/// Define allowed offsets to guarantee knowledge consistency
 	template<>
-	struct KnowledgeTrait<TestKnowledge> {
-		static constexpr std::array<size_t, 2> offsets = { { offsetof(TestKnowledge, id), offsetof(TestKnowledge,
-				position) } };
+	struct KnowledgeTrait<Knowledge> {
+		static constexpr std::array<size_t, 2> offsets = { {
+				offsetof(TestComponent::Knowledge, normVal),
+				offsetof(TestComponent::Knowledge, trigVal)
+		} };
 	};
 	// This declaration do not require array size to be specified twice, but drives eclipse crazy.
 	//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-	constexpr std::array<size_t, 2> KnowledgeTrait<TestKnowledge>::offsets;
+	constexpr std::array<size_t, 2> KnowledgeTrait<Knowledge>::offsets;
 }
 
-/**
- * Test component periodic task
- *
- * Uses periodic scheduling.
- * It processes whole component knowledge and outputs whole component knowledge.
- *
- * The task blinks the green LED and changes position knowledge.
- */
-class TestPeriodicTask: public CDEECO::PeriodicTask<TestKnowledge, TestKnowledge::Position> {
-public:
-	// Task initialization
-	TestPeriodicTask(auto &component) :
-			PeriodicTask(1429, component, component.knowledge.position) {
-	}
-
-private:
-	TestKnowledge::Position run(const TestKnowledge in) {
-		// Visualize knowledge position x
-		console.print(TaskInfo, "Test periodic task\n> %d\n\n", in.position.x);
-
-		if(in.position.x % 2)
-			blueLED.off();
-		else
-			blueLED.on();
-
-		// TODO: Do something with the "in" knowledge return the "out" knowledge
-		TestKnowledge::Position out;
-
-		// Change position
-		out.x = in.position.x + 1;
-		out.y = in.position.y + in.position.x % 2;
-
-		return out;
-	}
-};
-
-/**
- * Test component triggered task
- */
-class TestTriggeredTask: public CDEECO::TriggeredTask<TestKnowledge, TestKnowledge::Position, TestKnowledge::Value> {
-public:
-	// Task initialization
-	TestTriggeredTask(auto &component) :
-			TriggeredTask(component.knowledge.position, component, component.knowledge.value) {
-	}
-
-private:
-	TestKnowledge::Value run(const TestKnowledge in) {
-		console.print(TaskInfo, "Test triggered task\n\n");
-
-		if(in.position.x % 2)
-			orangeLED.off();
-		else
-			orangeLED.on();
-
-		return 42;
-	}
-};
-
-/**
- * Test component container
- *
- * Defines one periodic task.
- */
-class TestComponent: public CDEECO::Component<TestKnowledge> {
-public:
-	TestPeriodicTask periodicTask = TestPeriodicTask(*this);
-	TestTriggeredTask triggeredTask = TestTriggeredTask(*this);
-
-	TestComponent(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
-			CDEECO::Component<TestKnowledge>(id, 0x42, broadcaster) {
-		// Initialize knowledge
-		memset(&knowledge, 0, sizeof(TestKnowledge));
-	}
-};
-
-#endif /* TESTCOMPONENT_H_ */
+#endif /* TESTCOMPONENT_H */

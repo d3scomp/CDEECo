@@ -131,10 +131,10 @@ void userPressed(void* data) {
 void cdeecoSetup(const uint32_t uniqId) {
 	//// System setup
 	auto radio = new MrfRadio(0, uniqId, uniqId);
-	auto system = new CDEECO::System<3, 32>(*radio);
+	auto system = new CDEECO::System<3, 64>(*radio);
 
 	// Test component
-	new TestComponent(*system, uniqId);
+	new TestComponent::Component(*system, uniqId);
 
 	///// Temperature monitoring system
 	// Components
