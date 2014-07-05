@@ -71,7 +71,6 @@ namespace TestComponent {
 
 	private:
 		Knowledge::TrigValue run(const Knowledge in) {
-			console.print(TaskInfo, "Test triggered task\n\n");
 			return in.normVal * 2;
 		}
 	};

@@ -4,8 +4,6 @@
  *  Created on: 21. 5. 2014
  *      Author: Vladimír Matěna
  *
- *  CDEECO++ component monitoring temperature provided by Thermometers
- *
  */
 
 #ifndef ALARM_H
@@ -17,26 +15,37 @@
 
 #include "cdeeco/Component.h"
 
+/**
+ * CDEECO++ component monitoring temperatures provided by PortableSensors.
+ */
 namespace Alarm {
 	/**
-	 * Portable thermometer knowledge
+	 * Alarm knowledge
 	 */
 	struct Knowledge: CDEECO::Knowledge {
+		/// Alarm position
 		struct Position {
 			int lat;
 			int lon;
 		} position;
 
+		/// Id valued used to signal no id
 		static const CDEECO::Id NO_MEMBER = ULONG_MAX;
+
+		/// Information about single sensor
 		struct SensorInfo {
 			CDEECO::Id id;
 			PortableSensor::Knowledge::Value value;
 			PortableSensor::Knowledge::Position position;
 		};
 
+		/// Fixed size array of sensors
 		typedef std::array<SensorInfo, 10> SensorData;
+
+		/// Nearby sensors
 		SensorData nearbySensors;
 
+		// Whenever nearby sensor temperature reached critical
 		bool tempCritical;
 	};
 
@@ -70,6 +79,8 @@ namespace Alarm {
 					console.printFloat(TaskInfo, info.position.lon, 6);
 
 					console.print(TaskInfo, "\n");
+				} else {
+					console.print(TaskInfo, "> No data in this slot\n");
 				}
 			}
 			console.print(TaskInfo, "\n");
@@ -98,6 +109,10 @@ namespace Alarm {
 				console.print(TaskInfo, "##############################################################\n");
 				console.print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
 				console.print(TaskInfo, "##############################################################\n");
+
+				orangeLED.on();
+			} else {
+				orangeLED.off();
 			}
 		}
 	};

@@ -58,7 +58,19 @@ namespace TempExchange {
 				}
 			}
 
+			// Try to replace free record
+			for(auto &info : values) {
+				if(info.id == Alarm::Knowledge::NO_MEMBER) {
+					info.id = memberId;
+					info.value = memberKnowledge.value;
+					info.position = memberKnowledge.position;
+
+					return values;
+				}
+			}
+
 			// Replace random record
+			console.print(None, "Random\n", memberId);
 			size_t index = gen() % values.size();
 			values[index].id = memberId;
 			values[index].value = memberKnowledge.value;
