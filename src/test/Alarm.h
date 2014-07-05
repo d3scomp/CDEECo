@@ -54,11 +54,22 @@ namespace Alarm {
 	 */
 	class Check: public CDEECO::PeriodicTask<Knowledge, bool> {
 	public:
+		/**
+		 * Temperature check task constructor
+		 *
+		 * @param component Component this task is part of
+		 */
 		Check(auto &component) :
 				PeriodicTask(3000, component, component.knowledge.tempCritical) {
 		}
 
 	private:
+		/**
+		 * Temperature check task code
+		 *
+		 * @param in Copy of Alarm knowledge
+		 * @return Whenever temperature is critical (written to components knowledge)
+		 */
 		bool run(const Knowledge in) {
 			console.print(TaskInfo, "Alarm check task\n");
 			for(auto info : in.nearbySensors) {
@@ -100,10 +111,23 @@ namespace Alarm {
 	 */
 	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, void> {
 	public:
+		/**
+		 * Critical trigger task constructor
+		 *
+		 * @param component Component this task is part of
+		 */
 		Critical(auto &component) :
 				TriggeredTask(component.knowledge.tempCritical, component) {
 		}
 	protected:
+		/**
+		 * Critical triggered task code
+		 *
+		 * Executed on tempCritical knowledge member change. Output type declared as void -> has no output.
+		 *
+		 * @param in Copy of Alarm component's knowledge
+		 *
+		 */
 		void run(const Knowledge in) {
 			if(in.tempCritical) {
 				console.print(TaskInfo, "##############################################################\n");
@@ -118,17 +142,27 @@ namespace Alarm {
 	};
 
 	/**
-	 * PortableThermometer component class
+	 * Alarm component class
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
+		/// Alarm component magic number (identifies knowledge type fragments)
 		static const CDEECO::Type Type = 0x00000002;
+
+		// Check task instance
 		Check check = Check(*this);
+
+		// Critical task instance
 		Critical critical = Critical(*this);
 
+		/**
+		 * Costruct Alarm component
+		 *
+		 * @param system Reference to instance used for system access in Component base.
+		 */
 		Component(auto &system, const CDEECO::Id id) :
 				CDEECO::Component<Knowledge>(id, Type, system) {
-			// Initialize knowledge
+			// Initialize knowledge - zero and set all sensors as unused
 			memset(&knowledge, 0, sizeof(Knowledge));
 			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
 		}
