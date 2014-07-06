@@ -29,8 +29,8 @@ namespace Alarm {
 	struct Knowledge: CDEECO::Knowledge {
 		/// Alarm position
 		struct Position {
-			int lat;
-			int lon;
+			float lat;
+			float lon;
 		} position;
 
 		/// Id valued used to signal no id
@@ -99,6 +99,28 @@ namespace Alarm {
 	};
 
 	/**
+	 * Position task
+	 */
+	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
+	public:
+		/**
+		 * Position task constructor
+		 *
+		 * @param component Task's component
+		 */
+		Position(auto &component);
+
+	private:
+		/**
+		 * Position task code
+		 *
+		 * @param in Copy of component's knowledge
+		 * @return New position (task output)
+		 */
+		Knowledge::Position run(const Knowledge in);
+	};
+
+	/**
 	 * Alarm component class
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
@@ -111,6 +133,9 @@ namespace Alarm {
 
 		// Critical task instance
 		Critical critical = Critical(*this);
+
+		// Position task instance
+		Position position = Position(*this);
 
 		/**
 		 * Costruct Alarm component

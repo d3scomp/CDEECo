@@ -67,6 +67,27 @@ namespace Alarm {
 		}
 	}
 
+	Position::Position(auto &component) :
+			PeriodicTask(1259, component, component.knowledge.position) {
+	}
+
+	Knowledge::Position Position::run(const Knowledge in) {
+		GPSL10::GPSFix fix = gps.getGPSFix();
+
+		console.print(TaskInfo, "Position task:\n");
+		console.print(TaskInfo, "> valid:%d\n> date:%d.%d.%d\n> time:%d:%d:%d\n> pos: ", fix.valid, fix.day, fix.month,
+				fix.year, fix.hour, fix.minute, fix.second);
+		console.printFloat(TaskInfo, fix.latitude, 6);
+		console.print(TaskInfo, " ");
+		console.printFloat(TaskInfo, fix.longitude, 6);
+		console.print(TaskInfo, "\n\n");
+
+		if(fix.valid)
+			return {fix.latitude, fix.longitude};
+		else
+			return in.position;
+	}
+
 	Component::Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
 			CDEECO::Component<Knowledge>(id, Type, broadcaster) {
 		// Initialize knowledge - zero and set all sensors as unused
