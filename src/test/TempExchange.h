@@ -40,9 +40,8 @@ namespace TempExchange {
 		 * @param coordinator Coordinator component
 		 * @param library Library of member component knowledge
 		 */
-		Ensemble(CDEECO::Component<Alarm::Knowledge> &coordinator, auto &library) :
-				EnsembleType(&coordinator, &coordinator.knowledge.nearbySensors, &library, PERIOD_MS) {
-		}
+		Ensemble(CDEECO::Component<Alarm::Knowledge> &coordinator,
+				CDEECO::KnowledgeLibrary<PortableSensor::Knowledge> &library);
 
 		/**
 		 * Temperature exchange constructor for node where member is hosted
@@ -50,9 +49,8 @@ namespace TempExchange {
 		 * @param member Member component
 		 * @param library Library of coordinator component knowledge
 		 */
-		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &member, auto &library) :
-				EnsembleType(&member, &member.knowledge.coordId, &library, PERIOD_MS) {
-		}
+		Ensemble(CDEECO::Component<PortableSensor::Knowledge> &member,
+				CDEECO::KnowledgeLibrary<Alarm::Knowledge> &library);
 
 	protected:
 		/**
@@ -66,14 +64,7 @@ namespace TempExchange {
 		 * @return Whenever the supplied member and coordinator belong to the ensemble
 		 */
 		bool isMember(const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge, const CDEECO::Id memeberId,
-				const PortableSensor::Knowledge memberKnowledge) {
-			// For debugging purposes we consider all sensors are members
-			return true;
-
-			// Components with the same rough position are considered members
-			// return (int) (coordKnowledge.position.lat) == (int) (memberKnowledge.position.lat)
-			//		&& (int) (coordKnowledge.position.lon) == (int) (memberKnowledge.position.lon);
-		}
+				const PortableSensor::Knowledge memberKnowledge);
 
 		/**
 		 *  Map temperatures from Thermometers to Alarm
@@ -84,37 +75,7 @@ namespace TempExchange {
 		 *  @return Sensor data array (ensemble output)
 		 */
 		Alarm::Knowledge::SensorData memberToCoordMap(const Alarm::Knowledge coord, const CDEECO::Id memberId,
-				const PortableSensor::Knowledge memberKnowledge) {
-			auto values = coord.nearbySensors;
-
-			// Try to update record
-			for(auto &info : values) {
-				if(info.id == memberId) {
-					info.value = memberKnowledge.value;
-					info.position = memberKnowledge.position;
-
-					return values;
-				}
-			}
-
-			// Try to replace free record
-			for(auto &info : values) {
-				if(info.id == Alarm::Knowledge::NO_MEMBER) {
-					info.id = memberId;
-					info.value = memberKnowledge.value;
-					info.position = memberKnowledge.position;
-
-					return values;
-				}
-			}
-
-			// Replace random record
-			console.print(None, "Random\n", memberId);
-			size_t index = gen() % values.size();
-			values[index].id = memberId;
-			values[index].value = memberKnowledge.value;
-			return values;
-		}
+				const PortableSensor::Knowledge memberKnowledge);
 
 		/**
 		 * Map data from Alarm to Thermometer
@@ -125,9 +86,7 @@ namespace TempExchange {
 		 * @return Coordinator id (ensemble output)
 		 */
 		PortableSensor::Knowledge::CoordId coordToMemberMap(const PortableSensor::Knowledge member,
-				const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge) {
-			return coordId;
-		}
+				const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge);
 
 	private:
 		/**
