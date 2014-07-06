@@ -14,6 +14,10 @@
 #include <climits>
 
 #include "cdeeco/Component.h"
+#include "cdeeco/PeriodicTask.h"
+#include "cdeeco/TriggeredTask.h"
+
+#include "test/PortableSensor.h"
 
 /**
  * CDEECO++ component monitoring temperatures provided by PortableSensors.
@@ -59,9 +63,7 @@ namespace Alarm {
 		 *
 		 * @param component Component this task is part of
 		 */
-		Check(auto &component) :
-				PeriodicTask(3000, component, component.knowledge.tempCritical) {
-		}
+		Check(auto &component);
 
 	private:
 		/**
@@ -70,40 +72,7 @@ namespace Alarm {
 		 * @param in Copy of Alarm knowledge
 		 * @return Whenever temperature is critical (written to components knowledge)
 		 */
-		bool run(const Knowledge in) {
-			console.print(TaskInfo, "Alarm check task\n");
-			for(auto info : in.nearbySensors) {
-				if(info.id != Knowledge::NO_MEMBER) {
-					console.print(TaskInfo, "> Id: %x", info.id);
-
-					console.print(TaskInfo, "\tTemp: ");
-					console.printFloat(TaskInfo, info.value.temperature, 2);
-					console.print(TaskInfo, "°C");
-
-					console.print(TaskInfo, "\tHumi: ");
-					console.printFloat(TaskInfo, info.value.humidity, 2);
-					console.print(TaskInfo, "%%");
-
-					console.print(TaskInfo, "\tPos: ");
-					console.printFloat(TaskInfo, info.position.lat, 6);
-					console.print(TaskInfo, " ");
-					console.printFloat(TaskInfo, info.position.lon, 6);
-
-					console.print(TaskInfo, "\n");
-				} else {
-					console.print(TaskInfo, "> No data in this slot\n");
-				}
-			}
-			console.print(TaskInfo, "\n");
-
-			// Check temperatures for dangerous conditions
-			const float threshold = 26.0f;
-
-			for(auto info : in.nearbySensors)
-				if(info.value.temperature > threshold)
-					return true;
-			return false;
-		}
+		bool run(const Knowledge in);
 	};
 
 	/**
@@ -116,9 +85,7 @@ namespace Alarm {
 		 *
 		 * @param component Component this task is part of
 		 */
-		Critical(auto &component) :
-				TriggeredTask(component.knowledge.tempCritical, component) {
-		}
+		Critical(auto &component);
 	protected:
 		/**
 		 * Critical triggered task code
@@ -128,17 +95,7 @@ namespace Alarm {
 		 * @param in Copy of Alarm component's knowledge
 		 *
 		 */
-		void run(const Knowledge in) {
-			if(in.tempCritical) {
-				console.print(TaskInfo, "##############################################################\n");
-				console.print(TaskInfo, "# Critical task triggered on change and temp is CRITICAL !!! #\n");
-				console.print(TaskInfo, "##############################################################\n");
-
-				orangeLED.on();
-			} else {
-				orangeLED.off();
-			}
-		}
+		void run(const Knowledge in);
 	};
 
 	/**
@@ -158,14 +115,9 @@ namespace Alarm {
 		/**
 		 * Costruct Alarm component
 		 *
-		 * @param system Reference to instance used for system access in Component base.
+		 * @param broadcaster Reference to instance used for system access in Component base.
 		 */
-		Component(auto &system, const CDEECO::Id id) :
-				CDEECO::Component<Knowledge>(id, Type, system) {
-			// Initialize knowledge - zero and set all sensors as unused
-			memset(&knowledge, 0, sizeof(Knowledge));
-			knowledge.nearbySensors.fill( { Knowledge::NO_MEMBER, { 0, 0 } });
-		}
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
 	};
 }
 

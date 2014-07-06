@@ -17,6 +17,9 @@ OPENOCD=openocd
 SRCS +=	${SRC_DIR}/main.cpp
 SRCS +=	${SRC_DIR}/test/MrfRadio.cpp
 SRCS +=	${SRC_DIR}/test/PortableSensor.cpp
+SRCS +=	${SRC_DIR}/test/Alarm.cpp
+
+# Framework
 SRCS += $(CDEECO_DIR)/Radio.cpp
 
 # FreeRTOS wrappers
@@ -107,7 +110,7 @@ build/%.o: %.s
 build/%.dep: %.cpp
 	${CXX} -M $(CPPFLAGS) "$<" > "$@"
 
-.PHONY: proj
+.PHONY: proj init
 
 all: init $(BUILD_DIR)/$(PROJ_NAME).elf
 
