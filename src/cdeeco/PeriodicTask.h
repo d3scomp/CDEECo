@@ -5,7 +5,7 @@
  *      Author: Vladimir Matěna
  */
 
-#ifndef PERIODICTASK_H_
+#ifndef PERIODICTASK_H
 #define PERIODICTASK_H
 
 #include "FreeRTOS.h"

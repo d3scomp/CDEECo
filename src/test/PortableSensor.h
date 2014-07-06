@@ -16,6 +16,7 @@
 #include <climits>
 
 #include "cdeeco/Component.h"
+#include "cdeeco/PeriodicTask.h"
 #include "drivers/SHT1x.h"
 
 /**
@@ -54,10 +55,7 @@ namespace PortableSensor {
 		 *
 		 * @param component Task's component
 		 */
-		Sense(auto &component) :
-				PeriodicTask(1800, component, component.knowledge.value) {
-			sensor.init();
-		}
+		Sense(auto &component);
 
 	private:
 		/// SHT1x sensor properties
@@ -73,20 +71,7 @@ namespace PortableSensor {
 		 * @param in Copy of component's knowledge
 		 * @return Sensor values (task output)
 		 */
-		Knowledge::Value run(const Knowledge in) {
-			float temp = sensor.readTemperature();
-			float humi = sensor.readHumidity();
-			console.print(TaskInfo, "Sensor task:\n");
-			console.print(TaskInfo, "> Temp: ");
-			console.printFloat(TaskInfo, temp, 2);
-			console.print(TaskInfo, "°C\n");
-			console.print(TaskInfo, "> Humi: ");
-			console.printFloat(TaskInfo, humi, 2);
-			console.print(TaskInfo, "%%\n");
-			console.print(TaskInfo, "> AlarmId: %x\n\n", in.coordId);
-
-			return {temp, humi};
-		}
+		Knowledge::Value run(const Knowledge in);
 	};
 
 	/**
@@ -99,9 +84,7 @@ namespace PortableSensor {
 		 *
 		 * @param component Task's component
 		 */
-		Position(auto &component) :
-				PeriodicTask(1259, component, component.knowledge.position) {
-		}
+		Position(auto &component);
 
 	private:
 		/**
@@ -110,22 +93,7 @@ namespace PortableSensor {
 		 * @param in Copy of component's knowledge
 		 * @return New position (task output)
 		 */
-		Knowledge::Position run(const Knowledge in) {
-			GPSL10::GPSFix fix = gps.getGPSFix();
-
-			console.print(TaskInfo, "Position task:\n");
-			console.print(TaskInfo, "> valid:%d\n> date:%d.%d.%d\n> time:%d:%d:%d\n> pos: ", fix.valid, fix.day,
-					fix.month, fix.year, fix.hour, fix.minute, fix.second);
-			console.printFloat(TaskInfo, fix.latitude, 6);
-			console.print(TaskInfo, " ");
-			console.printFloat(TaskInfo, fix.longitude, 6);
-			console.print(TaskInfo, "\n\n");
-
-			if(fix.valid)
-				return {fix.latitude, fix.longitude};
-			else
-				return in.position;
-		}
+		Knowledge::Position run(const Knowledge in);
 	};
 
 	/**
@@ -151,23 +119,8 @@ namespace PortableSensor {
 		 * @param broadcaster Refernce to broadcaster to be used by base Component
 		 * @param id id of the component instance
 		 */
-		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
-				CDEECO::Component<Knowledge>(id, Type, broadcaster) {
-			// Initialize knowledge
-			memset(&knowledge, 0, sizeof(Knowledge));
-		}
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
 	};
-}
-
-namespace CDEECO {
-	/// Allowed offsets to guarantee knowledge consistency
-	template<>
-	struct KnowledgeTrait<PortableSensor::Knowledge> {
-		static constexpr std::array<size_t, 1> offsets = { { offsetof(PortableSensor::Knowledge, position) } };
-	};
-	// This declaration do not require array size to be specified twice, but drives eclipse crazy.
-	//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-	constexpr std::array<size_t, 1> KnowledgeTrait<PortableSensor::Knowledge>::offsets;
 }
 
 #endif // PORTABLE_SENSOR_H
