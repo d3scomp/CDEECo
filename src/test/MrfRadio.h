@@ -51,9 +51,9 @@ private:
 		 * This do not block and overwrites items in the full buffer
 		 */
 		void put(const T &item) {
-			access.lock();
+			taskENTER_CRITICAL();
 			data[start++ % SIZE] = item;
-			access.unlock();
+			taskEXIT_CRITICAL();
 			sem.giveFromISR();
 		}
 
@@ -66,9 +66,9 @@ private:
 		 */
 		T get() {
 			sem.take();
-			access.lock();
+			taskENTER_CRITICAL();
 			T ret = data[end++ % SIZE];
-			access.unlock();
+			taskEXIT_CRITICAL();
 			return ret;
 		}
 
@@ -84,9 +84,6 @@ private:
 
 		/// Buffer load semaphore
 		FreeRTOSSemaphore sem = FreeRTOSSemaphore(10000, 0);
-
-		/// Buffer access lock
-		FreeRTOSMutex access = FreeRTOSMutex();
 	};
 
 	/**
