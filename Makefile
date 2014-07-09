@@ -19,6 +19,7 @@ SRCS +=	${SRC_DIR}/test/MrfRadio.cpp
 SRCS +=	${SRC_DIR}/test/PortableSensor.cpp
 SRCS +=	${SRC_DIR}/test/Alarm.cpp
 SRCS +=	${SRC_DIR}/test/TempExchange.cpp
+SRCS +=	${SRC_DIR}/test/TestComponent.cpp
 
 # Framework
 SRCS += $(CDEECO_DIR)/Radio.cpp

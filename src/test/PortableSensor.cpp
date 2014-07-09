@@ -11,7 +11,6 @@
 #include "PortableSensor.h"
 
 namespace PortableSensor {
-
 	Sense::Sense(auto &component) :
 			PeriodicTask(1800, component, component.knowledge.value) {
 		sensor.init();

@@ -20,12 +20,12 @@
 
 /**
  * Test component
+ *
+ * @see TestComponent::Component
  */
 namespace TestComponent {
 	/**
 	 * Test component knowledge
-	 *
-	 * Holds integer and float values named "id" and "value".
 	 *
 	 */
 	struct Knowledge: CDEECO::Knowledge {
@@ -45,21 +45,19 @@ namespace TestComponent {
 	 */
 	class TestPeriodicTask: public CDEECO::PeriodicTask<Knowledge, Knowledge::NormValue> {
 	public:
-		// Task initialization
-		TestPeriodicTask(auto &component) :
-			PeriodicTask(429, component, component.knowledge.normVal) {
-		}
+		/**
+		 * Test periodic task constructor
+		 */
+		TestPeriodicTask(auto &component);
 
 	private:
-		Knowledge::NormValue run(const Knowledge in) {
-			// Blink blue led
-			if(in.normVal % 2)
-				blueLED.off();
-			else
-				blueLED.on();
-
-			return in.normVal + 1;
-		}
+		/**
+		 * Test periodic task code
+		 *
+		 * @param in Read-only copy of component's knowledge
+		 * @return "normal" value (task output)
+		 */
+		Knowledge::NormValue run(const Knowledge in);
 	};
 
 	/**
@@ -67,50 +65,43 @@ namespace TestComponent {
 	 */
 	class TestTriggeredTask: public CDEECO::TriggeredTask<Knowledge, Knowledge::NormValue, Knowledge::TrigValue> {
 	public:
-		// Task initialization
-		TestTriggeredTask(auto &component) :
-				TriggeredTask(component.knowledge.normVal, component, component.knowledge.trigVal) {
-		}
+		/**
+		 * Test triggered task constructor
+		 */
+		TestTriggeredTask(auto &component);
 
 	private:
-		Knowledge::TrigValue run(const Knowledge in) {
-			return in.normVal * 2;
-		}
+		/**
+		 * Test triggered task code
+		 *
+		 * @param in Read-only copy of component's knowledge
+		 * @return "trigger" value (task output)
+		 */
+		Knowledge::TrigValue run(const Knowledge in);
 	};
 
 	/**
 	 * Test component container
 	 *
-	 * Defines one periodic task.
+	 * Defines one periodic and one triggered task. Blinks with blue LED.
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
+		/// Test periodic task instance
 		TestPeriodicTask periodicTask = TestPeriodicTask(*this);
+
+		/// Test triggered task instance
 		TestTriggeredTask triggeredTask = TestTriggeredTask(*this);
 
+		/// Component's magic number
 		static const auto Type = 0xcdec0;
 
-		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id) :
-				CDEECO::Component<Knowledge>(id, 0x42, broadcaster) {
-			// Initialize knowledge
-			memset(&knowledge, 0, sizeof(Knowledge));
-		}
+		/**
+		 * Test component constructor
+		 */
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
 	};
 
-}
-
-namespace CDEECO {
-	/// Define allowed offsets to guarantee knowledge consistency
-	template<>
-	struct KnowledgeTrait<Knowledge> {
-		static constexpr std::array<size_t, 2> offsets = { {
-				offsetof(TestComponent::Knowledge, normVal),
-				offsetof(TestComponent::Knowledge, trigVal)
-		} };
-	};
-	// This declaration do not require array size to be specified twice, but drives eclipse crazy.
-	//constexpr decltype(KnowledgeTrait<TestKnowledge>::offsets) KnowledgeTrait<TestKnowledge>::offsets;
-	constexpr std::array<size_t, 2> KnowledgeTrait<Knowledge>::offsets;
 }
 
 #endif /* TESTCOMPONENT_H */
