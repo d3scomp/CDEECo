@@ -103,6 +103,9 @@ void SHT1x::sclLo() {
  * @return True when successful, false otherwise
  */
 bool SHT1x::sendByte(uint8_t data) {
+	// We should not be interrupted when talking to sensor
+	taskENTER_CRITICAL();
+
 	// Send command data
 	for(int i = 0; i < 8; ++i) {
 		if(data & 0b10000000)
@@ -120,10 +123,15 @@ bool SHT1x::sendByte(uint8_t data) {
 	uint8_t ack = sdaRead();
 	sclPulse();
 
+	taskEXIT_CRITICAL();
+
 	return !ack;
 }
 
 uint8_t SHT1x::receiveByte() {
+	// We should not be interrupted when talking to sensor
+	taskENTER_CRITICAL();
+
 	// Receive data
 	uint8_t data = 0;
 	for(int i = 0; i < 8; ++i) {
@@ -140,6 +148,8 @@ uint8_t SHT1x::receiveByte() {
 	sclPulse();
 	sdaHi();
 	delayTimer.uDelay(COM_DELAY);
+
+	taskEXIT_CRITICAL();
 
 	return data;
 }
