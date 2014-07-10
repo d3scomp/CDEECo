@@ -9,23 +9,43 @@
 #define LISTEDTRIGGERTASK_H
 
 namespace CDEECO {
+	/**
+	 * Interface for listing triggered tasks
+	 *
+	 * This provide members that can be used to link a list of triggered tasks. An interface
+	 * for conditional trigger execution is also included.
+	 */
 	class ListedTriggerTask {
 	public:
+		/// Pointer to next listed trigger task
 		ListedTriggerTask *next;
 
+		/**
+		 * Construct linked trigger task
+		 */
 		ListedTriggerTask() :
 				next(NULL) {
 		}
-		virtual ~ListedTriggerTask() {
-		}
 
+		/**
+		 * Check trigger condition on knowledge
+		 *
+		 * @tparam UPDATED_KNOWLEDGE Changed knowledge type
+		 * @param updated Reference to update knowledge
+		 */
 		template<typename UPDATED_KNOWLEDGE>
-		void checkTriggerCondition(UPDATED_KNOWLEDGE &updated) {
+		void checkTriggerCondition(const UPDATED_KNOWLEDGE &updated) {
 			checkTriggerConditionData(&updated, &updated + sizeof(updated));
 		}
 
 	protected:
-		virtual void checkTriggerConditionData(void *updateStart, void* updateEnd) = 0;
+		/**
+		 * Check trigger condition on knowledge pointers
+		 *
+		 * @param updateStart Start of updated region in the knowledge
+		 * @param updateEnd End of updated region in the knowledge
+		 */
+		virtual void checkTriggerConditionData(const void *updateStart, const void* updateEnd) = 0;
 	};
 }
 

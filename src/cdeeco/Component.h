@@ -242,4 +242,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* COMPONENT_H */
+#endif // COMPONENT_H

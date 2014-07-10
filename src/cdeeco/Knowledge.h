@@ -24,8 +24,6 @@ namespace CDEECO {
 	struct KnowledgeTrait {
 		static constexpr std::array<size_t, 0> offsets = {};
 	};
-	template<class KNOWLEDGE>
-	constexpr std::array<size_t, 0> KnowledgeTrait<KNOWLEDGE>::offsets;
 }
 
 #endif // KNOWLEDGE_H

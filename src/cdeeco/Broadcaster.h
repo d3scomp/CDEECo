@@ -21,9 +21,12 @@ namespace CDEECO {
 		 * @param fragment Knowledge fragment to broadcast
 		 */
 	public:
+		/**
+		 * Broadcast fragment
+		 *
+		 * @param fragment KnowledgeFragment to broadcast
+		 */
 		virtual void broadcastFragment(const KnowledgeFragment fragment) = 0;
-		virtual ~Broadcaster() {
-		}
 	};
 }
 

@@ -79,7 +79,7 @@ namespace CDEECO {
 		 * @param updateStart Pointer to start of changed area in the knowledge
 		 * @param updateEnd Pointer to the end of changed area in the knowledge
 		 */
-		void checkTriggerConditionData(void *updateStart, void* updateEnd) {
+		void checkTriggerConditionData(const void *updateStart, const void* updateEnd) {
 			// Check for trigger knowledge update
 			if(updateStart >= &trigger && updateStart < &trigger + sizeof(trigger)) {
 				triggerSem.give();
@@ -121,4 +121,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* TRIGERREDTASK_H */
+#endif // TRIGERREDTASK_H

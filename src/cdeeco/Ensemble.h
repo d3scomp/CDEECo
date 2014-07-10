@@ -208,4 +208,4 @@ namespace CDEECO {
 	};
 }
 
-#endif /* ENSEMBLE_H */
+#endif // ENSEMBLE_H
