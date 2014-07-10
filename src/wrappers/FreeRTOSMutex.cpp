@@ -1,8 +1,11 @@
 /*
  * FreeRTOSMutex.cpp
  *
- *  Created on: 17. 5. 2014
- *      Author: Vladimír Matěna
+ * Created on: 17. 5. 2014
+ * 		Author: Vladimír Matěna
+ *
+ * This file includes FreeRTOS wrapper for mutex implementation. It contains only trivial calls to FreeRTOS API.
+ *
  */
 
 #include "FreeRTOSMutex.h"

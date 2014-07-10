@@ -3,6 +3,9 @@
  *
  *  Created on: 2.6 2014
  *      Author: Vladimír Matěna
+ *
+ * Implementation for FreeRTOS semaphore wrapper. This contains trivial mapping to FreeRTOS API calls.
+ *
  */
 
 #include "FreeRTOSSemaphore.h"
@@ -20,8 +23,7 @@ void FreeRTOSSemaphore::give() {
 }
 
 void FreeRTOSSemaphore::giveFromISR() {
-	// TODO: Do possible yieldon ISR end
+	// TODO: Do possible yield on ISR end
 	signed long xHigherPriorityTaskWoken;
 	xSemaphoreGiveFromISR(sem, &xHigherPriorityTaskWoken);
 }
-
