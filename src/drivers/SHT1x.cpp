@@ -56,11 +56,12 @@ void SHT1x::reset() {
 void SHT1x::sdaMode(uint32_t mode) {
 	// Find pin position
 	uint32_t pinPos = 0;
-	for(int i = 0; i < 8; ++i)
+	for(int i = 0; i < 8; ++i) {
 		if(1 << i & properties.sdaPin) {
 			pinPos = i;
 			break;
 		}
+	}
 
 	// Set pin mode
 	properties.gpio->MODER &= ~(GPIO_MODER_MODER0 << (pinPos * 2));
@@ -178,18 +179,20 @@ void SHT1x::startCommand() {
 uint16_t SHT1x::readCommand(uint8_t command) {
 	reset();
 
+	// Send command
 	startCommand();
 	bool ok = sendByte(command);
 	if(!ok)
 		console.print(Error, "Error writing byte to sensor !!!");
 
+	// Wait for competition
 	delayTimer.mDelay(320);
 
+	// Receive result
 	union {
 		uint16_t value;
 		uint8_t bytes[2];
 	} result;
-
 	result.bytes[1] = receiveByte();
 	result.bytes[0] = receiveByte();
 	receiveByte();
