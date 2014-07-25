@@ -13,11 +13,6 @@
 
 #include "KnowledgeFragment.h"
 
-/**
- * \ingroup cdeeco
- *
- * Core system CDEECo++ classes
- */
 namespace CDEECO {
 	/**
 	 * Interface to broadcaster
