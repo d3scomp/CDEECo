@@ -50,18 +50,6 @@ void Console::toggleLevel() {
 	}
 }
 
-void Console::log(const char* format, ...) {
-	if(Info >= Console::level) {
-		vTaskSuspendAll();
-		va_list args;
-		va_start(args, format);
-		vsprintf(buffer, format, args);
-		putString(buffer);
-		va_end(args);
-		xTaskResumeAll();
-	}
-}
-
 void Console::print(const Level level, const char* format, ...) {
 	if(level >= Console::level) {
 		vTaskSuspendAll();

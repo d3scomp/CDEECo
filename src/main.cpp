@@ -195,41 +195,41 @@ int main(void) {
 	// Initialize stop-watch
 	StopWatch::init(TIM1, RCC_APB2PeriphClockCmd, RCC_APB2Periph_TIM1, TIM1_UP_TIM10_IRQn);
 
-	console.log("\n\n\n\n\n\n\n\n\n\n\n");
-	console.log("# # # # # # # # # # # # # # # # # # # #\n");
-	console.log(" # # # # # # # # # # # # # # # # # # #\n");
-	console.log("# # # # # # # # # # # # # # # # # # # #\n");
-	console.log("\n>>> SYSTEM INIT <<<\n");
+	console.print(Info, "\n\n\n\n\n\n\n\n\n\n\n");
+	console.print(Info, "# # # # # # # # # # # # # # # # # # # #\n");
+	console.print(Info, " # # # # # # # # # # # # # # # # # # #\n");
+	console.print(Info, "# # # # # # # # # # # # # # # # # # # #\n");
+	console.print(Info, "\n>>> SYSTEM INIT <<<\n");
 
-	console.log(">>> Waiting 3s for debugger to stop me...\n");
+	console.print(Info, ">>> Waiting 3s for debugger to stop me...\n");
 	delayTimer.mDelay(3000);
-	console.log(">>> Starting system\n");
+	console.print(Info, ">>> Starting system\n");
 
 	// Get unique device id
 	const uint32_t uniqId = *((uint32_t*) 0x1FFF7A10);
-	console.log("\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
+	console.print(Info, "\n\n>>>>> Unique system Id: %x <<<<<<\n\n\n", uniqId);
 
 	// Initialize user defined CDEECO++ system
 	cdeecoSetup(uniqId);
 
 	// Start the scheduler.
-	console.log(">>> Running scheduler\n");
+	console.print(Info, ">>> Running scheduler\n");
 	vTaskStartScheduler();
 
 	// This should not be reached
-	console.log(">>> End reached - THIS SHOULD NOT HAPPEN !!!!\n");
+	console.print(Error, ">>> End reached - THIS SHOULD NOT HAPPEN !!!!\n");
 	assert_param(false);
 }
 
 // FreeRTOS System error handlers
 extern "C" {
 	void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName) {
-		console.log("STACK OVERFLOW!!\n");
+		console.print(Error, "STACK OVERFLOW!!\n");
 		assert_param(false);
 	}
 
 	void vApplicationMallocFailedHook(void) {
-		console.log("MALLOC FAILED!!!\n");
+		console.print(Error, "MALLOC FAILED!!!\n");
 		assert_param(false);
 	}
 }

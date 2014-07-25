@@ -45,7 +45,7 @@ namespace CDEECO {
 				FreeRTOSTask::DEFAULT_STACK_SIZE, unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component, outKnowledge), FreeRTOSTask(stack, priority), trigger(
 						trigger), triggerSem(MAX_WAITING) {
-			console.log(">> TrigerredTask constructor\n");
+			console.print(Info, ">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);
@@ -63,7 +63,7 @@ namespace CDEECO {
 				unsigned long priority = FreeRTOSTask::DEFAULT_PRIORITY) :
 				Task<KNOWLEDGE, OUT_KNOWLEDGE>(component), FreeRTOSTask(stack, priority), trigger(trigger), triggerSem(
 						MAX_WAITING) {
-			console.log(">> TrigerredTask constructor\n");
+			console.print(Info, ">> TrigerredTask constructor\n");
 
 			// List task in component check list
 			component.addTriggeredTask(*this);

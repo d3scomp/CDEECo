@@ -40,7 +40,7 @@ namespace CDEECO {
 			// Erase caches
 			memset(&caches, 0, sizeof(caches));
 
-			console.log(">>> System constructor\n");
+			console.print(Info, ">>> System constructor\n");
 
 			radio.setReceiver(this);
 
