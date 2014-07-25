@@ -1,10 +1,11 @@
-/*
- * FreeRTOSMutex.h
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSMutex.h
  *
- *  Created on: 17. 5. 2014
- *      Author: Vladimír Matěna
+ * C++ wrapper for FreeRTOS mutex
  *
- * FreeRTOS C++ wrapper for mutex.
+ * \date 17. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 
@@ -16,6 +17,8 @@
 
 /**
  * C++ wrapper for FreeRTOS mutex
+ *
+ * \ingroup wrappers
  */
 class FreeRTOSMutex {
 public:

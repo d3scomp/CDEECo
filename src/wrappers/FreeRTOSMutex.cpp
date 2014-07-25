@@ -1,10 +1,11 @@
-/*
- * FreeRTOSMutex.cpp
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSMutex.cpp
  *
- * Created on: 17. 5. 2014
- * 		Author: Vladimír Matěna
+ * C++ wrapper for FreeRTOS mutex implementation
  *
- * This file includes FreeRTOS wrapper for mutex implementation. It contains only trivial calls to FreeRTOS API.
+ * \date 17. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 

@@ -1,8 +1,11 @@
-/*
- * FreeRTOSSemaphore.h
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSSemaphore.h
  *
- *  Created on: 2.6 2014
- *      Author: Vladimír Matěna
+ * C++ FreeRTOS semaphore wrapper
+ *
+ * \date 2.6 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  * @see FreeRTOSSemaphore
  *
@@ -16,6 +19,8 @@
 
 /**
  * C++ wrapper for FreeRTOS semaphore
+ *
+ * \ingroup wrappers
  */
 class FreeRTOSSemaphore {
 public:

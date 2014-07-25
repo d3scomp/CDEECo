@@ -1,8 +1,16 @@
-/*
- * FreeRTOSTask.h
+/**
+ * \defgroup wrappers FreeRTOS wrappers
+ * C++ classes wrapping FreeRTOS constructs
+ */
+
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSTask.h
  *
- *  Created on: 17. 5. 2014
- *      Author: Vladimír Matěna
+ * C++ FreeRTOS task wrapper
+ *
+ * \date 17. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  * @see FreeRTOSTask
  *
@@ -18,6 +26,8 @@
 
 /**
  * C++ wrapper for FreeRTOS task
+ *
+ * \ingroup wrappers
  */
 class FreeRTOSTask {
 public:

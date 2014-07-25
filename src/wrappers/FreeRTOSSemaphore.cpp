@@ -1,10 +1,15 @@
-/*
- * FreeRTOSSemaphore.cpp
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSSemaphore.cpp
  *
- *  Created on: 2.6 2014
- *      Author: Vladimír Matěna
+ * C++ FreeRTOS semaphore wrapper implementation
  *
  * Implementation for FreeRTOS semaphore wrapper. This contains trivial mapping to FreeRTOS API calls.
+ *
+ * \date 2.6 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ *
+ * @see FreeRTOSSemaphore
  *
  */
 

@@ -1,8 +1,14 @@
-/*
- * FreeRTOSTask.cpp
+/**
+ * \ingroup wrappers
+ * @file FreeRTOSTask.cpp
  *
- *  Created on: 2. 7. 2014
- *      Author: Vladimír Matěna
+ * C++ FreeRTOS task wrapper implementation
+ *
+ * \date 17. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ *
+ * @see FreeRTOSTask
+ *
  */
 
 #include "FreeRTOSTask.h"
