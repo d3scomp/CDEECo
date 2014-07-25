@@ -110,18 +110,18 @@ namespace CDEECO {
  * Once the paths are set the project can be complied, linked and flashed to the connected STM32F4 board by issuing
  * these commands in the project's root directory:
  *
- * $ make clean
- * $ make
- * $ make flash
+ * + $ make clean
+ * + $ make
+ * + $ make flash
  *
  * In order to speedup development the project can be built in parallel. The parallel build was tested with 9 tasks and
  * produced significantly faster builds on 8 core CPU. The AMD FX8350 CPU was able to build the project in 2 seconds when
  * building in parallel but it took over 12 seconds to build the project using single thread. In order to run 9 parallel
  * build threads these commands may be used:
  *
- * $ make clean
- * $ make -9
- * $ make flash
+ * - $ make clean
+ * - $ make -9
+ * - $ make flash
  *
  * Structure of a CDEECo application
  * =================================
