@@ -24,11 +24,12 @@ namespace CDEECO {
 		 * Receiver knowledge fragment
 		 *
 		 * @param fragment Knowledge fragment to broadcast
+		 * @param lqi Link auality of the packet containing the fragment
 		 */
 		virtual void receiveFragment(const KnowledgeFragment fragment, uint8_t lqi) = 0;
 		virtual ~Receiver() {
 		}
 	};
-};
+}
 
 #endif // RECEIVER_H

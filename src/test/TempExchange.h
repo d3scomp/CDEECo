@@ -68,7 +68,7 @@ namespace TempExchange {
 		 *
 		 * @return Whenever the supplied member and coordinator belong to the ensemble
 		 */
-		bool isMember(const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge, const CDEECO::Id memeberId,
+		bool isMember(const CDEECO::Id coordId, const Alarm::Knowledge coordKnowledge, const CDEECO::Id memberId,
 				const PortableSensor::Knowledge memberKnowledge);
 
 		/**

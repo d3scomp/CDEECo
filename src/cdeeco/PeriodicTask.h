@@ -34,6 +34,7 @@ namespace CDEECO {
 		 * Create the periodic task
 		 *
 		 * @param period task execution period in milliseconds
+		 * @param component Component owning this task
 		 * @param outKnowledge Reference to output knowledge.
 		 * 			Output knowledge should be member of component's knowledge.
 		 * @param stack Stack size of the task
@@ -49,6 +50,7 @@ namespace CDEECO {
 		 * Create the periodic task
 		 *
 		 * @param period task execution period in milliseconds
+		 * @param component Component owning this task
 		 * @param stack Stack size of the task
 		 * @param priority Task priority
 		 */

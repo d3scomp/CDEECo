@@ -1,6 +1,6 @@
 /**
  * \ingroup config
- * @file stm32f4_it.h
+ * @file stm32f4xx_it.h
  *
  * STM32F4 interrupt service routine definitions
  */

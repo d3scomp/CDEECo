@@ -1,6 +1,6 @@
 /**
  * \ingroup config
- * @file stm32f4xx_config.h
+ * @file stm32f4xx_conf.h
  *
  * STM32F4 peripheral library configuration header
  */

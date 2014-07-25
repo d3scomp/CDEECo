@@ -156,6 +156,7 @@ namespace Alarm {
 		 * Costruct Alarm component
 		 *
 		 * @param broadcaster Reference to instance used for system access in Component base.
+		 * @param id Id of this component instance
 		 */
 		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
 	};

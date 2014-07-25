@@ -64,31 +64,35 @@ namespace CDEECO {
 		/**
 		 * Membership to function to be implemented
 		 *
-		 * @param coord Coordinator knowledge
-		 * @param member Member knowledge
+		 * @param coordKnowledge Coordinator knowledge
+		 * @param coordId Id of the coordinator
+		 * @param memberKnowledge Member knowledge
+		 * @param memberId Id of the member
 		 * @return Whenever the member is part of Ensemble
 		 */
-		virtual bool isMember(const Id coordId, const COORD_KNOWLEDGE coordKnowledge, const Id memeberId,
-				const MEMBER_KNOWLEDGE member) = 0;
+		virtual bool isMember(const Id coordId, const COORD_KNOWLEDGE coordKnowledge, const Id memberId,
+				const MEMBER_KNOWLEDGE memberKnowledge) = 0;
 
 		/**
 		 * Member to Coordinator knowledge map function to be implemented
 		 *
-		 * @param coord Coordinator knowledge
-		 * @param member Member knowledge
+		 * @param coordKnowledge Coordinator knowledge
+		 * @param memberId Id of the member
+		 * @param memberKnowledge Member knowledge
 		 * @return Output knowledge for coordinator
 		 */
-		virtual COORD_OUT_KNOWLEDGE memberToCoordMap(const COORD_KNOWLEDGE coord, const Id memberId,
+		virtual COORD_OUT_KNOWLEDGE memberToCoordMap(const COORD_KNOWLEDGE coordKnowledge, const Id memberId,
 				const MEMBER_KNOWLEDGE memberKnowledge) = 0;
 
 		/**
 		 * Coordinator to member knowledge map function to be implemented
 		 *
-		 * @param member Member knowledge
-		 * @param coord Coordinator knowledge
+		 * @param memberKnowledge Member knowledge
+		 * @param coordId Id of the coordinator
+		 * @param coordKnowledge Coordinator knowledge
 		 * @return Output knowledge for coordinator
 		 */
-		virtual MEMBER_OUT_KNOWLEDGE coordToMemberMap(const MEMBER_KNOWLEDGE member, const Id coordId,
+		virtual MEMBER_OUT_KNOWLEDGE coordToMemberMap(const MEMBER_KNOWLEDGE memberKnowledge, const Id coordId,
 				const COORD_KNOWLEDGE coordKnowledge) = 0;
 
 	private:
@@ -155,7 +159,8 @@ namespace CDEECO {
 					console.print(Debug, ">>>> Found complete record, trying membership <<<<\n");
 					COORD_KNOWLEDGE coordKnowledge = coordinator->lockReadKnowledge();
 					if(isMember(coordinator->getId(), coordKnowledge, record.id, record.knowledge)) {
-						console.print(Debug, ">>>> Record is member of this Ensemble, running member->coord exchange\n");
+						console.print(Debug,
+								">>>> Record is member of this Ensemble, running member->coord exchange\n");
 
 						COORD_OUT_KNOWLEDGE out = memberToCoordMap(coordKnowledge, record.id, record.knowledge);
 
