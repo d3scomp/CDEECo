@@ -1,8 +1,9 @@
-/*
- * Timer.h
+/**
+ * \ingroup drivers
+ * @file Timer.h
  *
- *  Created on: 18. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 18. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #ifndef TIMER_H_

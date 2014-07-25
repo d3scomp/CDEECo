@@ -1,8 +1,9 @@
-/*
- * MRF24J40.h
+/**
+ * \ingroup drivers
+ * @file MRF24J40.h
  *
- *  Created on: 14. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 14. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #ifndef MRF24J40_H_

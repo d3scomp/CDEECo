@@ -1,3 +1,11 @@
+/**
+ * \ingroup config
+ * @file stm32f4xx_it.cpp
+ *
+ * STM32F4 interrupt service routine implementations
+ *
+ */
+
 #include "stm32f4xx_it.h"
 
 #include "main.h"

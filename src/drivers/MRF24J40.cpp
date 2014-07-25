@@ -1,8 +1,9 @@
-/*
- * MRF24J40.cpp
+/**
+ * \ingroup drivers
+ * @file MRF24J40.cpp
  *
- *  Created on: 14. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 14. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #include "MRF24J40.h"

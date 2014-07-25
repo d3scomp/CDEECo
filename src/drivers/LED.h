@@ -1,8 +1,9 @@
-/*
- * LED.h
+/**
+ * \ingroup drivers
+ * @file LED.h
  *
- *  Created on: 15. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 15. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #ifndef LED_H_

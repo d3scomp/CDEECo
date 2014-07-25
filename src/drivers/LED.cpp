@@ -1,8 +1,9 @@
-/*
- * LED.cpp
+/**
+ * \ingroup drivers
+ * @file LED.cpp
  *
- *  Created on: 15. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 15. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #include "LED.h"

@@ -1,3 +1,10 @@
+/**
+ * \ingroup config
+ * @file stm32f4_it.h
+ *
+ * STM32F4 interrupt service routine definitions
+ */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F4xx_IT_H
 #define __STM32F4xx_IT_H

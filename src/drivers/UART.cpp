@@ -1,8 +1,9 @@
-/*
- * UART.cpp
+/**
+ * \ingroup drivers
+ * @file UART.cpp
  *
- *  Created on: 14. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \date 14. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #include <UART.h>

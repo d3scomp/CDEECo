@@ -1,3 +1,15 @@
+/**
+ * \defgroup config Configuration files
+ * Source files used to configure used libraries
+ */
+
+/**
+ * \ingroup config
+ * @file FreeRTOSConfig.h
+ *
+ * FreeRTOS configuration header
+ */
+
 /*
     FreeRTOS V8.0.0 - Copyright (C) 2014 Real Time Engineers Ltd. 
     All rights reserved

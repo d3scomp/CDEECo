@@ -1,4 +1,11 @@
 /**
+ * \ingroup config
+ * @file system_stm32f4xx.c
+ *
+ * STM32F4 initialization configuration file
+ */
+
+/**
   ******************************************************************************
   * @file    system_stm32f4xx.c
   * @author  MCD Application Team

@@ -1,8 +1,9 @@
-/*
- * Button.cpp
+/**
+ * \ingroup drivers
+ * @file Button.cpp
  *
- *  Created on: 15. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \author 15. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
  */
 
 #include "Button.h"

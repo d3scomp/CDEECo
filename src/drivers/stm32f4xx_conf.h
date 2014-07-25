@@ -1,3 +1,10 @@
+/**
+ * \ingroup config
+ * @file stm32f4xx_config.h
+ *
+ * STM32F4 peripheral library configuration header
+ */
+
 #ifndef __STM32F4xx_CONF_H
 #define __STM32F4xx_CONF_H
 
