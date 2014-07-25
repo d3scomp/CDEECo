@@ -1,8 +1,11 @@
-/*
- * SHT1x.cpp
+/**
+ * \ingroup drivers
+ * @file SHT1x.cpp
  *
- *  Created on: 28. 5. 2014
- *      Author: Vladimír Matěna
+ * SHT1x temperature and humidity sensor driver implementation
+ *
+ * \date 27. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #include "SHT1x.h"

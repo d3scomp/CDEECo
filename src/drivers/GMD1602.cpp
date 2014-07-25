@@ -1,3 +1,15 @@
+/**
+ * \ingroup drivers
+ * @file GMD1602.cpp
+ *
+ * Simple GMD1602A 16x2 LCD driver implementation
+ *
+ * Code here is inspired by LiquidCrystal library: http://arduino.cc/en/Tutorial/LiquidCrystal
+ *
+ * \date 3.3.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ */
+
 #include "GMD1602.h"
 
 #include "FreeRTOS.h"
@@ -10,9 +22,6 @@ GMD1602::GMD1602(GPIO_TypeDef *gpio, uint32_t clk): gpio(gpio), clk(clk) {
 }
 
 void GMD1602::init() {
-//	xSemaphoreTake(writeSem, portMAX_DELAY);
-//	vTaskSuspendAll();
-
 	GPIO_InitTypeDef  gpioInitStruct;
 
 	// Enable the GPIO_LED Clock
@@ -50,38 +59,22 @@ void GMD1602::init() {
 
 	command(LCD_DISPLAYCONTROL | LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF);
 	delayTimer.mDelay(100);
-
-
-//	xTaskResumeAll();
-//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::writeText(const char *text) {
-///	xSemaphoreTake(writeSem, portMAX_DELAY);
-//	vTaskSuspendAll();
 	while(*text)
 		data(*text++);
-//	xTaskResumeAll();
-//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::writeXY(const char *text, int x, int y) {
-//	xSemaphoreTake(writeSem, portMAX_DELAY);
-//	vTaskSuspendAll();
 	setXY(x, y);
 	while(*text)
 		data(*text++);
-//	xTaskResumeAll();
-//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::clear() {
-//	xSemaphoreTake(writeSem, portMAX_DELAY);
-//	vTaskSuspendAll();
 	command(LCD_CLEARDISPLAY);
 	delayTimer.mDelay(100);
-//	xTaskResumeAll();
-//	xSemaphoreGive(writeSem);
 }
 
 void GMD1602::setXY(uint8_t x, uint8_t y) {

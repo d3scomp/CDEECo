@@ -1,8 +1,11 @@
-/*
- * SHT1x.h
+/**
+ * \ingroup drivers
+ * @file SHT1x.h
  *
- *  Created on: 27. 5. 2014
- *      Author: Vladimír Matěna
+ * SHT1x temperature and humidity sensor driver
+ *
+ * \date 27. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef SHT1X_H
@@ -16,6 +19,8 @@
 
 /**
  * SHT1x temperature and humidity sensor driver
+ *
+ * \ingroup drivers
  */
 class SHT1x {
 public:

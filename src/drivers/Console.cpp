@@ -1,3 +1,14 @@
+/**
+ * \ingroup drivers
+ * @file Console.cpp
+ *
+ * Console output logging into an UART implementation
+ *
+ * \date 15.5.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ *
+ */
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"

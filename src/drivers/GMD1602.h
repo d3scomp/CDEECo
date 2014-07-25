@@ -1,7 +1,13 @@
 /**
- * GMD1602A Control code
+ * \ingroup drivers
+ * @file GMD1602.h
  *
- * Inspired by LiquidCrystal library: http://arduino.cc/en/Tutorial/LiquidCrystal
+ * GMD1602A Control code a simple 16x2 LCD driver
+ *
+ * Code here is inspired by LiquidCrystal library: http://arduino.cc/en/Tutorial/LiquidCrystal
+ *
+ * \date 3.3.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef GMD1602_H
@@ -16,6 +22,8 @@
  * Testing driver for 16x2 LCD alphanumeric display
  *
  * This code was written as practice of STM32F4 hardware control. It should not be used as is.
+ *
+ * \ingroup drivers
  */
 class GMD1602 {
 public:

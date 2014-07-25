@@ -1,8 +1,16 @@
-/*
- * StopWatch.h
+/**
+ * \defgroup drivers Hardware drivers
+ * Drivers used by example CDEECo++ application
+ */
+
+/**
+ * \ingroup drivers
+ * @file StopWatch.h
  *
- *  Created on: 4.7.2014
- *      Author: Vladimír Matěna
+ * Time measurement tool used for execution time inspection
+ *
+ * \date 4.7.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef STOPWATCH_H
@@ -18,6 +26,8 @@
  *
  * Intended for execution time measurement with high precision. measured interval must be shorter than 65536us.
  * This stop-watch supports one measurement at time and detects overflows when used with interrupts enabled.
+ *
+ * \ingroup drivers
  */
 class StopWatch {
 public:

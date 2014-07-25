@@ -1,3 +1,13 @@
+/**
+ * \ingroup drivers
+ * @file StopWatch.cpp
+ *
+ * Time measurement driver implementation
+ *
+ * \date 4.7.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ */
+
 #include "StopWatch.h"
 
 

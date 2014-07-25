@@ -1,6 +1,6 @@
 /**
  * \defgroup cdeeco Core system CDECCo++ classes
- * Set of classes used to implement CDEECo++ framework.
+ * Core classes used to implement CDEECo++ framework.
  */
 
 /**

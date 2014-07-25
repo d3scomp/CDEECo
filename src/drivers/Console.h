@@ -1,3 +1,14 @@
+/**
+ * \ingroup drivers
+ * @file Console.h
+ *
+ * Console output logging into an UART
+ *
+ * \date 15.5.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ *
+ */
+
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
@@ -12,6 +23,8 @@
 
 /**
  * Console log level type
+ *
+ * \ingroup drivers
  */
 enum Level {
 	/// Print nothing
@@ -37,6 +50,8 @@ enum Level {
  * Console output driver
  *
  * This driver provides text output using the UART driver instance.
+ *
+ * \ingroup drivers
  */
 class Console {
 public:
