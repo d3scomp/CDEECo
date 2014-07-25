@@ -54,11 +54,11 @@ public:
 	static void interrupt();
 
 private:
-	// Last timer difference in us
+	/// Last timer difference in us
 	static volatile uint16_t diff;
-	// Whenever the last measurement resulted in timer overrun
+	/// Whenever the last measurement resulted in timer overrun
 	static volatile bool overrun;
-
+	/// Timer to use for measurement
 	static TIM_TypeDef *tim;
 };
 
