@@ -1,8 +1,11 @@
-/*
- * Alarm.h
+/**
+ * \ingroup example
+ * @file Alarm.h
  *
- *  Created on: 21. 5. 2014
- *      Author: Vladimír Matěna
+ * Definition of the example Alarm component
+ *
+ * \date 21. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 
@@ -21,10 +24,14 @@
 
 /**
  * CDEECO++ component monitoring temperatures provided by PortableSensors.
+ *
+ * \ingroup example
  */
 namespace Alarm {
 	/**
 	 * Alarm knowledge
+	 *
+	 * \ingroup example
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		/// Alarm position
@@ -55,6 +62,8 @@ namespace Alarm {
 
 	/**
 	 * Temperature check task
+	 *
+	 * \ingroup example
 	 */
 	class Check: public CDEECO::PeriodicTask<Knowledge, bool> {
 	public:
@@ -77,6 +86,8 @@ namespace Alarm {
 
 	/**
 	 * Temperature critical trigger task
+	 *
+	 * \ingroup example
 	 */
 	class Critical: public CDEECO::TriggeredTask<Knowledge, bool, void> {
 	public:
@@ -100,6 +111,8 @@ namespace Alarm {
 
 	/**
 	 * Position task
+	 *
+	 * \ingroup example
 	 */
 	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
 	public:
@@ -122,6 +135,8 @@ namespace Alarm {
 
 	/**
 	 * Alarm component class
+	 *
+	 * \ingroup example
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:

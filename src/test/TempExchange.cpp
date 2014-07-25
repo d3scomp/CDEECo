@@ -1,8 +1,11 @@
-/*
- * TempExchange.cpp
+/**
+ * \ingroup example
+ * @file TempExchange.cpp
  *
- *  Created on: 6. 7. 2014
- *      Author: Vladimír Matěna
+ * Temperature exchange ensemble implementation
+ *
+ * \date 6. 7. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #include "TempExchange.h"

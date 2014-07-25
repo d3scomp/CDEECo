@@ -1,10 +1,16 @@
-/*
- * TestComponent.h
+/**
+ * \defgroup example Example application sources
+ * CDEECo++ example application components' and ensembles' sources
+ */
+
+/**
+ * \ingroup example
+ * @file TestComponent.h
  *
- *  Created on: 28. 3. 2014
- *      Author: Vladimír Matěna
+ * This file contains CDEECo++ component implementation for testing early system
  *
- *  This file contains cdeeco++ component implementation for testing early system.
+ * \date 28. 3. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 
@@ -22,6 +28,8 @@
  * Test component
  *
  * @see TestComponent::Component
+ *
+ * \ingroup example
  */
 namespace TestComponent {
 	/**

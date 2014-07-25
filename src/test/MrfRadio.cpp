@@ -1,8 +1,11 @@
-/*
- * MrfRadio.cpp
+/**
+ * \ingroup example
+ * @file MrfRadio.cpp
  *
- *  Created on: 24. 6. 2014
- *      Author: Vladimír Matěna
+ * Implementation of the MRF24J40 adapter for CDEECo++ radio interface
+ *
+ * \date 24. 6. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #include "MrfRadio.h"

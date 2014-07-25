@@ -1,8 +1,11 @@
-/*
- * Alarm.cpp
+/**
+ * \ingroup example
+ * @file Alarm.cpp
  *
- *  Created on: 6. 7. 2014
- *      Author: Vladimír Matěna
+ * Implementation of the example Alarm component
+ *
+ * \date 21. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 

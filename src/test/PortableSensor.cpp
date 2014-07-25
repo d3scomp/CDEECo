@@ -1,10 +1,13 @@
-/*
- * PortableSensor.cpp
+/**
+ * \ingroup example
+ * @file PortableSensor.cpp
  *
- *  Created on: 6. 7. 2014
- *      Author: Vladimír Matěna
+ * Portable sensor component definition
  *
- *  CDEECO++ component providing temperature and humidity at given position.
+ * CDEECO++ component providing temperature and humidity at given position.
+ *
+ * \date 6. 7. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 

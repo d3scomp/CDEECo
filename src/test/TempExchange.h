@@ -1,8 +1,11 @@
-/*
- * TempExchange.h
+/**
+ * \ingroup example
+ * @file TempExchange.h
  *
- *  Created on: 21. 5. 2014
- *      Author: Vladimír Matěna
+ * Temperature exchange ensemble definition
+ *
+ * \date 21. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef TEMP_EXCHANGE_H
@@ -20,6 +23,8 @@
  * Temperature exchange ensemble
  *
  * Used to provide Alarms with sensor data
+ *
+ * \ingroup example
  */
 namespace TempExchange {
 	/// Base Ensemble type definition

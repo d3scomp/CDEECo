@@ -1,10 +1,13 @@
-/*
- * PortableSensor.h
+/**
+ * \ingroup example
+ * @file PortableSensor.h
  *
- *  Created on: 21. 5. 2014
- *      Author: Vladimír Matěna
+ * Portable sensor component definition
  *
- *  CDEECO++ component providing temperature and humidity at given position.
+ * CDEECO++ component providing temperature and humidity at given position.
+ *
+ * \date 21. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 
@@ -21,10 +24,14 @@
 
 /**
  * Portable sensor component
+ *
+ * \ingroup example
  */
 namespace PortableSensor {
 	/**
 	 * Portable sensor knowledge
+	 *
+	 * \ingroup example
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		/// Sensor position
@@ -47,7 +54,11 @@ namespace PortableSensor {
 		} value;
 	};
 
-	/// Sensor value gather task
+	/**
+	 * Sensor value gather task
+	 *
+	 * \ingroup example
+	 */
 	class Sense: public CDEECO::PeriodicTask<Knowledge, Knowledge::Value> {
 	public:
 		/**
@@ -76,6 +87,8 @@ namespace PortableSensor {
 
 	/**
 	 * Position task
+	 *
+	 * \ingroup example
 	 */
 	class Position: public CDEECO::PeriodicTask<Knowledge, Knowledge::Position> {
 	public:
@@ -98,6 +111,8 @@ namespace PortableSensor {
 
 	/**
 	 * PortableSensor component class
+	 *
+	 * \ingroup example
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:

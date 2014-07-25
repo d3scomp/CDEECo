@@ -1,10 +1,11 @@
-/*
- * TestComponent.cpp
+/**
+ * \ingroup example
+ * @file TestComponent.cpp
  *
- *  Created on: 9. 7. 2014
- *      Author: Vladimír Matěna
+ * This file contains CDEECo++ component implementation for testing early system
  *
- *  This file contains CDEECo++ component implementation for testing early system.
+ * \date 9. 7. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  */
 
