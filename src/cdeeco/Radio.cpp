@@ -1,8 +1,11 @@
-/*
- * Radio.cpp
+/**
+ * \ingroup cdeeco
+ * @file Radio.cpp
  *
- *  Created on: 27. 5. 2014
- *      Author: Vladimír Matěna
+ * CDEECo++ radio wrapper implementation
+ *
+ * \date 27. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #include "Radio.h"

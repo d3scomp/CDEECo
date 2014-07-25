@@ -1,12 +1,15 @@
-/*
- * main.h
+/**
+ * @file main.h
  *
- *  Created on: 15. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * Base application include file
+ *
+ * \date 15. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef MAIN_H
+#define MAIN_H
 
 #include "stm32f4xx.h"
 
@@ -30,4 +33,4 @@ extern UART uartSerial;
 extern Console console;
 
 
-#endif /* MAIN_H_ */
+#endif // MAIN_H

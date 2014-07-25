@@ -1,8 +1,11 @@
-/*
- * Component.h
+/**
+ * \ingroup cdeeco
+ * @file Component.h
  *
- *  Created on: 25. 3. 2014
- *      Author: Vladimir Matěna
+ * CDEECo++ base component implemnetation
+ *
+ * \date 25. 3. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef COMPONENT_H
@@ -24,6 +27,8 @@ namespace CDEECO {
 	 * Component class template
 	 *
 	 * @tparam KNOWLEDGE Component's knowledge type
+	 *
+	 * \ingroup cdeeco
 	 */
 	template<typename KNOWLEDGE>
 	class Component: FreeRTOSTask {

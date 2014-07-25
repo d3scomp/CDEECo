@@ -1,16 +1,38 @@
+/**
+ * \defgroup cdeeco Core system CDECCo++ classes
+ * Set of classes used to implement CDEECo++ framework.
+ */
+
+/**
+ * \ingroup cdeeco
+ * @file Knowledge.h
+ *
+ * CDEECo++ base knowledge definition
+ *
+ * \date 20.4.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ */
+
 #ifndef KNOWLEDGE_H
 #define KNOWLEDGE_H
 
 #include <array>
 
 namespace CDEECO {
-	/// Component/knowledge type
+	/**
+	 * Component/knowledge type
+	 * \ingroup cdeeco
+	 */
 	typedef uint32_t Type;
-	/// Component/knowledge id
+	/**
+	 * Component/knowledge id
+	 * \ingroup cdeeco
+	 */
 	typedef uint32_t Id;
 
 	/**
 	 * Knowledge interface
+	 * \ingroup cdeeco
 	 */
 	struct Knowledge {
 	};
@@ -19,6 +41,8 @@ namespace CDEECO {
 	 * Knowledge trait
 	 *
 	 * Used for allowed fragment offset definition
+	 *
+	 * \ingroup cdeeco
 	 */
 	template<class KNOWLEDGE>
 	struct KnowledgeTrait {

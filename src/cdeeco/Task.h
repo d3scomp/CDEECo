@@ -1,8 +1,11 @@
-/*
- * Task.h
+/**
+ * \ingroup cdeeco
+ * @file Task.h
  *
- *  Created on: 28. 3. 2014
- *      Author: Vladimir Matěna
+ * Base CDEECo++ task implementation
+ *
+ * \date 28. 3. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef TASK_H
@@ -18,6 +21,8 @@
 namespace CDEECO {
 	/**
 	 * Common base for the task implementation
+	 *
+	 * \ingroup cdeeco
 	 *
 	 * This class contains common code for the standard and read-only (void output type) task.
 	 *
@@ -64,6 +69,8 @@ namespace CDEECO {
 
 	/**
 	 * Component's tasks with output
+	 *
+	 * \ingroup cdeeco
 	 *
 	 * This is task code for task that has output (output type is non void)
 	 *

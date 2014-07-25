@@ -1,8 +1,11 @@
 /**
- * KnowledgeFragment.h
+ * \ingroup cdeeco
+ * @file KnowledgeFragment.h
  *
- *  Created on: 28. 4. 2014
- *      Author: Vladimír Matěna
+ * Definition of the CDEECo++ knowledge fragment
+ *
+ * \date 28. 4. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef KNOWLEDGE_FRAGMENT_H
@@ -16,6 +19,8 @@
 namespace CDEECO {
 	/**
 	 * Knowledge fragment structure to be included directly in the packet
+	 *
+	 * \ingroup cdeeco
 	 */
 	struct KnowledgeFragment {
 		/// Maximum packet size

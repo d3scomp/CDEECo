@@ -1,3 +1,12 @@
+/**
+ * \ingroup cdeeco
+ * @file RebroadcastStorage.h
+ *
+ * Class implementing CDEECo++ knowledge fragment rebroadcast
+ *
+ * \date 10.7.2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ */
 #ifndef REBROADCAST_STORAGE_H
 #define REBROADCAST_STORAGE_H
 
@@ -21,6 +30,7 @@ namespace CDEECO {
 	 *
 	 * @tparam SIZE Number of slots in cache. Each knowledge fragment takes one slot.
 	 *
+	 * \ingroup cdeeco
 	 */
 	template<size_t SIZE>
 	class RebroadcastStorage: FreeRTOSTask {

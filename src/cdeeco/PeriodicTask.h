@@ -1,8 +1,11 @@
-/*
- * PeriodicTask.h
+/**
+ * \ingroup cdeeco
+ * @file PeriodicTask.h
  *
- *  Created on: 28. 3. 2014
- *      Author: Vladimir Matěna
+ * CDEECo++ base periodic task implementation
+ *
+ * \date 28. 3. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef PERIODICTASK_H
@@ -21,6 +24,8 @@ namespace CDEECO {
 	 *
 	 * @tparam KNOWLEDGE Type of the this task's component's knowledge
 	 * @tparam OUT_KNOWLEDGE Type of this task output knowledge
+	 *
+	 * \ingroup cdeeco
 	 */
 	template<typename KNOWLEDGE, typename OUT_KNOWLEDGE>
 	class PeriodicTask: Task<KNOWLEDGE, OUT_KNOWLEDGE>, FreeRTOSTask {

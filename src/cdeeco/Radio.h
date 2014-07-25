@@ -1,8 +1,11 @@
-/*
- * Radio.h
+/**
+ * \ingroup cdeeco
+ * @file Radio.h
  *
- *  Created on: 27. 5. 2014
- *      Author: Vladimír Matěna
+ * CDEECo++ unified radio interface
+ *
+ * \date 27. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef RADIO_H
@@ -25,6 +28,8 @@ namespace CDEECO {
 	 * Common radio interface
 	 *
 	 * This abstract class shall be implemented by user in order to provide radio to the CDEECo++ system.
+	 *
+	 * \ingroup cdeeco
 	 */
 	class Radio: Broadcaster {
 	public:

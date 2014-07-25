@@ -1,8 +1,11 @@
-/*
- * main.cpp
+/** @file main.cpp
  *
- *  Created on: 15. 9. 2013
- *      Author: Tomas Bures <bures@d3s.mff.cuni.cz>
+ * Application entry point and CDEECO++ system initialization
+ *
+ * \date 15. 9. 2013
+ * \author Tomas Bures <bures@d3s.mff.cuni.cz>
+ * \author Vladimír Matěna <vlada@mattty.cz>
+ *
  */
 
 /* Kernel includes. */

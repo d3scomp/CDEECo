@@ -1,8 +1,11 @@
-/*
- * System.h
+/**
+ * \ingroup cdeeco
+ * @file System.h
  *
- *  Created on: 7. 5. 2014
- *      Author: Vladimír Matěna
+ * CDEECo++ application glue
+ *
+ * \date  7. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef SYSTEM_H
@@ -21,6 +24,8 @@
 namespace CDEECO {
 	/**
 	 * CDEECo++ system class template
+	 *
+	 * \ingroup cdeeco
 	 *
 	 * This provides unified access to the radio interface.
 	 *

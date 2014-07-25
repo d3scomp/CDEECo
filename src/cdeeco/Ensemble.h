@@ -1,8 +1,11 @@
-/*
- * Ensemble.h
+/**
+ * \ingroup cdeeco
+ * @file Ensemble.h
  *
- *  Created on: 21. 5. 2014
- *      Author: Vladimír Matěna
+ * CDEECo++ base Ensemble implementation
+ *
+ * \date 21. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef ENSEMBLE_H
@@ -22,6 +25,8 @@ namespace CDEECO {
 	 * @tparam COORD_OUT_KNOWLEDGE Type of coordinator output knowledge
 	 * @tparam MEMEBR_KNOWLEDGE Type of member knowledge
 	 * @tparam MEMBER_KNOWLEDGE Type of member output knowledge
+	 *
+	 * \ingroup cdeeco
 	 */
 	template<typename COORD_KNOWLEDGE, typename COORD_OUT_KNOWLEDGE, typename MEMBER_KNOWLEDGE,
 			typename MEMBER_OUT_KNOWLEDGE>

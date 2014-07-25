@@ -1,8 +1,11 @@
-/*
- * TrigerredTask.h
+/**
+ * \ingroup cdeeco
+ * @file TriggeredTask.h
  *
- *  Created on: 14.4. 2014
- *      Author: Vladimir Matěna
+ * CDEECO++ base Triggered task template class
+ *
+ * \date 14.4. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef TRIGERREDTASK_H
@@ -21,6 +24,8 @@
 
 namespace CDEECO {
 	/**
+	 * \ingroup cdeeco
+	 *
 	 * Triggered task implementation
 	 *
 	 * Thanks to C++1y "auto" this implementation compiles even when OUT_KNOWLEDGE = void.

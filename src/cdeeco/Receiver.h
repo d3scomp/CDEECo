@@ -1,8 +1,11 @@
-/*
- * Receiver.h
+/**
+ * \ingroup cdeeco
+ * @file Receiver.h
  *
- *  Created on: 27. 5. 2014
- *      Author: Vladimír Matěna
+ * Interface for receiving knowledge fragments
+ *
+ * \date 27. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 #ifndef RECEIVER_H
 #define RECEIVER_H
@@ -12,6 +15,8 @@
 namespace CDEECO {
 	/**
 	 * Interface to knowledge receiver
+	 *
+	 * \ingroup cdeeco
 	 */
 	class Receiver {
 	public:

@@ -1,14 +1,13 @@
 /**
- * KnowledgeCache.h
+ * \ingroup cdeeco
+ * @file KnowledgeCache.h
  *
- *  Created on: 5. 5. 2014
- *      Author: Vladimír Matěna
- *
- * @file Knowledge cache
  * This file includes implementation of the knowledge caching system. It contains KnowledgeCache template which is
  * accompanioned by two interfaces. KnowledgeStorage for storing knowledge fragments and KnowledgeLibrary for
- * listing records.
+ * listing records
  *
+ * \date 5. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  *
  * Unlike rebroadcast cache the knowledge cache is a bit more complicated. The actual
  * storage is implemented by class KnowledgeCache which is also template. It
@@ -51,6 +50,8 @@ namespace CDEECO {
 	 *
 	 * It is used to hide template arguments of the KnowledgeCache template, thus simplifies keeping references to
 	 * caches in the System class.
+	 *
+	 * \ingroup cdeeco
 	 */
 	class KnowledgeStorage {
 	public:
@@ -72,6 +73,8 @@ namespace CDEECO {
 	 * caches in the Ensemble related classes. It also provides provides iterator to iterate over records in cache.
 	 *
 	 * @tparam KNOWLEDGE Type of the knowledge for this library
+	 *
+	 * \ingroup cdeeco
 	 */
 	template<typename KNOWLEDGE>
 	class KnowledgeLibrary {
@@ -101,6 +104,8 @@ namespace CDEECO {
 		 * Iterator to the knowledge library
 		 *
 		 * Allows iterating over the records in the cache.
+		 *
+		 * \ingroup cdeeco
 		 */
 		class Iterator: std::iterator<std::input_iterator_tag, CacheRecord> {
 		public:
@@ -206,6 +211,7 @@ namespace CDEECO {
 	 * This template provides knowledge cache implementation. it is intended to be used
 	 * via interfaces for writing KnowledgeStorage and reading KnowledgeLibrary.
 	 *
+	 * \ingroup cdeeco
 	 */
 	template<Type TYPE, typename KNOWLEDGE, size_t SIZE>
 	class KnowledgeCache: public KnowledgeStorage, public KnowledgeLibrary<KNOWLEDGE> {

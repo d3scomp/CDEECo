@@ -1,8 +1,11 @@
-/*
- * Broadcaster.h
+/**
+ * \ingroup cdeeco
+ * @file Broadcaster.h
  *
- *  Created on: 7. 5. 2014
- *      Author: Vladimír Matěna
+ * Interface for knowledge broadcasting access
+ *
+ * \date 7. 5. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef BROADCASTER_H
@@ -10,9 +13,12 @@
 
 #include "KnowledgeFragment.h"
 
+/// \ingroup cdeeco
 namespace CDEECO {
 	/**
 	 * Interface to broadcaster
+	 *
+	 * \ingroup cdeeco
 	 */
 	class Broadcaster {
 		/**

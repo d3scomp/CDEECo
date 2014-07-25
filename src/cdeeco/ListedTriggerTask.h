@@ -1,8 +1,11 @@
-/*
- * ListedTrigerredTask.h
+/**
+ * \ingroup cdeeco
+ * @file ListedTriggerTask.h
  *
- *  Created on: 14.4. 2014
- *      Author: Vladimir Matěna
+ * Interface for listing triggered tasks in linked list
+ *
+ * \date 14.4. 2014
+ * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
 #ifndef LISTEDTRIGGERTASK_H
@@ -14,6 +17,8 @@ namespace CDEECO {
 	 *
 	 * This provide members that can be used to link a list of triggered tasks. An interface
 	 * for conditional trigger execution is also included.
+	 *
+	 * \ingroup cdeeco
 	 */
 	class ListedTriggerTask {
 	public:
