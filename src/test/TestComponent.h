@@ -35,6 +35,7 @@ namespace TestComponent {
 	/**
 	 * Test component knowledge
 	 *
+	 * \ingroup example
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		typedef int NormValue;
@@ -50,6 +51,8 @@ namespace TestComponent {
 	 * It processes whole component knowledge and outputs whole component knowledge.
 	 *
 	 * The task blinks the green LED and changes position knowledge.
+	 *
+	 * \ingroup example
 	 */
 	class TestPeriodicTask: public CDEECO::PeriodicTask<Knowledge, Knowledge::NormValue> {
 	public:
@@ -70,6 +73,8 @@ namespace TestComponent {
 
 	/**
 	 * Test component triggered task
+	 *
+	 * \ingroup example
 	 */
 	class TestTriggeredTask: public CDEECO::TriggeredTask<Knowledge, Knowledge::NormValue, Knowledge::TrigValue> {
 	public:
@@ -92,6 +97,8 @@ namespace TestComponent {
 	 * Test component container
 	 *
 	 * Defines one periodic and one triggered task. Blinks with blue LED.
+	 *
+	 * \ingroup example
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
 	public:
@@ -109,7 +116,6 @@ namespace TestComponent {
 		 */
 		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
 	};
-
 }
 
-#endif /* TESTCOMPONENT_H */
+#endif // TESTCOMPONENT_H
