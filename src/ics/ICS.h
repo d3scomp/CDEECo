@@ -23,14 +23,33 @@
  * CDEECO++ component handling intelligent cross-road
  */
 namespace ICS {
+	const int MAX_VEHILCES;
+
 	/**
 	 * Intelligent cross-road system knowledge
 	 */
 	struct Knowledge: CDEECO::Knowledge {
-		// Whenever cross-road is running in intelligent mode
+		typedef struct {
+			VehicleId id;
+			ArrivalTime desiredArrivalTime;
+		} DesiredArrivalTime;
+
+		/**
+		 * Whenever cross-road is running in intelligent mode
+		 */
 		bool operational;
 
-		// TODO: More knowledge
+		/**
+		 * Information about vehicles
+		 *
+		 * Information about vehicles approaching from all directions sorted by proximity to the crossing
+		 */
+		Vehicle::Knowledge vehicles[Direction::COUNT][MAX_VEHILCES];
+
+		/**
+		 * Desired arrival times for vehicles
+		 */
+		 DesiredArrivalTime arrivalTimes[MAX_VEHILCES];
 	};
 
 	// TODO: Processes
@@ -44,7 +63,7 @@ namespace ICS {
 		static const CDEECO::Type Type = 0x00000002;
 
 		/**
-		 * Costruct Alarm component
+		 * Construct ICS component
 		 *
 		 * @param broadcaster Reference to instance used for system access in Component base.
 		 * @param id Id of this component instance

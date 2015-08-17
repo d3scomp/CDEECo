@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef VEHICLE
-#define VEHICLE
+#ifndef VEHICLE_H
+#define VEHICLE_H
 
 #include <array>
 #include <random>
@@ -18,6 +18,7 @@
 #include "cdeeco/Component.h"
 #include "cdeeco/PeriodicTask.h"
 #include "drivers/SHT1x.h"
+#include "ICSUtils.h"
 
 /**
  * Vehicle component
@@ -27,13 +28,51 @@ namespace Vehicle {
 	 * Vehicle knowledge
 	 */
 	struct Knowledge: CDEECO::Knowledge {
-		/// Sensor position
-		struct Position {
-			float lat;
-			float lon;
-		} position;
+		/**
+		 * Vehicle identification
+		 */
+		VehicleId id;
 
-		// TODO: More knowledge
+		/**
+		 * Current time
+		 *
+		 * Used to judge whether the vehicle is complaint with the system.
+		 */
+		Time time;
+
+		/**
+		 * Whenever vehicle supports remote operation
+		 */
+		bool remotelyOperable;
+
+		/**
+		 * Approach direction
+		 *
+		 * Direction from which the car is approaching the crossing.
+		 */
+		Direction approachDirection;
+
+		/**
+		 * Current time to crossing
+		 *
+		 * Takes into account current position and speed.
+		 */
+		ArrivalTime timeToCrossing;
+
+		/**
+		 * Minimal time to crossing
+		 *
+		 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
+		 */
+		ArrivalTime minTimeToCrossing;
+
+		/**
+		 * Distance to crossing
+		 *
+		 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
+		 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
+		 */
+		DistanceToCrossing distanceToCrossing;
 	};
 
 	// TODO: Processes
@@ -62,4 +101,4 @@ namespace Vehicle {
 	};
 }
 
-#endif // VEHICLE
+#endif // VEHICLE_H
