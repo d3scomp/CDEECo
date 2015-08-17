@@ -9,7 +9,7 @@
  *
  */
 
-#include "Alarm.h"
+#include "../test/Alarm.h"
 
 /**
  * CDEECO++ component monitoring temperatures provided by PortableSensors.

@@ -24,16 +24,16 @@
 #include "cdeeco/System.h"
 #include "cdeeco/KnowledgeCache.h"
 
-#include "test/MrfRadio.h"
-#include "test/TestComponent.h"
-#include "test/PortableSensor.h"
-#include "test/Alarm.h"
-#include "test/TempExchange.h"
-
 #include <cstdio>
 #include <sstream>
 #include <string>
 #include <signal.h>
+
+#include "ics/MrfRadio.h"
+#include "test/Alarm.h"
+#include "test/PortableSensor.h"
+#include "test/TempExchange.h"
+#include "test/TestComponent.h"
 
 // Delay timer
 Timer::Properties tim6Props {

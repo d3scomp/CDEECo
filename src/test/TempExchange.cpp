@@ -8,7 +8,7 @@
  * \author Vladimír Matěna <vlada@mattty.cz>
  */
 
-#include "TempExchange.h"
+#include "../test/TempExchange.h"
 
 namespace TempExchange {
 	Ensemble::Ensemble(CDEECO::Component<Alarm::Knowledge> &coordinator,

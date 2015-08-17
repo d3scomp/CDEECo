@@ -11,7 +11,7 @@
  *
  */
 
-#include "PortableSensor.h"
+#include "../test/PortableSensor.h"
 
 namespace PortableSensor {
 	Sense::Sense(auto &component) :

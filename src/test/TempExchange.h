@@ -13,11 +13,11 @@
 
 #include <random>
 
+#include "../ics/Alarm.h"
+#include "../ics/PortableSensor.h"
 #include "cdeeco/Component.h"
 #include "cdeeco/Ensemble.h"
 #include "cdeeco/KnowledgeCache.h"
-#include "Alarm.h"
-#include "PortableSensor.h"
 
 /**
  * Temperature exchange ensemble

@@ -9,7 +9,7 @@
  *
  */
 
-#include "TestComponent.h"
+#include "../test/TestComponent.h"
 
 namespace TestComponent {
 	TestPeriodicTask::TestPeriodicTask(auto &component) :
