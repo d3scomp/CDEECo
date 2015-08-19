@@ -36,6 +36,11 @@ namespace ICS {
 		} DesiredArrivalTime;
 
 		/**
+		 * Crossing id
+		 */
+		CrossingId id;
+
+		/**
 		 * Current time
 		 */
 		Time time;

@@ -6,10 +6,10 @@ namespace Vehicle {
 			CDEECO::Component<Knowledge>(id, Type, broadcaster) {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));
-		// TODO: Set approach direction based on the current crossing
 		knowledge.id = id;
-		knowledge.approachDirection = NORTH_EAST;
 		knowledge.remotelyOperable = remotelyOperable;
+		// TODO: Set approach direction based on the current crossing
+		knowledge.approachDirection = NORTH_EAST;
 	}
 
 	StoreCurrentTime::StoreCurrentTime(auto &component) {
@@ -19,5 +19,39 @@ namespace Vehicle {
 
 	Time StoreCurrentTime::run(const Knowledge in) {
 		return GetCurrentTimeMs();
+	}
+
+	PlanRoute::PlanRoute(auto &component) {
+		// TODO: Period
+		PeriodicTask(1000, component, component.knowledge.crossingId);
+	}
+
+	CrossingId PlanRoute::run(const Knowledge in) {
+		// TODO: return next crossing on the path to destiantion
+		return 42;
+	}
+
+	UpdateCrossingInfo::UpdateCrossingInfo(auto &component) {
+		// TODO: Period
+		PeriodicTask(1000, component, component.knowledge.crossingDistanceInfo);
+	}
+
+	Knowledge::CrossingDistanceInfo UpdateCrossingInfo::UpdateCrossingInfo(const Knowledge in) {
+		// Desired arrival time set by ICS
+		ArrivalTime desiredArivalTime = in.desiredArrivalTime;
+
+		// Calculate new throttle value and set it to vehicle
+
+		// Calculate new distance and time to crossing
+		// TODO: Implement this
+		ArrivalTime timeToCrossing = 42;
+		ArrivalTime minTimeToCrossing = 42;
+		DistanceToCrossing distanceToCrossing = 42;
+
+		return {
+			timeToCrossing,
+			minTimeToCrossing,
+			distanceToCrossing
+		};
 	}
 }

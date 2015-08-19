@@ -3,6 +3,7 @@
 
 typedef long Time;
 typedef long VehicleId;
+typedef long CrossingId;
 typedef float ArrivalTime;
 typedef float DistanceToCrossing;
 

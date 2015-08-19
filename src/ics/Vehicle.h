@@ -46,6 +46,13 @@ namespace Vehicle {
 		bool remotelyOperable;
 
 		/**
+		 * Current crossing
+		 *
+		 * The next crossing this vehicle is going to cross
+		 */
+		CrossingId crossingId;
+
+		/**
 		 * Approach direction
 		 *
 		 * Direction from which the car is approaching the crossing.
@@ -53,26 +60,38 @@ namespace Vehicle {
 		Direction approachDirection;
 
 		/**
-		 * Current time to crossing
-		 *
-		 * Takes into account current position and speed.
+		 * Info about crossing distance
 		 */
-		ArrivalTime timeToCrossing;
+		typedef struct {
+			/**
+			 * Current time to crossing
+			 *
+			 * Takes into account current position and speed.
+			 */
+			ArrivalTime timeToCrossing;
+
+			/**
+			 * Minimal time to crossing
+			 *
+			 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
+			 */
+			ArrivalTime minTimeToCrossing;
+
+			/**
+			 * Distance to crossing
+			 *
+			 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
+			 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
+			 */
+			DistanceToCrossing distanceToCrossing;
+		} CrossingDistanceInfo;
+
+		CrossingDistanceInfo crossingDistanceInfo;
 
 		/**
-		 * Minimal time to crossing
-		 *
-		 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
+		 * Desired time to crossing planed by ICS
 		 */
-		ArrivalTime minTimeToCrossing;
-
-		/**
-		 * Distance to crossing
-		 *
-		 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
-		 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
-		 */
-		DistanceToCrossing distanceToCrossing;
+		ArrivalTime desiredArrivalTime;
 	};
 
 	/**
@@ -84,6 +103,39 @@ namespace Vehicle {
 
 	private:
 		Time run(const Knowledge in);
+	};
+
+	/**
+	 * Plans route and sets current crossing
+	 */
+	class PlanRoute: public CDEECO::PeriodicTask<Knowledge, CrossingId> {
+	public:
+		PlanRoute(auto &component);
+
+	private:
+		CrossingId run(const Knowledge in);
+	};
+
+	/**
+	 * Updates information about crossing distance and controls vehicle speed
+	 */
+	class UpdateCrossingInfo: public CDEECO::PeriodicTask<Knowledge, Knowledge::CrossingDistanceInfo> {
+	public:
+		UpdateCrossingInfo(auto &component);
+
+	private:
+		Knowledge::CrossingDistanceInfo run(const Knowledge in);
+	};
+
+	/**
+	 * Controls throttle in order to match desired time and updates current time to crossing
+	 */
+	class UpdateTimeAndDrive: public CDEECO::PeriodicTask<Knowledge, Time> {
+	public:
+		UpdateTimeAndDrive(auto &component);
+
+	private:
+		 run(const Knowledge in);
 	};
 
 	/**

@@ -11,6 +11,7 @@ namespace ICS {
 			CDEECO::Component<Knowledge>(id, Type, broadcaster) {
 		// Initialize knowledge - zero and set all sensors as unused
 		memset(&knowledge, 0, sizeof(Knowledge));
+		knowledge.id = id;
 	}
 
 	CheckOperational::CheckOperational(auto &component):
