@@ -7,6 +7,7 @@ namespace Vehicle {
 		// Initialize knowledge
 		memset(&knowledge, 0, sizeof(Knowledge));
 		// TODO: Set approach direction based on the current crossing
+		knowledge.id = id;
 		knowledge.approachDirection = NORTH_EAST;
 		knowledge.remotelyOperable = remotelyOperable;
 	}
