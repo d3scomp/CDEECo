@@ -49,13 +49,15 @@ namespace ICS {
 		 * Information about vehicles
 		 *
 		 * Information about vehicles approaching from all directions sorted by proximity to the crossing
+		 *
+		 * Vehicles with id = 0 are considered invalid and should be ignored
 		 */
 		Vehicle::Knowledge vehicles[MAX_VEHILCES];
 
 		/**
 		 * Desired arrival times for vehicles
 		 */
-		 DesiredArrivalTime arrivalTimes[MAX_VEHILCES];
+		DesiredArrivalTime arrivalTimes[MAX_VEHILCES];
 	};
 
 	/**
@@ -71,6 +73,17 @@ namespace ICS {
 	private:
 		bool run(const Knowledge in);
 		std::set<VehicleId> getOutOfBandRegisteredVehicles();
+	};
+
+	/**
+	 * Remove vehicles that already left the crossing
+	 */
+	class RemoveOldVehicles: public CDEECO::PeriodicTask<Knowledge, Vehicle::Knowledge*> {
+	public:
+		RemoveOldVehicles(auto &component);
+
+	private:
+		Vehicle::Knowledge* run(const Knowledge in);
 	};
 
 	/**

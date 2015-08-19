@@ -14,8 +14,8 @@ namespace ICS {
 	}
 
 	CheckOperational::CheckOperational(auto &component):
-			// TODO: Period ???
-			PeriodicTask(3000, component, component.knowledge.checkOperational) {
+		// TODO: Period ???
+		PeriodicTask(3000, component, component.knowledge.checkOperational) {
 	}
 
 	/**
@@ -57,5 +57,27 @@ namespace ICS {
 		}
 
 		return true;
+	}
+
+	RemoveOldVehicles::RemoveOldVehicles(auto &component) {
+		// TODO: Period
+		PeriodicTask(1000, component, component.knowledge.vehicles);
+	}
+
+	Vehicle::Knowledge* RemoveOldVehicles::run(const Knowledge in) {
+		// Copy live vehicles to new array
+		Vehicle::Knowledge vehicles[] = new Vehicle::Knowledge[MAX_VEHILCES];
+		int used = 0;
+		for(int i = 0; i < MAX_VEHILCES; ++i) {
+			Vehicle::Knowledge vehicle = in.vehicles[i];
+			if(vehicle.id != 0 && vehicle.distanceToCrossing != 0) {
+				vehicles[used++] = vehicle;
+			}
+		}
+
+		// Fill the remaining space with invalid entries
+		for(; used < MAX_VEHILCES; ++used) {
+			vehicles[used].id = 0;
+		}
 	}
 }
