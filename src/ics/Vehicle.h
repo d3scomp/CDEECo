@@ -104,10 +104,10 @@ namespace Vehicle {
 		/**
 		 * Vehicle constructor
 		 *
-		 * @param broadcaster Refernce to broadcaster to be used by base Component
+		 * @param broadcaster Reference to broadcaster to be used by base Component
 		 * @param id id of the component instance
 		 */
-		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id);
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id, bool remotelyOperable);
 	};
 }
 
