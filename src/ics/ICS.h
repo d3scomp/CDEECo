@@ -23,7 +23,8 @@
  * CDEECO++ component handling intelligent cross-road
  */
 namespace ICS {
-	const int MAX_VEHILCES;
+	const int MAX_VEHILCES = 70;
+	const long MAX_LATENCY_MS = 50;
 
 	/**
 	 * Intelligent cross-road system knowledge
@@ -35,6 +36,11 @@ namespace ICS {
 		} DesiredArrivalTime;
 
 		/**
+		 * Current time
+		 */
+		Time time;
+
+		/**
 		 * Whenever cross-road is running in intelligent mode
 		 */
 		bool operational;
@@ -44,7 +50,7 @@ namespace ICS {
 		 *
 		 * Information about vehicles approaching from all directions sorted by proximity to the crossing
 		 */
-		Vehicle::Knowledge vehicles[Direction::COUNT][MAX_VEHILCES];
+		Vehicle::Knowledge vehicles[MAX_VEHILCES];
 
 		/**
 		 * Desired arrival times for vehicles
@@ -52,7 +58,20 @@ namespace ICS {
 		 DesiredArrivalTime arrivalTimes[MAX_VEHILCES];
 	};
 
-	// TODO: Processes
+	/**
+	 * Check operational state
+	 *
+	 * Checks whenever all vehicles in the crossing range support remote operation
+	 * and have good enough latency in order to run the crossing in smart mode.
+	 */
+	class CheckOperational: public CDEECO::PeriodicTask<Knowledge, bool> {
+	public:
+		CheckOperational(auto &component);
+
+	private:
+		bool run(const Knowledge in);
+		std::set<VehicleId> getOutOfBandRegisteredVehicles();
+	};
 
 	/**
 	 * Intelligent cross-road component class
@@ -61,6 +80,9 @@ namespace ICS {
 	public:
 		/// ICS component magic
 		static const CDEECO::Type Type = 0x00000002;
+
+		// Operational check process instance
+		CheckOperational checkOperational = CheckOperational(*this);
 
 		/**
 		 * Construct ICS component
