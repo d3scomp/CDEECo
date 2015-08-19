@@ -80,4 +80,27 @@ namespace ICS {
 			vehicles[used].id = 0;
 		}
 	}
+
+	ScheduleVehicles::ScheduleVehicles(auto &component) {
+		// TODO: Period
+		PeriodicTask(2000, component, component.knowledge.arrivalTimes);
+	}
+
+	Knowledge::DesiredArrivalTime* ScheduleVehicles::run(const Knowledge in) {
+		// Arrival times from last schedule
+		const Knowledge::DesiredArrivalTime inArrivalTimes[MAX_VEHILCES] = in.arrivalTimes;
+		// Current information about vehicles
+		const Vehicle::Knowledge inVehicleData[MAX_VEHILCES] = in.vehicles;
+		// New schedule to be computed
+		Knowledge::DesiredArrivalTime outArrivalTimes[] = new Knowledge::DesiredArrivalTime[MAX_VEHILCES];
+
+		/*
+		 * TODO: Compute new schedule, take into account current schedule,
+		 * conflicting directions and arrival time estimates.
+		 *
+		 * outArrivalTimes = schedule(inArrivalTimes, inVehicleData);
+		 */
+
+		return outArrivalTimes;
+	}
 }

@@ -87,6 +87,17 @@ namespace ICS {
 	};
 
 	/**
+	 * Schedules vehicle arrival to optimize crossing throughput
+	 */
+	class ScheduleVehicles: public CDEECO::PeriodicTask<Knowledge, Knowledge::DesiredArrivalTime*> {
+	public:
+		ScheduleVehicles(auto &component);
+
+	private:
+		Knowledge::DesiredArrivalTime* run(const Knowledge in);
+	};
+
+	/**
 	 * Intelligent cross-road component class
 	 */
 	class Component: public CDEECO::Component<Knowledge> {
