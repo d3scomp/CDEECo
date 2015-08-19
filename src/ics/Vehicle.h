@@ -75,7 +75,16 @@ namespace Vehicle {
 		DistanceToCrossing distanceToCrossing;
 	};
 
-	// TODO: Processes
+	/**
+	 * Stores current time in the knowledge
+	 */
+	class StoreCurrentTime: public CDEECO::PeriodicTask<Knowledge, Time> {
+	public:
+		StoreCurrentTime(auto &component);
+
+	private:
+		Time run(const Knowledge in);
+	};
 
 	/**
 	 * Vehicle component class
@@ -89,7 +98,8 @@ namespace Vehicle {
 		 */
 		static const CDEECO::Type Type = 0x00000001;
 
-		// TODO: Tasks
+		// Process instances
+		StoreCurrentTime storeCurrentTime = StoreCurrentTime(*this);
 
 		/**
 		 * Vehicle constructor

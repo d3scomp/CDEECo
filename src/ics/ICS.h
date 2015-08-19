@@ -61,6 +61,17 @@ namespace ICS {
 	};
 
 	/**
+	 * Stores current time in the knowledge
+	 */
+	class StoreCurrentTime: public CDEECO::PeriodicTask<Knowledge, Time> {
+	public:
+		StoreCurrentTime(auto &component);
+
+	private:
+		Time run(const Knowledge in);
+	};
+
+	/**
 	 * Check operational state
 	 *
 	 * Checks whenever all vehicles in the crossing range support remote operation
@@ -105,8 +116,11 @@ namespace ICS {
 		/// ICS component magic
 		static const CDEECO::Type Type = 0x00000002;
 
-		// Operational check process instance
+		// Process instances
+		StoreCurrentTime storeCurrentTime = StoreCurrentTime(*this);
 		CheckOperational checkOperational = CheckOperational(*this);
+		RemoveOldVehicles removeOldVehicles = RemoveOldVehicles(*this);
+		ScheduleVehicles scheduleVehicles = ScheduleVehicles(*this);
 
 		/**
 		 * Construct ICS component
