@@ -33,7 +33,7 @@ namespace ICS {
 	bool CheckOperational::run(const Knowledge in) {
 		// Check if there are vehicles that are not registered by the system
 		std::set<VehicleId> outOfBandVehicles = getOutOfBandRegisteredVehicles();
-		for(unsigned int i = 0; i < MAX_VEHILCES; ++i) {
+		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
 			outOfBandVehicles.erase(in.vehicles[i].id);
 		}
 		if(!outOfBandVehicles.empty()) {
@@ -41,14 +41,14 @@ namespace ICS {
 		}
 
 		// Check if there are unsupported vehicles in the system
-		for(unsigned int i = 0; i < MAX_VEHILCES; ++i) {
+		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
 			if(!in.vehicles[i].remotelyOperable) {
 				return false;
 			}
 		}
 
 		// Check if there are vehicles with high latency in the system
-		for(unsigned int i = 0; i < MAX_VEHILCES; ++i) {
+		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
 			Vehicle::Knowledge vehicle = in.vehicles[i];
 
 			if(vehicle.id != 0 && vehicle.distanceToCrossing != 0 &&
@@ -67,9 +67,9 @@ namespace ICS {
 
 	Vehicle::Knowledge* RemoveOldVehicles::run(const Knowledge in) {
 		// Copy live vehicles to new array
-		Vehicle::Knowledge vehicles[] = new Vehicle::Knowledge[MAX_VEHILCES];
+		Vehicle::Knowledge vehicles[] = new Vehicle::Knowledge[MAX_VEHICLES];
 		int used = 0;
-		for(int i = 0; i < MAX_VEHILCES; ++i) {
+		for(int i = 0; i < MAX_VEHICLES; ++i) {
 			Vehicle::Knowledge vehicle = in.vehicles[i];
 			if(vehicle.id != 0 && vehicle.distanceToCrossing != 0) {
 				vehicles[used++] = vehicle;
@@ -77,7 +77,7 @@ namespace ICS {
 		}
 
 		// Fill the remaining space with invalid entries
-		for(; used < MAX_VEHILCES; ++used) {
+		for(; used < MAX_VEHICLES; ++used) {
 			vehicles[used].id = 0;
 		}
 	}
@@ -89,11 +89,11 @@ namespace ICS {
 
 	Knowledge::DesiredArrivalTime* ScheduleVehicles::run(const Knowledge in) {
 		// Arrival times from last schedule
-		const Knowledge::DesiredArrivalTime inArrivalTimes[MAX_VEHILCES] = in.arrivalTimes;
+		const Knowledge::DesiredArrivalTime inArrivalTimes[MAX_VEHICLES] = in.arrivalTimes;
 		// Current information about vehicles
-		const Vehicle::Knowledge inVehicleData[MAX_VEHILCES] = in.vehicles;
+		const Vehicle::Knowledge inVehicleData[MAX_VEHICLES] = in.vehicles;
 		// New schedule to be computed
-		Knowledge::DesiredArrivalTime outArrivalTimes[] = new Knowledge::DesiredArrivalTime[MAX_VEHILCES];
+		Knowledge::DesiredArrivalTime outArrivalTimes[] = new Knowledge::DesiredArrivalTime[MAX_VEHICLES];
 
 		/*
 		 * TODO: Compute new schedule, take into account current schedule,

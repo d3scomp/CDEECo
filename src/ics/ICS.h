@@ -23,7 +23,7 @@
  * CDEECO++ component handling intelligent cross-road
  */
 namespace ICS {
-	const int MAX_VEHILCES = 70;
+	const int MAX_VEHICLES = 70;
 	const long MAX_LATENCY_MS = 50;
 
 	/**
@@ -57,12 +57,12 @@ namespace ICS {
 		 *
 		 * Vehicles with id = 0 are considered invalid and should be ignored
 		 */
-		Vehicle::Knowledge vehicles[MAX_VEHILCES];
+		Vehicle::Knowledge vehicles[MAX_VEHICLES];
 
 		/**
 		 * Desired arrival times for vehicles
 		 */
-		DesiredArrivalTime arrivalTimes[MAX_VEHILCES];
+		DesiredArrivalTime arrivalTimes[MAX_VEHICLES];
 	};
 
 	/**

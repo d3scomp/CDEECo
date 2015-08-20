@@ -29,6 +29,33 @@ namespace Vehicle {
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		/**
+		 * Info about crossing distance
+		 */
+		typedef struct {
+			/**
+			 * Current time to crossing
+			 *
+			 * Takes into account current position and speed.
+			 */
+			ArrivalTime timeToCrossing;
+
+			/**
+			 * Minimal time to crossing
+			 *
+			 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
+			 */
+			ArrivalTime minTimeToCrossing;
+
+			/**
+			 * Distance to crossing
+			 *
+			 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
+			 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
+			 */
+			DistanceToCrossing distanceToCrossing;
+		} CrossingDistanceInfo;
+
+		/**
 		 * Vehicle identification
 		 */
 		VehicleId id;
@@ -62,30 +89,6 @@ namespace Vehicle {
 		/**
 		 * Info about crossing distance
 		 */
-		typedef struct {
-			/**
-			 * Current time to crossing
-			 *
-			 * Takes into account current position and speed.
-			 */
-			ArrivalTime timeToCrossing;
-
-			/**
-			 * Minimal time to crossing
-			 *
-			 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
-			 */
-			ArrivalTime minTimeToCrossing;
-
-			/**
-			 * Distance to crossing
-			 *
-			 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
-			 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
-			 */
-			DistanceToCrossing distanceToCrossing;
-		} CrossingDistanceInfo;
-
 		CrossingDistanceInfo crossingDistanceInfo;
 
 		/**
