@@ -133,12 +133,12 @@ namespace Vehicle {
 	/**
 	 * Controls throttle in order to match desired time and updates current time to crossing
 	 */
-	class UpdateTimeAndDrive: public CDEECO::PeriodicTask<Knowledge, Time> {
+	class UpdateTimeAndDrive: public CDEECO::PeriodicTask<Knowledge, ArrivalTime> {
 	public:
 		UpdateTimeAndDrive(auto &component);
 
 	private:
-		 run(const Knowledge in);
+		ArrivalTime run(const Knowledge in);
 	};
 
 	/**
