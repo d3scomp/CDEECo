@@ -28,6 +28,10 @@ namespace Vehicle {
 	 * Vehicle knowledge
 	 */
 	struct Knowledge: CDEECO::Knowledge {
+		enum Mode {
+			Automatic, Manual
+		};
+
 		/**
 		 * Info about crossing distance
 		 */
@@ -56,6 +60,28 @@ namespace Vehicle {
 		} CrossingDistanceInfo;
 
 		/**
+		 * INformation from ICS about desired arrival time
+		 */
+		typedef struct {
+			/**
+			 * Crossing id that originated the information
+			 */
+			CrossingId crossingId;
+
+			/**
+			 * TIme when the ICS originated the information
+			 */
+			Time time;
+
+			/**
+			 * Desired arrival time
+			 *
+			 * When the ICS wants this vehicle to arrive
+			 */
+			ArrivalTime arrivalTime;
+		} DesiredArrivalTime;
+
+		/**
 		 * Vehicle identification
 		 */
 		VehicleId id;
@@ -71,6 +97,11 @@ namespace Vehicle {
 		 * Whenever vehicle supports remote operation
 		 */
 		bool remotelyOperable;
+
+		/**
+		 * Current vehicle mode
+		 */
+		Mode mode;
 
 		/**
 		 * Current crossing
@@ -106,6 +137,19 @@ namespace Vehicle {
 
 	private:
 		Time run(const Knowledge in);
+	};
+
+	/**
+	 * Monitors current system
+	 *
+	 * Checks latency of input data and ICS operational state
+	 */
+	class Monitor: public CDEECO::PeriodicTask<Knowledge, Knowledge> {
+	public:
+		Monitor(auto &component);
+
+	private:
+		Knowledge::Mode run(const Knowledge in);
 	};
 
 	/**
@@ -155,6 +199,10 @@ namespace Vehicle {
 
 		// Process instances
 		StoreCurrentTime storeCurrentTime = StoreCurrentTime(*this);
+		Monitor monitor = Monitor(*this);
+		PlanRoute planRoute = PlanRoute(*this);
+		UpdateCrossingInfo updateCrossingInfo = UpdateCrossingInfo(*this);
+		UpdateTimeAndDrive updateTimeAndDrive = UpdateTimeAndDrive(*this);
 
 		/**
 		 * Vehicle constructor

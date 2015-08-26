@@ -21,6 +21,20 @@ namespace Vehicle {
 		return GetCurrentTimeMs();
 	}
 
+	Monitor::Monitor(auto &component) {
+		// TODO: Period
+		Monitor(10, component, component.knowledge.mode);
+	}
+
+	Knowledge::Mode Monitor::run(const Knowledge in) {
+		if(in.desiredArrivalTime.crossingId == in.crossingId &&
+				std::abs(in.desiredArrivalTime.time - in.time) < LATENCY_THRESHOLD_MS) {
+			return Knowledge::Mode::Automatic;
+		} else {
+			return Knowledge::Mode::Manual;
+		}
+	}
+
 	PlanRoute::PlanRoute(auto &component) {
 		// TODO: Period
 		PeriodicTask(1000, component, component.knowledge.crossingId);

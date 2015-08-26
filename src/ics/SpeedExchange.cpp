@@ -56,16 +56,20 @@ namespace SpeedExchange {
 		return vehicles;
 	}
 
-	ArrivalTime Ensemble::coordToMemberMap(const Vehicle::Knowledge member,
+	Vehicle::Knowledge::DesiredArrivalTime Ensemble::coordToMemberMap(const Vehicle::Knowledge member,
 			const CDEECO::Id coordId, const ICS::Knowledge coordKnowledge) {
 		// Try to find desired arrival time in desired arrival time array
 		for (int i = 0; i < ICS::MAX_VEHICLES; ++i) {
 			if (coordKnowledge.arrivalTimes[i].id == member.id) {
-				return coordKnowledge.arrivalTimes[i].desiredArrivalTime;
+				return  {
+					coordId,
+					coordKnowledge.time,
+					coordKnowledge.arrivalTimes[i].desiredArrivalTime;
+				}
 			}
 		}
 
 		// Set some value when ICS has not yet set the desired arrival time for the vehicle
-		return std::numeric_limits<ArrivalTime>::max();
+		return {0, 0, std::numeric_limits<ArrivalTime>::max()};
 	}
 }

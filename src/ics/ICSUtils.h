@@ -29,6 +29,8 @@ enum Direction {
 	MAX = EAST_SOUTH
 };
 
+const long LATENCY_THRESHOLD_MS = 20;
+
 /**
  * Gets some global time information
  *
