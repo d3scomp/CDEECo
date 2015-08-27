@@ -41,7 +41,7 @@ namespace Vehicle {
 	}
 
 	CrossingId PlanRoute::run(const Knowledge in) {
-		// TODO: return next crossing on the path to destiantion
+		// TODO: return next crossing on the path to destination
 		return 42;
 	}
 

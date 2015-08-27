@@ -29,6 +29,11 @@ enum Direction {
 	MAX = EAST_SOUTH
 };
 
+/** Possible unit operation mode */
+enum Mode {
+	Automatic, Manual
+};
+
 const long LATENCY_THRESHOLD_MS = 20;
 
 /**

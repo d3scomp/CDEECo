@@ -48,7 +48,7 @@ namespace ICS {
 		/**
 		 * Whenever cross-road is running in intelligent mode
 		 */
-		bool operational;
+		Mode mode;
 
 		/**
 		 * Information about vehicles

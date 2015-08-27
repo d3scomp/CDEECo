@@ -28,10 +28,6 @@ namespace Vehicle {
 	 * Vehicle knowledge
 	 */
 	struct Knowledge: CDEECO::Knowledge {
-		enum Mode {
-			Automatic, Manual
-		};
-
 		/**
 		 * Info about crossing distance
 		 */
@@ -149,7 +145,7 @@ namespace Vehicle {
 		Monitor(auto &component);
 
 	private:
-		Knowledge::Mode run(const Knowledge in);
+		Mode run(const Knowledge in);
 	};
 
 	/**
