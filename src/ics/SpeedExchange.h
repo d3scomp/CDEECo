@@ -17,11 +17,11 @@ namespace SpeedExchange {
 	 *
 	 * Coordinator: ICS
 	 * type: ICS knowledge
-	 * output: vehicle info array
+	 * output: Vehicle info array
 	 *
 	 * Member: Vehicle
 	 * type: Vehicle::Knowledge
-	 * output: DesiredArrivalTime
+	 * output: Desired vehicle Speed
 	 */
 	typedef CDEECO::Ensemble<ICS::Knowledge, Vehicle::Knowledge*, Vehicle::Knowledge, Speed> EnsembleType;
 
