@@ -29,55 +29,6 @@ namespace Vehicle {
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		/**
-		 * Info about crossing distance
-		 */
-		typedef struct {
-			/**
-			 * Current time to crossing
-			 *
-			 * Takes into account current position and speed.
-			 */
-			ArrivalTime timeToCrossing;
-
-			/**
-			 * Minimal time to crossing
-			 *
-			 * Takes into account current position, speed, maximal acceleration and top vehicle speed.
-			 */
-			ArrivalTime minTimeToCrossing;
-
-			/**
-			 * Distance to crossing
-			 *
-			 * Distance to crossing point in meters. Used to maintain queue of cars waiting for crossing.
-			 * This is needed as cars can possibly increase speed, but this ability is limited by cars in front of them.
-			 */
-			DistanceToCrossing distanceToCrossing;
-		} CrossingDistanceInfo;
-
-		/**
-		 * INformation from ICS about desired arrival time
-		 */
-		typedef struct {
-			/**
-			 * Crossing id that originated the information
-			 */
-			CrossingId crossingId;
-
-			/**
-			 * TIme when the ICS originated the information
-			 */
-			Time time;
-
-			/**
-			 * Desired arrival time
-			 *
-			 * When the ICS wants this vehicle to arrive
-			 */
-			ArrivalTime arrivalTime;
-		} DesiredArrivalTime;
-
-		/**
 		 * Vehicle identification
 		 */
 		VehicleId id;
@@ -116,12 +67,22 @@ namespace Vehicle {
 		/**
 		 * Info about crossing distance
 		 */
-		CrossingDistanceInfo crossingDistanceInfo;
+		Distance crossingDistance;
 
 		/**
-		 * Desired time to crossing planed by ICS
+		 * Speed assigned by ICS
 		 */
-		ArrivalTime desiredArrivalTime;
+		Speed sped;
+
+		/**
+		 * Speed timestamp created by ICS
+		 */
+		Time speedTimestamp;
+
+		/**
+		 * Whenever the vehicle is privileged
+		 */
+		bool priviledged;
 	};
 
 	/**
@@ -150,6 +111,9 @@ namespace Vehicle {
 
 	/**
 	 * Plans route and sets current crossing
+	 *
+	 * This process uses GPS map and schedule to assign crossing identification
+	 * when the vehicle is about to reach the range of the crossing.
 	 */
 	class PlanRoute: public CDEECO::PeriodicTask<Knowledge, CrossingId> {
 	public:
@@ -162,23 +126,23 @@ namespace Vehicle {
 	/**
 	 * Updates information about crossing distance and controls vehicle speed
 	 */
-	class UpdateCrossingInfo: public CDEECO::PeriodicTask<Knowledge, Knowledge::CrossingDistanceInfo> {
+	class UpdateCrossingDistance: public CDEECO::PeriodicTask<Knowledge, Distance> {
 	public:
-		UpdateCrossingInfo(auto &component);
+		UpdateCrossingDistance(auto &component);
 
 	private:
-		Knowledge::CrossingDistanceInfo run(const Knowledge in);
+		Distance run(const Knowledge in);
 	};
 
 	/**
-	 * Controls throttle in order to match desired time and updates current time to crossing
+	 * Controls speed in order to keep the speed assigned by intelligent crossing system
 	 */
-	class UpdateTimeAndDrive: public CDEECO::PeriodicTask<Knowledge, ArrivalTime> {
+	class SetSpeed: public CDEECO::PeriodicTask<Knowledge, void> {
 	public:
-		UpdateTimeAndDrive(auto &component);
+		SetSpeed(auto &component);
 
 	private:
-		ArrivalTime run(const Knowledge in);
+		void run(const Knowledge in);
 	};
 
 	/**
@@ -193,12 +157,15 @@ namespace Vehicle {
 		 */
 		static const CDEECO::Type Type = 0x00000001;
 
+		// Private component data
+		VehicleInterface &vehicleInterface;
+
 		// Process instances
 		StoreCurrentTime storeCurrentTime = StoreCurrentTime(*this);
 		Monitor monitor = Monitor(*this);
 		PlanRoute planRoute = PlanRoute(*this);
-		UpdateCrossingInfo updateCrossingInfo = UpdateCrossingInfo(*this);
-		UpdateTimeAndDrive updateTimeAndDrive = UpdateTimeAndDrive(*this);
+		UpdateCrossingDistance updateCrossingInfo = UpdateCrossingDistance(*this);
+		SetSpeed updateTimeAndDrive = SetSpeed(*this);
 
 		/**
 		 * Vehicle constructor
@@ -206,7 +173,7 @@ namespace Vehicle {
 		 * @param broadcaster Reference to broadcaster to be used by base Component
 		 * @param id id of the component instance
 		 */
-		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id, bool remotelyOperable);
+		Component(CDEECO::Broadcaster &broadcaster, const CDEECO::Id id, VehicleInterface &vehicleInterface);
 	};
 }
 

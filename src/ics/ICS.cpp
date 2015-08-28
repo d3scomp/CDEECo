@@ -16,7 +16,7 @@ namespace ICS {
 
 	CheckOperational::CheckOperational(auto &component):
 		// TODO: Period ???
-		PeriodicTask(3000, component, component.knowledge.checkOperational) {
+		PeriodicTask(3000, component, component.knowledge.mode) {
 	}
 
 	/**
@@ -30,20 +30,20 @@ namespace ICS {
 	/**
 	 * Checks whenever the crossing can run in smart mode
 	 */
-	bool CheckOperational::run(const Knowledge in) {
+	Mode CheckOperational::run(const Knowledge in) {
 		// Check if there are vehicles that are not registered by the system
 		std::set<VehicleId> outOfBandVehicles = getOutOfBandRegisteredVehicles();
 		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
 			outOfBandVehicles.erase(in.vehicles[i].id);
 		}
 		if(!outOfBandVehicles.empty()) {
-			return false;
+			return Mode::Manual;
 		}
 
 		// Check if there are unsupported vehicles in the system
 		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
-			if(!in.vehicles[i].remotelyOperable) {
-				return false;
+			if(!in.vehicles[i].mode == Mode::Automatic) {
+				return Mode::Manual;
 			}
 		}
 
@@ -51,13 +51,13 @@ namespace ICS {
 		for(unsigned int i = 0; i < MAX_VEHICLES; ++i) {
 			Vehicle::Knowledge vehicle = in.vehicles[i];
 
-			if(vehicle.id != 0 && vehicle.distanceToCrossing != 0 &&
+			if(vehicle.id != 0 && vehicle.crossingDistance != 0 &&
 					std::abs(GetCurrentTimeMs() - vehicle.time) > MAX_LATENCY_MS) {
-				return false;
+				return Mode::Manual;
 			}
 		}
 
-		return true;
+		return Mode::Automatic;
 	}
 
 	RemoveOldVehicles::RemoveOldVehicles(auto &component) {
@@ -71,7 +71,7 @@ namespace ICS {
 		int used = 0;
 		for(int i = 0; i < MAX_VEHICLES; ++i) {
 			Vehicle::Knowledge vehicle = in.vehicles[i];
-			if(vehicle.id != 0 && vehicle.distanceToCrossing != 0) {
+			if(vehicle.id != 0 && vehicle.crossingDistance != 0) {
 				vehicles[used++] = vehicle;
 			}
 		}
@@ -84,25 +84,25 @@ namespace ICS {
 
 	ScheduleVehicles::ScheduleVehicles(auto &component) {
 		// TODO: Period
-		PeriodicTask(2000, component, component.knowledge.arrivalTimes);
+		PeriodicTask(2000, component, component.knowledge.speeds);
 	}
 
-	Knowledge::DesiredArrivalTime* ScheduleVehicles::run(const Knowledge in) {
+	Knowledge::SpeedInfo* ScheduleVehicles::run(const Knowledge in) {
 		// Arrival times from last schedule
-		const Knowledge::DesiredArrivalTime inArrivalTimes[MAX_VEHICLES] = in.arrivalTimes;
+		const Speed inSpeeds[MAX_VEHICLES] = in.speeds;
 		// Current information about vehicles
 		const Vehicle::Knowledge inVehicleData[MAX_VEHICLES] = in.vehicles;
 		// New schedule to be computed
-		Knowledge::DesiredArrivalTime outArrivalTimes[] = new Knowledge::DesiredArrivalTime[MAX_VEHICLES];
+		Knowledge::SpeedInfo outSpeeds[] = new Knowledge::SpeedInfo[MAX_VEHICLES];
 
 		/*
 		 * TODO: Compute new schedule, take into account current schedule,
 		 * conflicting directions and arrival time estimates.
 		 *
-		 * outArrivalTimes = schedule(inArrivalTimes, inVehicleData);
+		 * outSPeeds = schedule(inSpeeds, inVehicleData);
 		 */
 
-		return outArrivalTimes;
+		return outSpeeds;
 	}
 
 	StoreCurrentTime::StoreCurrentTime(auto &component) {

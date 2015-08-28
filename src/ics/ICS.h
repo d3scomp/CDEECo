@@ -31,9 +31,10 @@ namespace ICS {
 	 */
 	struct Knowledge: CDEECO::Knowledge {
 		typedef struct {
+			Speed speed;
 			VehicleId id;
-			ArrivalTime desiredArrivalTime;
-		} DesiredArrivalTime;
+			Time time;
+		} SpeedInfo;
 
 		/**
 		 * Crossing id
@@ -60,9 +61,9 @@ namespace ICS {
 		Vehicle::Knowledge vehicles[MAX_VEHICLES];
 
 		/**
-		 * Desired arrival times for vehicles
+		 * Desired speeds for vehicles
 		 */
-		DesiredArrivalTime arrivalTimes[MAX_VEHICLES];
+		SpeedInfo speeds[MAX_VEHICLES];
 	};
 
 	/**
@@ -103,14 +104,14 @@ namespace ICS {
 	};
 
 	/**
-	 * Schedules vehicle arrival to optimize crossing throughput
+	 * Schedules vehicles speeds to optimize crossing throughput
 	 */
-	class ScheduleVehicles: public CDEECO::PeriodicTask<Knowledge, Knowledge::DesiredArrivalTime*> {
+	class ScheduleVehicles: public CDEECO::PeriodicTask<Knowledge, Knowledge::SpeedInfo*> {
 	public:
 		ScheduleVehicles(auto &component);
 
 	private:
-		Knowledge::DesiredArrivalTime* run(const Knowledge in);
+		Knowledge::SpeedInfo* run(const Knowledge in);
 	};
 
 	/**

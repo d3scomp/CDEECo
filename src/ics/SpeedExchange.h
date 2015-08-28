@@ -23,8 +23,7 @@ namespace SpeedExchange {
 	 * type: Vehicle::Knowledge
 	 * output: DesiredArrivalTime
 	 */
-	typedef CDEECO::Ensemble<ICS::Knowledge, Vehicle::Knowledge*, Vehicle::Knowledge,
-			Vehicle::Knowledge::DesiredArrivalTime> EnsembleType;
+	typedef CDEECO::Ensemble<ICS::Knowledge, Vehicle::Knowledge*, Vehicle::Knowledge, Speed> EnsembleType;
 
 	/**
 	 * Speed exchange ensemble class
@@ -74,7 +73,7 @@ namespace SpeedExchange {
 		 * @param coordKnowledge Coordinator knowledge
 		 * @return Ensemble output
 		 */
-		Vehicle::Knowledge::DesiredArrivalTime coordToMemberMap(const Vehicle::Knowledge member,
+		Speed coordToMemberMap(const Vehicle::Knowledge member,
 				const CDEECO::Id coordId, const ICS::Knowledge coordKnowledge);
 	};
 }

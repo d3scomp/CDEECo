@@ -4,8 +4,8 @@
 typedef long Time;
 typedef long VehicleId;
 typedef long CrossingId;
-typedef float ArrivalTime;
-typedef float DistanceToCrossing;
+typedef float Distance;
+typedef float Speed;
 
 /**
  * Possible directions/vectors for passing the crossing
@@ -35,6 +35,16 @@ enum Mode {
 };
 
 const long LATENCY_THRESHOLD_MS = 20;
+
+/**
+ * Dummy vehicle interface
+ */
+class VehicleInterface {
+public:
+	void setSpeed(float speed) {};
+	bool isInteligentModeSupported() { return true;};
+	struct {double log; double lat;} getPosition() {return {42, 43};};
+};
 
 /**
  * Gets some global time information

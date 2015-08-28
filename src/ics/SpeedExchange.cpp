@@ -10,7 +10,7 @@ namespace SpeedExchange {
 
 	Ensemble::Ensemble(CDEECO::Component<Vehicle::Knowledge> &member,
 			CDEECO::KnowledgeLibrary<ICS::Knowledge> &library) :
-			EnsembleType(&member, &member.knowledge.desiredArrivalTime, &library,
+			EnsembleType(&member, &member.knowledge.speed, &library,
 					PERIOD_MS) {
 	}
 
@@ -18,7 +18,7 @@ namespace SpeedExchange {
 			const ICS::Knowledge coordKnowledge, const CDEECO::Id memeberId,
 			const Vehicle::Knowledge memberKnowledge) {
 		// Membership condition, vehicle is about to cross at the crossing
-		return memberKnowledge.crossingId == coordKnowledge.id;
+		return memberKnowledge.crossingId == coordKnowledge.id && memberKnowledge.crossingDistance < 50;
 	}
 
 	Vehicle::Knowledge* Ensemble::memberToCoordMap(const ICS::Knowledge coord,
@@ -56,20 +56,16 @@ namespace SpeedExchange {
 		return vehicles;
 	}
 
-	Vehicle::Knowledge::DesiredArrivalTime Ensemble::coordToMemberMap(const Vehicle::Knowledge member,
+	Speed Ensemble::coordToMemberMap(const Vehicle::Knowledge member,
 			const CDEECO::Id coordId, const ICS::Knowledge coordKnowledge) {
 		// Try to find desired arrival time in desired arrival time array
 		for (int i = 0; i < ICS::MAX_VEHICLES; ++i) {
-			if (coordKnowledge.arrivalTimes[i].id == member.id) {
-				return  {
-					coordId,
-					coordKnowledge.time,
-					coordKnowledge.arrivalTimes[i].desiredArrivalTime;
-				}
+			if (coordKnowledge.speeds[i].id == member.id) {
+				return coordKnowledge.speeds[i].speed;
 			}
 		}
 
 		// Set some value when ICS has not yet set the desired arrival time for the vehicle
-		return {0, 0, std::numeric_limits<ArrivalTime>::max()};
+		return {0, 0, std::numeric_limits<Speed>::max()};
 	}
 }
