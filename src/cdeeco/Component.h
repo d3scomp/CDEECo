@@ -11,9 +11,6 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include "FreeRTOS.h"
-#include "semphr.h"
-
 #include <climits>
 
 #include "System.h"
