@@ -32,5 +32,14 @@ extern MRF24J40 mrf;
 extern UART uartSerial;
 extern Console console;
 
+/**
+ * This method is to be implemented by DEECo application
+ * 
+ * It is supposed to be setup DEECo application. In order to see how please read documentation and see example
+ * application in test directory.
+ * 
+ */
+void cdeecoSetup(const uint32_t uniqId);
+
 
 #endif // MAIN_H

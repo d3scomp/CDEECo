@@ -1,8 +1,10 @@
 # Binaries will be generated with this name (.elf, .bin, .hex, etc)
 PROJ_NAME=cdeeco++
+PROJ_EXAMPLE_NAME=cdeeco++example
 
 BUILD_DIR=build
 SRC_DIR=src
+EXAMPLE_SRC_DIR=$(SRC_DIR)/example
 CMSIS_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/CMSIS
 CMSIS_DEVICE_DIR=${CMSIS_DIR}/Device/ST/STM32F4xx
 PERIPH_DIR=STM32F4xx_DSP_StdPeriph_Lib/Libraries/STM32F4xx_StdPeriph_Driver
@@ -13,13 +15,17 @@ WRAPPERS_DIR=${SRC_DIR}/wrappers
 
 OPENOCD=openocd
 
+# Example project
+EXAMPLE_SRCS +=	${EXAMPLE_SRC_DIR}/MrfRadio.cpp
+EXAMPLE_SRCS +=	${EXAMPLE_SRC_DIR}/PortableSensor.cpp
+EXAMPLE_SRCS +=	${EXAMPLE_SRC_DIR}/Alarm.cpp
+EXAMPLE_SRCS +=	${EXAMPLE_SRC_DIR}/TempExchange.cpp
+EXAMPLE_SRCS +=	${EXAMPLE_SRC_DIR}/TestComponent.cpp
+EXAMPLE_SRCS += ${EXAMPLE_SRC_DIR}/test_app.cpp
+
+
 # System
 SRCS +=	${SRC_DIR}/main.cpp
-SRCS +=	${SRC_DIR}/test/MrfRadio.cpp
-SRCS +=	${SRC_DIR}/test/PortableSensor.cpp
-SRCS +=	${SRC_DIR}/test/Alarm.cpp
-SRCS +=	${SRC_DIR}/test/TempExchange.cpp
-SRCS +=	${SRC_DIR}/test/TestComponent.cpp
 
 # Framework
 SRCS += $(CDEECO_DIR)/Radio.cpp
@@ -71,6 +77,7 @@ CC=armv7m-hardfloat-eabi-gcc
 CXX=armv7m-hardfloat-eabi-g++
 OBJCOPY=armv7m-hardfloat-eabi-objcopy
 SIZE=armv7m-hardfloat-eabi-size
+AR=armv7m-hardfloat-eabi-ar
 
 # For some reason -O2 generates wrong code for interrupts. At least the USER_BUTTON interrupt handler get called twice
 CFLAGS  = -mcpu=cortex-m4 -g -Og -Wall -pipe
@@ -88,7 +95,7 @@ CFLAGS += -D USE_STDPERIPH_DRIVER -D STM32F40_41xxx -D HSI_VALUE=16000000ul -D H
 
 CPPFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti -std=c++1y
 
-LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/cdeeco++.map $(CFLAGS)  
+LDFLAGS = -Tstm32_flash.ld -Wl,-Map,$(BUILD_DIR)/cdeeco++.map $(CFLAGS)
 
 # Add startup file to build
 OBJS = $(patsubst %.c,build/%.o,$(SRCS))
@@ -98,6 +105,14 @@ OBJS := $(patsubst %.s,build/%.o,$(OBJS))
 DEPS = $(patsubst %.c,build/%.d,$(SRCS))
 DEPS := $(patsubst %.cpp,build/%.d,$(DEPS))
 DEPS := $(patsubst %.s,,$(DEPS))
+
+EXAMPLE_OBJS = $(patsubst %.c,build/%.o,$(EXAMPLE_SRCS))
+EXAMPLE_OBJS := $(patsubst %.cpp,build/%.o,$(EXAMPLE_OBJS))
+EXAMPLE_OBJS := $(patsubst %.s,build/%.o,$(EXAMPLE_OBJS))
+
+EXAMPLE_DEPS = $(patsubst %.c,build/%.d,$(EXAMPLE_SRCS))
+EXAMPLE_DEPS := $(patsubst %.cpp,build/%.d,$(EXAMPLE_DEPS))
+EXAMPLE_DEPS := $(patsubst %.s,,$(EXAMPLE_DEPS))
 
 
 build/%.o: %.c
@@ -112,25 +127,30 @@ build/%.o: %.s
 build/%.dep: %.cpp
 	${CXX} -M $(CPPFLAGS) "$<" > "$@"
 
-.PHONY: proj init
+.PHONY: init all
 
-all: init $(BUILD_DIR)/$(PROJ_NAME).elf
+all: init $(BUILD_DIR)/$(PROJ_NAME).a $(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).hex
 
 init:
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)
-	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/test
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/drivers
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/cdeeco
 	mkdir -p $(BUILD_DIR)/$(SRC_DIR)/wrappers
+	mkdir -p $(BUILD_DIR)/$(EXAMPLE_SRC_DIR)
 	mkdir -p $(BUILD_DIR)/$(PERIPH_DIR)/src
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/MemMang
 	mkdir -p $(BUILD_DIR)/$(FREERTOS_DIR)/Source/portable/GCC/ARM_CM4F
 	mkdir -p ${BUILD_DIR}/$(CMSIS_DEVICE_DIR)/Source/Templates/TrueSTUDIO
 
-$(BUILD_DIR)/$(PROJ_NAME).elf: $(OBJS)
-	${CXX} $(LDFLAGS) -o "$@" $(OBJS)
-	${OBJCOPY} -O ihex "$@" $(BUILD_DIR)/$(PROJ_NAME).hex 
+$(BUILD_DIR)/$(PROJ_NAME).a: $(OBJS)
+	${AR} cr "$@" $(OBJS)
+	
+$(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).elf: $(EXAMPLE_OBJS)
+	$(CXX) $(LDFLAGS) -o "$@" $(EXAMPLE_OBJS) $(BUILD_DIR)/$(PROJ_NAME).a
+
+$(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).hex: $(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).elf
+	${OBJCOPY} -O ihex "$<" "$@"
 	${SIZE} --format=berkeley "$@"
 
 clean:
@@ -139,7 +159,7 @@ clean:
 openocd:
 	${OPENOCD} -f interface/stlink-v2.cfg -f target/stm32f4x_stlink.cfg
 
-flash: all
-	${OPENOCD} -f board/stm32f4discovery.cfg -c "program $(BUILD_DIR)/$(PROJ_NAME).elf verify reset"
+flash: $(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).hex
+	${OPENOCD} -f board/stm32f4discovery.cfg -c "program $(BUILD_DIR)/$(PROJ_EXAMPLE_NAME).elf verify reset"
 
 -include $(DEPS)

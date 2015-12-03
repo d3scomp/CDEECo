@@ -20,7 +20,7 @@
 #include "cdeeco/PeriodicTask.h"
 #include "cdeeco/TriggeredTask.h"
 
-#include "test/PortableSensor.h"
+#include "PortableSensor.h"
 
 /**
  * CDEECO++ component monitoring temperatures provided by PortableSensors.
