@@ -15,6 +15,9 @@
 
 #include "FreeRTOSSemaphore.h"
 
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 FreeRTOSSemaphore::FreeRTOSSemaphore(const size_t max, const size_t start) :
 		sem(xSemaphoreCreateCounting(max, start)) {
 }

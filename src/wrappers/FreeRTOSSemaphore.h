@@ -14,8 +14,9 @@
 #ifndef FREE_RTOS_SEMAPHORE_H
 #define FREE_RTOS_SEMAPHORE_H
 
-#include "FreeRTOS.h"
-#include "semphr.h"
+#include <cstdlib>
+
+typedef void * SemaphoreHandle_t;
 
 /**
  * C++ wrapper for FreeRTOS semaphore

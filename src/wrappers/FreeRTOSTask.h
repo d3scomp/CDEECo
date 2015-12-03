@@ -19,10 +19,10 @@
 #ifndef FREERTOSTASK_H
 #define FREERTOSTASK_H
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "timers.h"
-#include "semphr.h"
+#include <cstdlib>
+#include <cstdint>
+
+typedef void* TaskHandle_t;
 
 /**
  * C++ wrapper for FreeRTOS task

@@ -13,7 +13,9 @@
 #define FREERTOSMUTEX_H
 
 #include "FreeRTOS.h"
-#include "semphr.h"
+
+// Forward declaration in order to avoid unecessary dependencies
+typedef void * SemaphoreHandle_t;
 
 /**
  * C++ wrapper for FreeRTOS mutex

@@ -13,6 +13,11 @@
 
 #include "FreeRTOSTask.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+#include "semphr.h"
+
 FreeRTOSTask::FreeRTOSTask(size_t stackSize, unsigned long priority) {
 	xTaskCreate(taskBody, "Task", stackSize, this, tskIDLE_PRIORITY + priority, &handle);
 }

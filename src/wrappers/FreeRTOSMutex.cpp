@@ -10,6 +10,7 @@
  */
 
 #include "FreeRTOSMutex.h"
+#include "semphr.h"
 
 FreeRTOSMutex::FreeRTOSMutex() :
 		sem(xSemaphoreCreateMutex()) {
