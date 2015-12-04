@@ -39,8 +39,8 @@
 
 #include <iterator>
 #include <array>
+#include <cassert>
 
-#include "main.h"
 #include "wrappers/FreeRTOSMutex.h"
 #include "KnowledgeFragment.h"
 
@@ -274,7 +274,7 @@ namespace CDEECO {
 		 * @param fragment Knowledge fragment to update the record with
 		 */
 		void updateCache(size_t index, const KnowledgeFragment fragment) {
-			assert_param(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
+			assert(fragment.size + fragment.offset <= sizeof(KNOWLEDGE));
 
 			// Set knowledge data
 			memcpy(((char*) &cache[index].knowledge) + fragment.offset, fragment.data, fragment.size);
@@ -291,7 +291,7 @@ namespace CDEECO {
 				cache[index].complete = true;
 
 			// Set last updated time-stamp
-			cache[index].timestamp = xTaskGetTickCount();
+			cache[index].timestamp = FreeRTOSTask::getTickCount();
 		}
 
 		/**
