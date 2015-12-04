@@ -21,25 +21,6 @@
 #include "MRF24J40.h"
 #include "Console.h"
 
-// Hardware
-extern Timer delayTimer;
-extern Button toggleButton;
-extern UART uartGPS;
-extern GPSL30 gps;
-extern LED blueLED;
-extern LED orangeLED;
-extern MRF24J40 mrf;
-extern UART uartSerial;
-extern Console console;
-
-/**
- * This method is to be implemented by DEECo application
- * 
- * It is supposed to be setup DEECo application. In order to see how please read documentation and see example
- * application in test directory.
- * 
- */
-void cdeecoSetup(const uint32_t uniqId);
-
+#include "cdeeco/CDEECo.h"
 
 #endif // MAIN_H
