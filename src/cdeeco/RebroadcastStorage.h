@@ -13,11 +13,11 @@
 #include <array>
 #include <random>
 
-#include "main.h"
 #include "KnowledgeFragment.h"
 #include "Broadcaster.h"
 #include "wrappers/FreeRTOSTask.h"
 #include "wrappers/FreeRTOSMutex.h"
+#include "CDEECo.h"
 
 namespace CDEECO {
 	/**
@@ -87,8 +87,8 @@ namespace CDEECO {
 			recordsMutex.lock();
 			Index free = getFree();
 			records[free].used = true;
-			records[free].received = xTaskGetTickCount();
-			records[free].rebroadcast = xTaskGetTickCount() + rebroadcastDelay / portTICK_PERIOD_MS;
+			records[free].received = FreeRTOSTask::getTickCount();
+			records[free].rebroadcast = records[free].received + rebroadcastDelay / portTICK_PERIOD_MS;
 			records[free].fragment = fragment;
 			recordsMutex.unlock();
 		}
@@ -136,9 +136,9 @@ namespace CDEECO {
 		 */
 		void run() {
 			while(1) {
-				vTaskDelay(PERIOD / portTICK_PERIOD_MS);
+				FreeRTOSTask::mDelay(PERIOD);
 
-				const Timestamp now = xTaskGetTickCount();
+				const Timestamp now = FreeRTOSTask::getTickCount();
 				recordsMutex.lock();
 				for(Index i = 0; i < records.size(); ++i)
 					if(records[i].used && records[i].rebroadcast <= now)

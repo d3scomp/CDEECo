@@ -23,4 +23,14 @@
 
 #include "cdeeco/CDEECo.h"
 
+// Hardware
+extern Timer delayTimer;
+extern Button toggleButton;
+extern UART uartGPS;
+extern GPSL30 gps;
+extern LED blueLED;
+extern LED orangeLED;
+extern MRF24J40 mrf;
+extern UART uartSerial;
+
 #endif // MAIN_H

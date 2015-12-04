@@ -9,15 +9,9 @@
  * 
  */
 
+#include "Console.h"
+
 // Hardware
-extern Timer delayTimer;
-extern Button toggleButton;
-extern UART uartGPS;
-extern GPSL30 gps;
-extern LED blueLED;
-extern LED orangeLED;
-extern MRF24J40 mrf;
-extern UART uartSerial;
 extern Console console;
 
 /**

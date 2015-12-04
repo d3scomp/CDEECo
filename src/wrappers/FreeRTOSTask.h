@@ -65,7 +65,12 @@ public:
 	 *
 	 * @param ms Delay in milliseconds
 	 */
-	void mDelay(uint16_t ms);
+	static void mDelay(uint16_t ms);
+	
+	/**
+	 * Gets tick count
+	 */
+	static long getTickCount();
 
 	/**
 	 * Suspend this task using FreeRTOS API

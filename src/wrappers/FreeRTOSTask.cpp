@@ -33,6 +33,13 @@ void FreeRTOSTask::mDelay(uint16_t ms) {
 void FreeRTOSTask::suspend() {
 	vTaskSuspend(handle);
 }
+
 void FreeRTOSTask::taskBody(void *data) {
 	static_cast<FreeRTOSTask*>(data)->run();
 }
+
+long FreeRTOSTask::getTickCount() {
+	return xTaskGetTickCount();
+}
+
+
