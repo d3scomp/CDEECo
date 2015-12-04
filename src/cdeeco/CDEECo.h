@@ -10,9 +10,16 @@
  */
 
 #include "../drivers/Console.h"
+#include "../drivers/MRF24J40.h"
+#include "../drivers/GPS.h"
+#include "../drivers/LED.h"
 
 // Hardware
 extern Console console;
+extern MRF24J40 mrf;
+extern GPSL30 gps;
+extern LED blueLED;
+extern LED orangeLED;
 
 /**
  * This method is to be implemented by DEECo application

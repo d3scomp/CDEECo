@@ -83,6 +83,7 @@ AR=armv7m-hardfloat-eabi-ar
 CFLAGS  = -mcpu=cortex-m4 -g -Og -Wall -pipe
 CFLAGS += -mlittle-endian -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP -fsingle-precision-constant
 CFLAGS += -I$(SRC_DIR)
+CFLAGS += -I$(SRC_DIR)/cdeeco
 CFLAGS += -I$(DRIVERS_DIR)
 CFLAGS += -I${CMSIS_DEVICE_DIR}/Include
 CFLAGS += -I$(CMSIS_DIR)/Include

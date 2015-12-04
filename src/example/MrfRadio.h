@@ -11,6 +11,11 @@
 #ifndef MRFRADIO_H
 #define MRFRADIO_H
 
+#include "FreeRTOS.h"
+#include "task.h"
+
+#include <CDEECo.h>
+
 #include "cdeeco/KnowledgeFragment.h"
 #include "cdeeco/Knowledge.h"
 #include "cdeeco/Radio.h"

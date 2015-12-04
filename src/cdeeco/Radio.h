@@ -11,12 +11,8 @@
 #ifndef RADIO_H
 #define RADIO_H
 
-#include "FreeRTOS.h"
-#include "task.h"
-
 #include <array>
 
-#include "main.h"
 #include "Receiver.h"
 #include "Broadcaster.h"
 #include "Console.h"

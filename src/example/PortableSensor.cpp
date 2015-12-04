@@ -13,6 +13,8 @@
 
 #include "PortableSensor.h"
 
+#include "../drivers/GPS.h"
+
 namespace PortableSensor {
 	Sense::Sense(auto &component) :
 			PeriodicTask(1800, component, component.knowledge.value) {

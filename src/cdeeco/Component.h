@@ -237,7 +237,7 @@ namespace CDEECO {
 		void run() {
 			while(true) {
 				// Wait for next execution time
-				vTaskDelay(this->broadcastPeriodMs / portTICK_PERIOD_MS);
+				FreeRTOSTask::mDelay(this->broadcastPeriodMs);
 				broadcastChange(0, sizeof(KNOWLEDGE));
 			}
 		}

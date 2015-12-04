@@ -14,11 +14,8 @@
 #include "stm32f4xx.h"
 
 #include "UART.h"
-#include "LED.h"
 #include "Button.h"
 #include "Timer.h"
-#include "GPS.h"
-#include "MRF24J40.h"
 #include "Console.h"
 
 #include "cdeeco/CDEECo.h"
@@ -27,10 +24,6 @@
 extern Timer delayTimer;
 extern Button toggleButton;
 extern UART uartGPS;
-extern GPSL30 gps;
-extern LED blueLED;
-extern LED orangeLED;
-extern MRF24J40 mrf;
 extern UART uartSerial;
 
 #endif // MAIN_H

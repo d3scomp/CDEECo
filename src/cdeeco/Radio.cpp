@@ -10,6 +10,9 @@
 
 #include "Radio.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 namespace CDEECO {
 	void Radio::setReceiver(Receiver *receiver) {
 		this->receiver = receiver;

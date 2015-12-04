@@ -121,7 +121,7 @@ namespace CDEECO {
 				runExchange();
 
 				// Wait for next execution time
-				vTaskDelay(period / portTICK_PERIOD_MS);
+				FreeRTOSTask::mDelay(period);
 			}
 		}
 
