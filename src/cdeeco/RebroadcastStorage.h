@@ -33,7 +33,7 @@ namespace CDEECO {
 	class RebroadcastStorage: FreeRTOSTask {
 	private:
 		/// Cache record time-stamp type
-		typedef TickType_t Timestamp;
+		typedef long Timestamp;
 		/// Cache record index type
 		typedef size_t Index;
 		/// Period in between rebroadcast checks
@@ -88,7 +88,7 @@ namespace CDEECO {
 			Index free = getFree();
 			records[free].used = true;
 			records[free].received = FreeRTOSTask::getTickCount();
-			records[free].rebroadcast = records[free].received + rebroadcastDelay / portTICK_PERIOD_MS;
+			records[free].rebroadcast = records[free].received + rebroadcastDelay;
 			records[free].fragment = fragment;
 			recordsMutex.unlock();
 		}

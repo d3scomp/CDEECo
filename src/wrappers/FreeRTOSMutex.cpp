@@ -9,6 +9,8 @@
  *
  */
 
+#include <FreeRTOS.h>
+
 #include "FreeRTOSMutex.h"
 #include "semphr.h"
 

@@ -12,8 +12,6 @@
 #ifndef FREERTOSMUTEX_H
 #define FREERTOSMUTEX_H
 
-#include "FreeRTOS.h"
-
 // Forward declaration in order to avoid unecessary dependencies
 typedef void * SemaphoreHandle_t;
 
