@@ -24,7 +24,7 @@ namespace CDEECO {
 	 * @tparam COORD_KNOWLEDGE Type of coordinator knowledge
 	 * @tparam COORD_OUT_KNOWLEDGE Type of coordinator output knowledge
 	 * @tparam MEMEBR_KNOWLEDGE Type of member knowledge
-	 * @tparam MEMBER_KNOWLEDGE Type of member output knowledge
+	 * @tparam MEMBER_OUT_KNOWLEDGE Type of member output knowledge
 	 *
 	 * \ingroup cdeeco
 	 */
