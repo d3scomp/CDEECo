@@ -18,6 +18,8 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "UART.h"
+
 #include "Console.h"
 
 

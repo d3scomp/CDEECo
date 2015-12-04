@@ -19,7 +19,7 @@
 #include "cdeeco/KnowledgeFragment.h"
 #include "cdeeco/Receiver.h"
 
-#include "UART.h"
+class UART;
 
 /**
  * Console log level type
